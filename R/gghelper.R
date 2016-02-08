@@ -2,7 +2,8 @@
 #'
 #' Based on gagdets
 #'
-#' @param df a data frame ready for graphing
+#' @param data a data frame ready for graphing
+#' @param formula a formula to set the frame initially
 #' @export
 gghelper <- function(data = NULL, formula=NULL) {
   vars <- head(names(data), 20)
