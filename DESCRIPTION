@@ -1,0 +1,17 @@
+Package: gghelper
+Type: Package
+Title: Simple GUIs for ggplot
+Version: 0.1.0
+Author: Daniel Kaplan
+Maintainer: Daniel Kaplan <kaplan@macalester.edu>
+Description: A shiny gadget helper for ggplot2
+License: What license is it under?
+LazyData: TRUE
+Depends:
+    shiny,
+    miniUI,
+    ggplot2
+Extends:
+    ggplot2
+RoxygenNote: 5.0.1
+Suggests: testthat
