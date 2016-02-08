@@ -4,9 +4,11 @@
 #'
 #' @param df a data frame ready for graphing
 #' @export
-gghelper <- function(df, formula=NULL) {
-  vars <- head(names(df), 20)
+gghelper <- function(data = NULL, formula=NULL) {
+  vars <- head(names(data), 20)
   formula_vars <- all.vars(formula)
+  data_table_name <- as.character(substitute(data))
+
   if (length(formula) == 2) {
     xstart <- formula_vars[1]
   } else {
@@ -34,7 +36,6 @@ gghelper <- function(df, formula=NULL) {
   )
 
   server <- function(input, output, session) {
-    browser()
     updateSelectInput(session = session, "xframe", choices = vars, selected=xstart)
     updateSelectInput(session = session, "yframe", choices = vars, selected=ystart)
     updateSelectInput(session = session, "color",
@@ -48,7 +49,7 @@ gghelper <- function(df, formula=NULL) {
     })
 
     ggplot_string <- reactive({
-      res <- paste0("ggplot(data = df, aes(x=",
+      res <- paste0("ggplot(data = data, aes(x=",
              input$xframe, ", y=", input$yframe, ")) + ", input$glyph, "(color ='",
              input$color, "')"  )
 
@@ -60,6 +61,9 @@ gghelper <- function(df, formula=NULL) {
     # When the Done button is clicked, return a value
     observeEvent(input$done, {
       returnValue <- ggplot_string()
+      returnValue <- gsub("data = data",
+           paste0("data = ", data_table_name),
+           returnValue)
       stopApp(returnValue)
     })
   }
