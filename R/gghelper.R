@@ -5,10 +5,16 @@
 #' @param data a data frame ready for graphing
 #' @param formula a formula to set the frame initially
 #' @export
-gghelper <- function(data = NULL, formula=NULL) {
+gghelper <- function(data = NULL, formula=NULL, ...) {
   vars <- head(names(data), 20)
+  categorical_vars <- vars[unlist(lapply(data, FUN = function(x){ !inherits(x, "numeric")}))]
   formula_vars <- all.vars(formula)
-  data_table_name <- as.character(substitute(data))
+  data_table_name <- unlist(as.character(substitute(data)))
+  other_data_tables <- lazyeval::lazy_dots(...)
+  # All the data tables given to the function
+  all_data_table_names <-
+    as.character(c(data_table_name,
+      unlist(lapply(other_data_tables, FUN=function(x) x$expr ))))
 
   if (length(formula) == 2) {
     xstart <- formula_vars[1]
@@ -20,41 +26,117 @@ gghelper <- function(data = NULL, formula=NULL) {
   ui <- miniPage(
     gadgetTitleBar("ggplot helper"),
     miniTabstripPanel(
-     tabPanel("Frame", icon = icon("area-chart"),
+      tabPanel("Frame", icon = icon("area-chart"),
               fillRow(flex = c(1,2),
                 fillCol(wellPanel(HTML(frame_controls))),
                 plotOutput("ggframe", height="90%", width="90%")
               )
-
-     ),
-      tabPanel("geom_point", icon = icon("sliders"),
-                   miniContentPanel(
-
-                     sliderInput("year", "Year", 1978, 2010, c(2000, 2010), sep = "")
-                   )
+      ),
+      tabPanel("Scatter", icon = icon("sliders"),
+               fillRow(flex = c(1,2),
+                       fillCol(checkboxInput("scatter_go", "Activate scatter layer", value = FALSE),
+                               wellPanel(HTML(scatter_controls))),
+                       plotOutput("ggscatter", height="90%", width="90%")
+               )
+      ),
+      tabPanel("Density", icon = icon("sliders"),
+               fillRow(flex = c(1,2),
+                       fillCol(checkboxInput("density_go", "Activate density layer", value = FALSE),
+                               HTML(density_controls)),
+                       plotOutput("ggdensity", height="90%", width="90%")
+               )
+      ),
+      tabPanel("Map", icon = icon("sliders"),
+               fillRow(flex = c(1,2),
+                       fillCol(checkboxInput("map_go", "Activate map layer", value = FALSE),
+                               HTML(map_controls)),
+                       plotOutput("ggmap", height="90%", width="90%")
+               )
       )
     )
   )
 
-  server <- function(input, output, session) {
+
+  server<- function(input, output, session) {
     updateSelectInput(session = session, "xframe", choices = vars, selected=xstart)
     updateSelectInput(session = session, "yframe", choices = vars, selected=ystart)
+    updateSelectInput(session = session, "logaxes",
+                      choices = c("none", "x", "y", "both"))
+    updateSelectInput(session = session, "model",
+                      choices = c("none", "linear", "smoother", "linear+bands", "smoother+bands"))
     updateSelectInput(session = session, "color",
                       choices = c("black", "red", "green", "blue", vars), selected="black")
-    updateSelectInput(session = session, "glyph",
-                      choices = c(point = "geom_point", line = "geom_line")
+    updateSelectInput(session = session, "shape",
+                      choices = add_NA(categorical_vars), selected = "")
+    updateSelectInput(session = session, "facet",
+                      choices = add_NA(categorical_vars), selected = "")
+    updateSelectInput(session = session, "legend",
+                      choices = c(none="", top="top", left="left", right="right"),
+                      selected = "right")
+    updateSelectInput(session = session, "scatterglyph",
+                      choices = c("point", "line", "path", "boxplot")
                       )
     output$ggframe <- renderPlot({
-      if (input$xframe == '.') NULL
-      else eval(parse(text = ggplot_string() ))
+      if (input$xframe == '.') NULL # skip initialization step
+      make_whole_plot()
+    })
+
+    output$ggscatter <- renderPlot({
+      if (input$xframe == '.') NULL # skip initialization step
+      make_whole_plot()
+    })
+
+    output$ggdensity <- renderPlot({
+      if (input$xframe == '.') NULL # skip initialization step
+      make_whole_plot()
+    })
+
+    output$ggmap <- renderPlot({
+      if (input$xframe == '.') NULL # skip initialization step
+      make_whole_plot()
+    })
+
+    string_for_frame <- reactive({
+      frame_string(data_table_name, input$xframe, input$yframe)
+    })
+
+    string_for_scatter_layer <- reactive({
+      res <- layer_string(names(data), geom=input$scatterglyph, color=input$color,
+                   shape=input$shape)
+      paste0("+ ",res)
+    })
+
+    string_for_facets <- reactive({
+      facet_string(input$facet)
+    })
+
+    string_for_legend_position <- reactive({
+      legend_position_string(input$legend)
+    })
+
+    string_for_log_axes <- reactive({
+      log_axes_string(input$logaxes)
+    })
+
+    string_for_model <- reactive({
+      model_string(input$model)
     })
 
     ggplot_string <- reactive({
-      res <- paste0("ggplot(data = data, aes(x=",
-             input$xframe, ", y=", input$yframe, ")) + ", input$glyph, "(color ='",
-             input$color, "')"  )
-
+      res <- paste(string_for_frame(),
+                   ifelse(input$scatter_go, string_for_scatter_layer(), ""),
+                   string_for_facets(),
+                   string_for_legend_position(),
+                   string_for_log_axes(),
+                   ifelse(input$scatter_go, string_for_model(), "")
+      )
       res
+    })
+
+    make_whole_plot <- reactive({
+      if (input$scatterglyph == ".") return(NULL) # initialization dodge
+
+      eval(parse(text = ggplot_string()))
     })
 
 
@@ -74,8 +156,6 @@ gghelper <- function(data = NULL, formula=NULL) {
 
 # initial value for xframe and yframe is "."
 frame_controls <- '<table border="0px">
-<caption>Frame aesthetics</caption>
-<tr>
 <td><label for="xframe">x</label></td>
 <td><select id="xframe"><option value = "." selected>A</option></select>
 <script type="application/json" data-for="xframe" data-nonempty="">{}</script></td></tr>
@@ -84,12 +164,44 @@ frame_controls <- '<table border="0px">
 <td><select id="yframe"><option value = "." selected>A</option></select>
 <script type="application/json" data-for="yframe" data-nonempty="">{}</script></td>
 </tr><tr>
+<td><label for="facet">facet</label></td>
+<td><select id="facet"><option value = "." selected>A</option></select>
+<script type="application/json" data-for="facet" data-nonempty="">{}</script></td>
+</tr><tr>
+<td><label for="logaxes">log axes</label></td>
+<td><select id="logaxes"><option value = "." selected>A</option></select>
+<script type="application/json" data-for="logaxes" data-nonempty="">{}</script></td>
+</tr><tr>
+<td><label for="legend">legend</label></td>
+<td><select id="legend"><option value = "A" selected>A</option></select>
+<script type="application/json" data-for="legend" data-nonempty="">{}</script></td>
+</tr></table>'
+
+scatter_controls <- '<table><tr>
+<td><label for="model">model</label></td>
+<td><select id="model"><option value = "A" selected>A</option></select>
+<script type="application/json" data-for="model" data-nonempty="">{}</script></td>
+</tr><tr>
 <td><label for="color">color</label></td>
 <td><select id="color"><option value = "A" selected>A</option></select>
 <script type="application/json" data-for="color" data-nonempty="">{}</script></td>
 </tr><tr>
-<td><label for="glyph">glyph</label></td>
-<td><select id="glyph"><option value = "A" selected>A</option></select>
-<script type="application/json" data-for="glyph" data-nonempty="">{}</script></td>
+<td><label for="shape">shape</label></td>
+<td><select id="shape"><option value = "A" selected>A</option></select>
+<script type="application/json" data-for="shape" data-nonempty="">{}</script></td>
+</tr></table>
+<td><label for="glyph">scatterglyph</label></td>
+<td><select id="scatterglyph"><option value = "point" selected>point</option></select>
+<script type="application/json" data-for="scatterglyph" data-nonempty="">{}</script></td>
 </tr>
 </table>'
+
+map_controls <- "Map controls here."
+density_controls <- "Density controls here."
+#' Take a character string of possibilities and prepend it with NA
+add_NA <- function(levels) {
+  res <- as.list(levels)
+  names(res) <- levels
+
+  c(list(none = ""), res)
+}
