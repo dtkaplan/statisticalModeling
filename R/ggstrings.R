@@ -6,6 +6,10 @@ frame_string <- function(data = NULL, x = NULL, y = NULL) {
   res
 }
 
+map_string <- function(location) {
+  "ggplot()" # placeholder for now.
+}
+
 # variable for facetting as a character string
 facet_string <- function(var) {
   if (var == "") ""

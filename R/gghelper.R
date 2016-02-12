@@ -16,11 +16,17 @@ gghelper <- function(data = NULL, formula=NULL, ...) {
     as.character(c(data_table_name,
       unlist(lapply(other_data_tables, FUN=function(x) x$expr ))))
 
-  if (length(formula) == 2) {
-    xstart <- formula_vars[1]
+
+  # Make this about whether to do a density, a scatter, or a map.
+  if (missing(formula)) { # it's a map
+    plot_mode <- "map"
+  } else if (length(formula) == 2) { # it's a scatterplot
+    x_start <- formula_vars[1]
+    plot_mode <- "density"
   } else {
-    ystart <- formula_vars[1]
-    xstart <- formula_vars[2]
+    y_start <- formula_vars[1]
+    x_start <- formula_vars[2]
+    plot_mode <- "scatter"
   }
 
   ui <- miniPage(
@@ -34,21 +40,27 @@ gghelper <- function(data = NULL, formula=NULL, ...) {
       ),
       tabPanel("Scatter", icon = icon("sliders"),
                fillRow(flex = c(1,2),
-                       fillCol(checkboxInput("scatter_go", "Activate scatter layer", value = FALSE),
+                       fillCol(checkboxInput("scatter_go",
+                                             "Activate scatter layer",
+                                             value = plot_mode == "scatter"),
                                wellPanel(HTML(scatter_controls))),
                        plotOutput("ggscatter", height="90%", width="90%")
                )
       ),
       tabPanel("Density", icon = icon("sliders"),
                fillRow(flex = c(1,2),
-                       fillCol(checkboxInput("density_go", "Activate density layer", value = FALSE),
+                       fillCol(checkboxInput("density_go",
+                                             "Activate density layer",
+                                             value = plot_mode == "density"),
                                HTML(density_controls)),
                        plotOutput("ggdensity", height="90%", width="90%")
                )
       ),
       tabPanel("Map", icon = icon("sliders"),
                fillRow(flex = c(1,2),
-                       fillCol(checkboxInput("map_go", "Activate map layer", value = FALSE),
+                       fillCol(checkboxInput("map_go",
+                                             "Activate map layer",
+                                             value = plot_mode == "map"),
                                HTML(map_controls)),
                        plotOutput("ggmap", height="90%", width="90%")
                )
@@ -57,9 +69,35 @@ gghelper <- function(data = NULL, formula=NULL, ...) {
   )
 
 
-  server<- function(input, output, session) {
-    updateSelectInput(session = session, "xframe", choices = vars, selected=xstart)
-    updateSelectInput(session = session, "yframe", choices = vars, selected=ystart)
+  server <- function(input, output, session) {
+    # set the y-axis depending on the mode of plot
+
+    if(plot_mode == "density") {
+      y_possibilities <- "..Computed.."
+      x_possibilities <- vars
+      y_selected <- NULL
+      x_selected <- x_start
+    } else if (plot_mode == "map") {
+      y_possibilities <- "..Latitude.."
+      x_possibilities <- "..Longitude.."
+      y_selected <- NULL # first item on the list
+      x_selected <- NULL # first item on the list
+    } else { # plot_mode is "scatter"
+      y_possibilities <- vars
+      x_possibilities <- vars
+      y_selected <- y_start
+      x_selected <- x_start
+    }
+
+    updateSelectInput(session = session, "yframe",
+                      choices = y_possibilities, selected=y_selected)
+    updateSelectInput(session = session, "xframe",
+                      choices = x_possibilities, selected=x_selected)
+
+
+
+
+
     updateSelectInput(session = session, "logaxes",
                       choices = c("none", "x", "y", "both"))
     updateSelectInput(session = session, "model",
@@ -100,6 +138,10 @@ gghelper <- function(data = NULL, formula=NULL, ...) {
       frame_string(data_table_name, input$xframe, input$yframe)
     })
 
+    string_for_map <- reactive({
+      map_string(input$map_location)
+    })
+
     string_for_scatter_layer <- reactive({
       res <- layer_string(names(data), geom=input$scatterglyph, color=input$color,
                    shape=input$shape)
@@ -123,18 +165,19 @@ gghelper <- function(data = NULL, formula=NULL, ...) {
     })
 
     ggplot_string <- reactive({
-      res <- paste(string_for_frame(),
-                   ifelse(input$scatter_go, string_for_scatter_layer(), ""),
-                   string_for_facets(),
-                   string_for_legend_position(),
-                   string_for_log_axes(),
-                   ifelse(input$scatter_go, string_for_model(), "")
+      res <- paste(
+        if (input$map_go) string_for_map() else string_for_frame(),
+        ifelse(input$scatter_go, string_for_scatter_layer(), ""),
+        string_for_facets(),
+        string_for_legend_position(),
+        string_for_log_axes(),
+        ifelse(input$scatter_go, string_for_model(), "")
       )
       res
     })
 
     make_whole_plot <- reactive({
-      if (input$scatterglyph == ".") return(NULL) # initialization dodge
+      if (input$xframe == ".") return(NULL) # initialization dodge
 
       eval(parse(text = ggplot_string()))
     })
