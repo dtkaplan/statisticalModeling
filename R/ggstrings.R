@@ -6,8 +6,15 @@ frame_string <- function(data = NULL, x = NULL, y = NULL) {
   res
 }
 
-map_string <- function(location) {
-  "ggplot()" # placeholder for now.
+density_string <- function(data_name = NULL, var_names, type, xframe, position, color, fill, ...){
+  one <- frame_string(data = data_name, xframe)
+  two <- layer_string(var_names, geom = type, position = position, color=color, fill=fill, ...)
+  paste(one, two, sep = "+")
+}
+
+map_string <- function(location, zoom, source, type) {
+  sprintf( "ggmap::ggmap(ggmap::get_map(location = '%s', zoom = %d, source = '%s', maptype = '%s', crop=FALSE))",
+           location, zoom, source, type)
 }
 
 # variable for facetting as a character string
@@ -26,7 +33,11 @@ legend_position_string <- function(where) {
         fill = NULL, shape =  NULL, size = NULL, stroke = NULL),
   line = list(x = NULL, y=NULL, alpha=NULL, group = NULL, color = NULL, colour=NULL, linetype=NULL, size=NULL),
   path = list(x = NULL, y=NULL, alpha=NULL, group = NULL, color = NULL, colour=NULL, linetype=NULL, size=NULL),
-  boxplot = list(x = NULL, y=NULL, alpha=NULL, group = NULL, fill = NULL, color = NULL, colour=NULL, linetype=NULL, size=NULL)
+  boxplot = list(x = NULL, y=NULL, alpha=NULL, group = NULL, fill = NULL,
+                 color = NULL, colour=NULL, linetype=NULL, size=NULL),
+  density = list(x = NULL, alpha = NULL, fill = NULL, color = NULL, colour = NULL, position = NULL),
+  freqpoly = list(x = NULL, alpha = NULL, fill = NULL, color = NULL, colour = NULL, position = NULL),
+  histogram = list(x = NULL, alpha = NULL, fill = NULL, color = NULL, colour = NULL, position = NULL)
 
 )
 

@@ -52,7 +52,17 @@ gghelper <- function(data = NULL, formula=NULL, ...) {
                        fillCol(checkboxInput("density_go",
                                              "Activate density layer",
                                              value = plot_mode == "density"),
-                               HTML(density_controls)),
+                               selectInput("density_type", "Type",
+                                           choices = c(density = "density",
+                                                       # note: just tail part of name of e.g. geom_density
+                                                       histogram = "histogram",
+                                                       polygon = "freqpoly")),
+                               selectInput("density_position", "Position",
+                                           choices = c(stack = "stack", overlap = "dodge", conditional = "fill")),
+                               selectInput("density_color", "Color",
+                                           choices = c("black", "red", "green", "blue", categorical_vars), selected="black"),
+                               checkboxInput("density_fill", "Fill", value = TRUE)
+                       ),
                        plotOutput("ggdensity", height="90%", width="90%")
                )
       ),
@@ -61,7 +71,14 @@ gghelper <- function(data = NULL, formula=NULL, ...) {
                        fillCol(checkboxInput("map_go",
                                              "Activate map layer",
                                              value = plot_mode == "map"),
-                               HTML(map_controls)),
+                               #HTML(map_controls),
+                               textInput("map_location", "Location", value = ""),
+                               selectInput("map_source", "Choose a map source:",
+                                           choices = list("None", "stamen", "google", "osm"), selected = ""),
+                               selectInput("map_type", "Map type:", choices = ""),
+                               sliderInput("map_zoom", "Scale", min = 1, max = 21, value = 10),
+                               p("Scale: 3 (continent) to 21 (building).")
+                               ),
                        plotOutput("ggmap", height="90%", width="90%")
                )
       )
@@ -135,16 +152,31 @@ gghelper <- function(data = NULL, formula=NULL, ...) {
     })
 
     string_for_frame <- reactive({
+      req(input$xframe, input$yframe)
       frame_string(data_table_name, input$xframe, input$yframe)
     })
 
+    string_for_density <- reactive({
+      req(input$density_type, input$xframe, input$density_position, input$density_color, input$density_fill)
+      res <- density_string(data_table_name,
+                            names(data),
+                            input$density_type,
+                            input$xframe,
+                            input$density_position,
+                            input$density_color,
+                            ifelse(input$density_fill, input$density_color, ""))
+      res
+
+    })
+
     string_for_map <- reactive({
-      map_string(input$map_location)
+      req(input$map_location, input$map_zoom, input$map_source, input$map_type)
+      map_string(input$map_location, as.integer(input$map_zoom), input$map_source, input$map_type)
     })
 
     string_for_scatter_layer <- reactive({
-      res <- layer_string(names(data), geom=input$scatterglyph, color=input$color,
-                   shape=input$shape)
+      res <- layer_string(names(data), geom = input$scatterglyph, color = input$color,
+                   shape = input$shape)
       paste0("+ ",res)
     })
 
@@ -165,13 +197,16 @@ gghelper <- function(data = NULL, formula=NULL, ...) {
     })
 
     ggplot_string <- reactive({
-      res <- paste(
-        if (input$map_go) string_for_map() else string_for_frame(),
-        ifelse(input$scatter_go, string_for_scatter_layer(), ""),
-        string_for_facets(),
-        string_for_legend_position(),
-        string_for_log_axes(),
-        ifelse(input$scatter_go, string_for_model(), "")
+      frame_str <- if (input$map_go) string_for_map()
+      else if (input$density_go) string_for_density()
+      else string_for_frame()
+      res <- paste(frame_str,
+                   ifelse(input$scatter_go, string_for_scatter_layer(), ""),
+                   # ifelse(input$density_go, string_for_density(), ""),
+                   string_for_facets(),
+                   string_for_legend_position(),
+                   string_for_log_axes(),
+                   ifelse(input$scatter_go, string_for_model(), "")
       )
       res
     })
@@ -182,7 +217,20 @@ gghelper <- function(data = NULL, formula=NULL, ...) {
       eval(parse(text = ggplot_string()))
     })
 
+    # To choose from different maps
+    observe({
+      stamen <- list("terrain", "toner", "watercolor")
+      google <- list ("roadmap", "terrain", "satellite", "hybrid")
 
+      relevant <- switch(input$map_source,
+                         "stamen" = stamen,
+                         "google" = google
+      )
+
+      updateSelectInput(session, inputId = "map_type",
+                        choices = relevant
+      )
+    })
 
     # When the Done button is clicked, return a value
     observeEvent(input$done, {
@@ -239,8 +287,7 @@ scatter_controls <- '<table><tr>
 </tr>
 </table>'
 
-map_controls <- "Map controls here."
-density_controls <- "Density controls here."
+
 #' Take a character string of possibilities and prepend it with NA
 add_NA <- function(levels) {
   res <- as.list(levels)
