@@ -40,22 +40,19 @@ point_plot <- function(data=parent.env(), formula=NULL, add=FALSE,
     mapping_list["x"] <- nms[2]
     nms <- nms[-(1:2)]
   }
-  if (length(nms) > 0) { # there are property:name pairs
-    inds <- seq(1, length(nms), by = 2)
-    for (k in inds) {
-      mapping_list[nms[k]] <- nms[k+1]
-    }
-  }
 
   # generate a frame (if needed)
   for_frame <- do.call(frame_string, mapping_list[c("data", "x", "y")])
+
+  mapping_list <- pairs_in_formula(formula)
+
   for_layer_fun <-
     function(...) layer_string(names(data), geom = geom, ...)
   for_layer <- do.call(for_layer_fun,
                        mapping_list)
   gg_command_string <-
     if ( ! add) {
-      paste(for_frame, for_layer, sep=" +\n  ")
+      paste(for_frame, for_layer, sep=" +  ")
     } else {
       for_layer
     }
@@ -64,4 +61,21 @@ point_plot <- function(data=parent.env(), formula=NULL, add=FALSE,
   p <- eval(parse(text = gg_command_string ))
 
   p
+}
+
+# pull out the pairs from a formula like color::red + alpha:0.5
+# return them as a named list
+pairs_in_formula <- function(formula) {
+  fc <- as.character(formula)
+  parts <- unlist(strsplit(fc, "+", fixed = TRUE))
+  # trim leading blanks
+  parts <- gsub("^\\s+|\\s+$", "", parts)
+  # identify the pairs
+  pairs <- parts[grep(":+", parts)]
+  res <- list()
+  for (pair in pairs) {
+    this_pair <- unlist(strsplit(pair, ":+"))
+    res[this_pair[1] ] <- this_pair[2]
+  }
+  res
 }

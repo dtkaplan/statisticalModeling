@@ -80,10 +80,18 @@ layer_string <- function(var_names, geom = "point", ...) {
       } else if (candidates[[k]] %in% var_names) {
         map_list[candidate_names[k]] <- candidates[[k]]
       } else {
+        # for set_list
+        val <- candidates[[k]]
+        as_number <- suppressWarnings(as.numeric(val))
+        if (is.na(as_number)) { # val should be quoted
+          val <- paste0("'", val, "'")
+        } else {
+          val <- as_number
+        }
         set_list[candidate_names[k]] <-
           ifelse(candidate_names[[k]] == "data",
                  candidates[[k]],
-                 paste0("'",candidates[[k]], "'"))
+                 val)
       }
     }
   }
