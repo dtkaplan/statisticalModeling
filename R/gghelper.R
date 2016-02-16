@@ -4,8 +4,17 @@
 #'
 #' @param data a data frame ready for graphing
 #' @param formula a formula to set the frame initially
+#' @examples
+#' \dontrun{
+#' gghelper(wage ~ age, data = CPS85)
+#' gghelper( ~ wage, data = CPS85) # for a density plot
+#' gghelper(data = CPS85) # for a map
+#' }
+#'
 #' @export
 gghelper <- function(data = NULL, formula=NULL, ...) {
+  requireNamespace("shiny")
+  requireNamespace("miniUI")
   vars <- head(names(data), 20)
   categorical_vars <- vars[unlist(lapply(data, FUN = function(x){ !inherits(x, "numeric")}))]
   formula_vars <- all.vars(formula)
@@ -288,10 +297,3 @@ scatter_controls <- '<table><tr>
 </table>'
 
 
-#' Take a character string of possibilities and prepend it with NA
-add_NA <- function(levels) {
-  res <- as.list(levels)
-  names(res) <- levels
-
-  c(list(none = ""), res)
-}

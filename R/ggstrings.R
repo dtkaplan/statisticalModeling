@@ -1,5 +1,8 @@
-#' Functions for constructing ggplot command strings
-#'
+# Functions for constructing ggplot command strings
+#
+# Internals: nothing to export here!
+
+
 frame_string <- function(data = NULL, x = NULL, y = NULL) {
   ystring <- ifelse(is.null(y), "", paste0(", y = ", y) )
   res <- sprintf("ggplot(%s, aes(x = %s%s))", data, x, ystring)
@@ -35,6 +38,10 @@ legend_position_string <- function(where) {
   path = list(x = NULL, y=NULL, alpha=NULL, group = NULL, color = NULL, colour=NULL, linetype=NULL, size=NULL),
   boxplot = list(x = NULL, y=NULL, alpha=NULL, group = NULL, fill = NULL,
                  color = NULL, colour=NULL, linetype=NULL, size=NULL),
+  violin = list(x = NULL, y=NULL, alpha=NULL, group = NULL, fill = NULL,
+                color = NULL, colour=NULL, linetype=NULL, size=NULL),
+
+  # single variable plot types
   density = list(x = NULL, alpha = NULL, fill = NULL, color = NULL, colour = NULL, position = NULL),
   freqpoly = list(x = NULL, alpha = NULL, fill = NULL, color = NULL, colour = NULL, position = NULL),
   histogram = list(x = NULL, alpha = NULL, fill = NULL, color = NULL, colour = NULL, position = NULL)
@@ -65,7 +72,7 @@ log_axes_string <- function(which = c("none", "both", "x", "y")) {
     return(paste0(" + ", y))
 }
 
-layer_string <- function(var_names, geom = "point", ...) {
+layer_string <- function(var_names, geom = "point", extras = "", ...) {
   map_list <- list()
   set_list <- list()
   candidates <- list(...)
@@ -105,6 +112,36 @@ layer_string <- function(var_names, geom = "point", ...) {
          ifelse(length(map_list) > 0, map_string, ""),
          ifelse(length(map_list) > 0 & length(set_list) != 0, ", ", ""),
          ifelse (length(set_list) > 0, set_string, ""),
+         ifelse (extras == "", "", paste(",", extras)),
          ")"
   )
 }
+
+
+capture_extras <- function(...) {
+  extras <- list(...)
+  res <- ""
+  values = list()
+  if (length(extras) > 0) {
+
+    for (k in seq_along(extras)) {
+      as_number <- suppressWarnings(as.numeric(extras[[k]]))
+      if (is.na(as_number)) { # val should be quoted
+        values[k] <- paste0("'", extras[[k]], "'")
+      } else {
+        values[k] <- as_number
+      }
+    }
+    res <- paste(paste(names(extras), unlist(values), sep = " = "), collapse = ", ")
+  }
+  res
+}
+
+# Take a character string of possibilities and prepend it with NA
+add_NA <- function(levels) {
+  res <- as.list(levels)
+  names(res) <- levels
+
+  c(list(none = ""), res)
+}
+

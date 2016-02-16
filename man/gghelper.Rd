@@ -4,12 +4,22 @@
 \alias{gghelper}
 \title{Simple graphical user interface helper for ggplot2}
 \usage{
-gghelper(df)
+gghelper(data = NULL, formula = NULL, ...)
 }
 \arguments{
-\item{df}{a data frame ready for graphing}
+\item{data}{a data frame ready for graphing}
+
+\item{formula}{a formula to set the frame initially}
 }
 \description{
 Based on gagdets
+}
+\examples{
+\dontrun{
+gghelper(wage ~ age, data = CPS85)
+gghelper( ~ wage, data = CPS85) # for a density plot
+gghelper(data = CPS85) # for a map
+}
+
 }
 
