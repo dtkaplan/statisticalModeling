@@ -21,9 +21,10 @@
 #'
 #' @examples
 #' data(CPS85, package = "mosaicData")
+#' require(ggplot2)
 #' formula_gg(wage ~ age, data = CPS85)
 #' formula_gg(wage ~ age + color:sex + size:3, data = CPS85) + facet_wrap(~ sector)
-#' formula_gg(wage ~ age, data = CPS85, position = '"jitter"') # note extra ' ' for character strings
+#' formula_gg(wage ~ age, data = CPS85, position = "jitter")
 #' formula_gg( ~ age + color:married + fill:married + alpha:0.5, data = CPS85,
 #'               geom = "histogram", bins = 10)
 #' @param data a data frame
