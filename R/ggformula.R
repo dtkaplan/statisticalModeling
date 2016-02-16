@@ -6,8 +6,9 @@
 #' formula notation to an equivalent ggplot2 command.
 #'
 #' The formula will, generically, look like
-#' y ~ x
-#' You can add in terms to handle other aesthetics
+#' y ~ x for 2-variable graphics, and
+#' ~ x for 1-variable graphics (e.g. density, histogram)
+#' For both 2- and 1-variable graphics, you can add terms to the formula to handle other aesthetics
 #' y ~ x + color:blue + shape:age + alpha:0.5
 #' Names like <blue> that are not variables in the data frame will be
 #' set to the corresponding attribute.
