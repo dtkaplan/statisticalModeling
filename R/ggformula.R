@@ -1,8 +1,11 @@
 #' Formula interface to ggplot2
 #'
-#' Uses a model formula interface to map and set aesthetics in ggplot2
+#' Provides a model formula interface to ggplot2
 #'
-#' @details The formula will, generically, look like
+#' @details Use \code{formula_gg()} to create the plot. \code{formula_to_gg()} translates from
+#' formula notation to an equivalent ggplot2 command.
+#'
+#' The formula will, generically, look like
 #' y ~ x
 #' You can add in terms to handle other aesthetics
 #' y ~ x + color:blue + shape:age + alpha:0.5
@@ -13,58 +16,52 @@
 #'
 #' Some geoms take additional arguments, like \code{bins = } in histograms.  Add those arguments
 #' as you would in the geom.
+#' @return A character string containing the ggplot2 command equivalent of the formula
 #'
 #' @examples
 #' data(CPS85, package = "mosaicData")
-#' gpointg(wage ~ age, data = CPS85)
-#' gpointg(wage ~ age + color:sex + size:3, data = CPS85) + facet_wrap(~ sector)
-#' gpointg(wage ~ age, data = CPS85, position = '"jitter"') # note extra ' ' for character strings
-#'
+#' formula_gg(wage ~ age, data = CPS85)
+#' formula_gg(wage ~ age + color:sex + size:3, data = CPS85) + facet_wrap(~ sector)
+#' formula_gg(wage ~ age, data = CPS85, position = '"jitter"') # note extra ' ' for character strings
+#' formula_gg( ~ age + color:married + fill:married + alpha:0.5, data = CPS85,
+#'               geom = "histogram", bins = 10)
 #' @param data a data frame
 #' @param formula a formula constructed from the variables in the data frame
 #' @param add if TRUE, create just the layer
 #' @param geom the name of the geom, e.g. "point", "line", "path". You don't need to use this.
-#' @rdname gplotg
-#' @export
-glineg <- function(data=parent.env(), formula=NULL, add=FALSE, geom="line", ...){
-  point_plot(data=data, formula=formula, add=add, geom=geom)
-}
-#' @rdname gplotg
-#' @export
-gpathg <- function(data=parent.env(), formula=NULL, add=FALSE, geom="path", ...){
-  point_plot(data=data, formula=formula, add=add, geom=geom, ...)
-}
+#' @param ... additional arguments for the ggplot2 geom, e.g. \code{bins = 10} for histogram
 
-#' @rdname gplotg
+#' @rdname formula_gg
 #' @export
-gpointg <- function(data=parent.env(), formula=NULL, add=FALSE, geom = "point", ...) {
+formula_to_gg <- function(data=NULL, formula=NULL, add=FALSE, geom = NULL, ...) {
   if (is.null(formula)) stop("Must provide a graphing formula, e.g. y ~ x")
+  if (is.null(data)) stop("Must provide a data frame for graphing")
+  data_name <- as.character(substitute(data))
+  extras <- list(...)
 
   # Pull out the frame and aesthetic info from the formula
   # and put it in list form suitable for ggstring functions
   nms <- all.vars(formula, unique = FALSE)
-  mapping_list <- list(data = "data")
-  if (length(formula) == 2) {
-    nms["x"] = nms[1]
-    nms["y"] = NULL
-    nms <- nms[-1]
-  } else {
-    mapping_list["y"] <- nms[1]
-    mapping_list["x"] <- nms[2]
-    nms <- nms[-(1:2)]
-  }
+
+  # generate the frame.
+  # Default geoms are density (1-var) and point (2-vars)
+  for_frame <-
+    if (length(formula) == 2) {
+      if (is.null(geom)) geom <- "density"
+      frame_string(data_name, nms[1])
+    } else {
+      if (is.null(geom)) geom <- "point"
+      frame_string(data_name, nms[1], nms[2])
+    }
 
   extras <- capture_extras(...) # get the extra arguments (if any) to the geom
 
-  # generate a frame (if needed)
-  for_frame <- do.call(frame_string, mapping_list[c("data", "x", "y")])
-
-  mapping_list <- pairs_in_formula(formula)
+  aes_and_set_list <- pairs_in_formula(formula) # get the pairs (e.g. color:red)
 
   for_layer_fun <-
     function(...) layer_string(names(data), geom = geom, extras = extras, ...)
-  for_layer <- do.call(for_layer_fun,
-                       mapping_list)
+  for_layer <- do.call(for_layer_fun, aes_and_set_list)
+
   gg_command_string <-
     if ( ! add) {
       paste(for_frame, for_layer, sep=" +  ")
@@ -72,73 +69,15 @@ gpointg <- function(data=parent.env(), formula=NULL, add=FALSE, geom = "point", 
       for_layer
     }
 
-
-  p <- eval(parse(text = gg_command_string ))
-
-  p
+  gg_command_string
 }
 
-# pull out the pairs from a formula like color::red + alpha:0.5
-# return them as a named list
-pairs_in_formula <- function(formula) {
-  fc <- as.character(formula)
-  parts <- unlist(strsplit(fc, "+", fixed = TRUE))
-  # trim leading blanks
-  parts <- gsub("^\\s+|\\s+$", "", parts)
-  # identify the pairs
-  pairs <- parts[grep(":+", parts)]
-  res <- list()
-  for (pair in pairs) {
-    this_pair <- unlist(strsplit(pair, ":+"))
-    res[this_pair[1] ] <- this_pair[2]
-  }
-  res
-}
-
-#' @rdname gplotg
+#' @rdname formula_gg
+#' @return The ggplot object itself
 #' @export
-gfreqpolyg <- function(data = parent.env(), formula = NULL, add = FALSE, ...) {
-  gdensityg(data=data, formula=formula, add=add, geom="freqpoly", ...)
-}
-#' @rdname gplotg
-#' @examples
-#' ghistogramg( ~ wage + color:sex, data = CPS85, bins = 5, position="dodge")
-#' # also, position = "fill" for conditional probabilities.
-#' @export
-ghistogramg <- function(data = parent.env(), formula = NULL, add = FALSE, ...) {
-  gdensityg(data=data, formula=formula, add=add, geom="histogram", ...)
-}
-#' @rdname gplotg
-#' @export
-gdensityg <- function(data=parent.env(), formula=NULL, add=FALSE, geom = "density", ...) {
-  if (is.null(formula) || length(formula) > 2)
-    stop("Must provide a formula with no left hand side, e.g. ~ x")
-
-  # Pull out the frame and aesthetic info from the formula
-  # and put it in list form suitable for ggstring functions
-  nms <- all.vars(formula, unique = FALSE)
-  mapping_list <- list(data = "data")
-  mapping_list["x"] <- nms[1]
-
-  extras <- capture_extras(...) # get extra arguments to the geom
-  # generate a frame (if needed)
-  for_frame <- do.call(frame_string, mapping_list[c("data", "x")])
-
-  mapping_list <- pairs_in_formula(formula)
-
-  for_layer_fun <-
-    function(...) layer_string(names(data), geom = geom, extras = extras, ...)
-  for_layer <- do.call(for_layer_fun,
-                       mapping_list)
-  gg_command_string <-
-    if ( ! add) {
-      paste(for_frame, for_layer, sep=" +  ")
-    } else {
-      for_layer
-    }
-
-
-  p <- eval(parse(text = gg_command_string ))
+formula_gg <- function(data=NULL, formula=NULL, add=FALSE, geom = NULL, ...) {
+  gg_command_string <- formula_to_gg(data=data, formula=formula, add=add, geom=geom, ...)
+  p <- eval(parse(text = gg_command_string))
 
   p
 }

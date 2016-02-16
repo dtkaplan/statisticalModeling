@@ -10,16 +10,15 @@ gghelper(data = NULL, formula = NULL, ...)
 \item{data}{a data frame ready for graphing}
 
 \item{formula}{a formula to set the frame initially}
+
+\item{...}{specify additional data tables for layers}
 }
 \description{
 Based on gagdets
 }
 \examples{
-\dontrun{
-gghelper(wage ~ age, data = CPS85)
+\dontrun{gghelper(wage ~ age, data = CPS85)
 gghelper( ~ wage, data = CPS85) # for a density plot
-gghelper(data = CPS85) # for a map
-}
-
+gghelper(data = CPS85) # for a map}
 }
 

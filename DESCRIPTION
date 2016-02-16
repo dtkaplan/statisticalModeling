@@ -1,19 +1,17 @@
 Package: gghelper
 Type: Package
-Title: Simple GUIs for ggplot
+Title: Tools for using ggplot in intro stats
 Version: 0.1.0
 Author: Daniel Kaplan
 Maintainer: Daniel Kaplan <kaplan@macalester.edu>
-Description: A shiny gadget helper for ggplot2
+Description: ToolsA shiny gadget helper for ggplot2.
 License: MIT + file LICENSE
 LazyData: TRUE
-Depends:
+Imports:
     shiny,
     miniUI,
-    ggplot2
-Imports:
-    ggmap
-Extends:
-    ggplot2
+    ggplot2,
+    ggmap,
+    lazyeval
 RoxygenNote: 5.0.1
 Suggests: testthat, mosaicData

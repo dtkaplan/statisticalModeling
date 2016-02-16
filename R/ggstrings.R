@@ -108,13 +108,15 @@ layer_string <- function(var_names, geom = "point", extras = "", ...) {
                         paste( collapse = ", ",
                                paste(names(map_list), map_list, sep = " = ")
                         ), ")")
-  paste0("geom_", geom, "(",
+  res <- paste0("geom_", geom, "(",
          ifelse(length(map_list) > 0, map_string, ""),
          ifelse(length(map_list) > 0 & length(set_list) != 0, ", ", ""),
          ifelse (length(set_list) > 0, set_string, ""),
          ifelse (extras == "", "", paste(",", extras)),
          ")"
   )
+
+  res
 }
 
 
@@ -143,5 +145,22 @@ add_NA <- function(levels) {
   names(res) <- levels
 
   c(list(none = ""), res)
+}
+
+# pull out the pairs from a formula like color::red + alpha:0.5
+# return them as a named list
+pairs_in_formula <- function(formula) {
+  fc <- as.character(formula)
+  parts <- unlist(strsplit(fc, "+", fixed = TRUE))
+  # trim leading blanks
+  parts <- gsub("^\\s+|\\s+$", "", parts)
+  # identify the pairs
+  pairs <- parts[grep(":+", parts)]
+  res <- list()
+  for (pair in pairs) {
+    this_pair <- unlist(strsplit(pair, ":+"))
+    res[this_pair[1] ] <- this_pair[2]
+  }
+  res
 }
 

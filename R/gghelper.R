@@ -4,12 +4,15 @@
 #'
 #' @param data a data frame ready for graphing
 #' @param formula a formula to set the frame initially
+#' @param ... specify additional data tables for layers
 #' @examples
-#' \dontrun{
-#' gghelper(wage ~ age, data = CPS85)
+#' \dontrun{gghelper(wage ~ age, data = CPS85)
 #' gghelper( ~ wage, data = CPS85) # for a density plot
-#' gghelper(data = CPS85) # for a map
-#' }
+#' gghelper(data = CPS85) # for a map}
+#' @import shiny
+#' @import miniUI
+#' @import ggmap
+#' @import ggplot2
 #'
 #' @export
 gghelper <- function(data = NULL, formula=NULL, ...) {
