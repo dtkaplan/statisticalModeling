@@ -31,14 +31,21 @@
 #' @param formula a formula constructed from the variables in the data frame
 #' @param add if TRUE, create just the layer
 #' @param geom the name of the geom, e.g. "point", "line", "path". You don't need to use this.
+#' @param .use_name For internal use: holds the name of the data table input
 #' @param ... additional arguments for the ggplot2 geom, e.g. \code{bins = 10} for histogram
 
 #' @rdname formula_gg
 #' @export
-formula_to_gg <- function(data=NULL, formula=NULL, add=FALSE, geom = NULL, ...) {
+formula_to_gg <- function(data=NULL, formula=NULL, add=FALSE,
+                          geom = NULL, .use_name = NULL, ...) {
   if (is.null(formula)) stop("Must provide a graphing formula, e.g. y ~ x")
   if (is.null(data)) stop("Must provide a data frame for graphing")
-  data_name <- as.character(substitute(data))
+  data_name <-
+    if (is.null(.use_name)) {
+      as.character(substitute(data))
+    } else {
+      .use_name
+    }
   extras <- list(...)
 
   # Pull out the frame and aesthetic info from the formula

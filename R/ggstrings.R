@@ -44,7 +44,8 @@ legend_position_string <- function(where) {
   # single variable plot types
   density = list(x = NULL, alpha = NULL, fill = NULL, color = NULL, colour = NULL, position = NULL),
   freqpoly = list(x = NULL, alpha = NULL, fill = NULL, color = NULL, colour = NULL, position = NULL),
-  histogram = list(x = NULL, alpha = NULL, fill = NULL, color = NULL, colour = NULL, position = NULL)
+  histogram = list(x = NULL, alpha = NULL, fill = NULL, color = NULL, colour = NULL, position = NULL),
+  bar = list(x = NULL, y = NULL, alpha = NULL, fill = NULL, color = NULL, colour = NULL, position = NULL)
 
 )
 
@@ -163,4 +164,5 @@ pairs_in_formula <- function(formula) {
   }
   res
 }
+
 

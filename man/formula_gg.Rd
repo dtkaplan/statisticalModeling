@@ -6,7 +6,7 @@
 \title{Formula interface to ggplot2}
 \usage{
 formula_to_gg(data = NULL, formula = NULL, add = FALSE, geom = NULL,
-  ...)
+  .use_name = NULL, ...)
 
 formula_gg(data = NULL, formula = NULL, add = FALSE, geom = NULL, ...)
 }
@@ -18,6 +18,8 @@ formula_gg(data = NULL, formula = NULL, add = FALSE, geom = NULL, ...)
 \item{add}{if TRUE, create just the layer}
 
 \item{geom}{the name of the geom, e.g. "point", "line", "path". You don't need to use this.}
+
+\item{.use_name}{For internal use: holds the name of the data table input}
 
 \item{...}{additional arguments for the ggplot2 geom, e.g. \code{bins = 10} for histogram}
 }
