@@ -13,7 +13,7 @@ In the formula interface, the function name specifies the `geom_` and a formula 
 ```r
 data(KidsFeet, package = "mosaicData")
 library(gghelper)
-point_plot(width ~ length + color:sex, data = KidsFeet)
+fpoint(width ~ length + color:sex, data = KidsFeet)
 ```
 Note that the `x` and `y` aesthetics are derived from the formula in the usual way.  Other aesthetics are set by `property:value` pairs.  The value
 may be either a variable from the data table, or a constant, e.g. color:blue.

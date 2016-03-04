@@ -42,15 +42,37 @@ gghelper <- function(data = NULL, formula=NULL, ...) {
   }
 
   ui <- miniPage(
+    tags$style(type='text/css',
+               ".select-input {padding-right: 0px; padding-left: 0px; padding-top: 0px; font-size: 10px; line-height: 10px;} .selectize-dropdown { font-size: 9px; line-height: 9px; }"),
+
     gadgetTitleBar("ggplot helper"),
     miniTabstripPanel(
-      tabPanel("Frame", icon = icon("area-chart"),
-              fillRow(flex = c(1,2),
-                fillCol(wellPanel(HTML(frame_controls))),
-                plotOutput("ggframe", height="90%", width="90%")
-              )
+      tabPanel("Frame", icon = icon("square-o"), # "object-group"
+               fillRow(flex = c(1,2),
+                       fillCol(
+                         fillRow(
+                           div(style="display:inline-block",
+                               tags$small(
+                                 selectInput(inputId="xframe", label="x-axis", choices = ".", selectize = TRUE, width = "100px"))),
+                           div(style="display:inline-block",
+                               tags$small(selectInput(inputId="yframe", label="y-axis", choices = ".", selectize = TRUE, width = "100px")))
+                         ),
+                         div(style="display:inline-block",
+                             tags$small(selectInput(inputId="facet", label="facet by", choices = ".", selectize = TRUE, width = "100px"))),
+                         div(style="display:inline-block",
+                             tags$small(selectInput(inputId="logaxes", label="log axes", choices = ".", selectize = TRUE, width = "100px"))),
+                         div(style="display:inline-block",
+                             tags$small(selectInput(inputId="color", label="color", choices = ".", selectize = TRUE, width = "100px"))),tags$hr(),
+                         div(style="display:inline-block",
+                             tags$small(selectInput(inputId="legend", label="legend position", choices = ".", selectize = TRUE, width = "100px")))
+                         # wellPanel(
+                         #   HTML(frame_controls)
+                         # )
+                       ),
+                       plotOutput("ggframe", height="90%", width="90%")
+               )
       ),
-      tabPanel("Scatter", icon = icon("sliders"),
+      tabPanel("Scatter", icon = icon("line-chart"),
                fillRow(flex = c(1,2),
                        fillCol(checkboxInput("scatter_go",
                                              "Activate scatter layer",
@@ -59,7 +81,7 @@ gghelper <- function(data = NULL, formula=NULL, ...) {
                        plotOutput("ggscatter", height="90%", width="90%")
                )
       ),
-      tabPanel("Density", icon = icon("sliders"),
+      tabPanel("Density", icon = icon("bar-chart"),
                fillRow(flex = c(1,2),
                        fillCol(checkboxInput("density_go",
                                              "Activate density layer",
@@ -78,7 +100,7 @@ gghelper <- function(data = NULL, formula=NULL, ...) {
                        plotOutput("ggdensity", height="90%", width="90%")
                )
       ),
-      tabPanel("Map", icon = icon("sliders"),
+      tabPanel("Map", icon = icon("map-o"),
                fillRow(flex = c(1,2),
                        fillCol(checkboxInput("map_go",
                                              "Activate map layer",

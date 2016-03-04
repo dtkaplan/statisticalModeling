@@ -60,7 +60,7 @@ formula_to_gg <- function(data=NULL, formula=NULL, add=FALSE,
       frame_string(data_name, nms[1])
     } else {
       if (is.null(geom)) geom <- "point"
-      frame_string(data_name, nms[1], nms[2])
+      frame_string(data_name, nms[2], nms[1])
     }
 
   extras <- capture_extras(...) # get the extra arguments (if any) to the geom

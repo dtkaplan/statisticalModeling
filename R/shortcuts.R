@@ -45,5 +45,3 @@ fboxplot <- .ffactory(type = "boxplot")
 #' @export
 fhistogram <- .ffactory(type = "histogram")
 
-
-
