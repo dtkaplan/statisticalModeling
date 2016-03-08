@@ -37,7 +37,7 @@
 #' @rdname formula_gg
 #' @export
 formula_to_gg <- function(data=NULL, formula=NULL, add=FALSE,
-                          geom = NULL, .use_name = NULL, ...) {
+                          geom = NULL, .use_name = NULL, details = NULL, ...) {
   if (is.null(formula)) stop("Must provide a graphing formula, e.g. y ~ x")
   if (is.null(data)) stop("Must provide a data frame for graphing")
   data_name <-
@@ -67,8 +67,14 @@ formula_to_gg <- function(data=NULL, formula=NULL, add=FALSE,
 
   aes_and_set_list <- pairs_in_formula(formula) # get the pairs (e.g. color:red)
 
-  for_layer_fun <-
-    function(...) layer_string(names(data), geom = geom, extras = extras, ...)
+  for_layer_fun <- if (add){
+    function(...) layer_string(names(data), geom = geom, extras = extras,
+                               details = details,
+                               data_name = data_name, formula=formula, ...)
+  } else {
+    function(...) layer_string(names(data), geom = geom, extras = extras,
+                               details = details, ...)
+  }
   for_layer <- do.call(for_layer_fun, aes_and_set_list)
 
   gg_command_string <-

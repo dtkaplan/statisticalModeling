@@ -15,9 +15,15 @@ density_string <- function(data_name = NULL, var_names, type, xframe, position, 
   paste(one, two, sep = "+")
 }
 
-map_string <- function(location, zoom, source, type) {
-  sprintf( "ggmap::ggmap(ggmap::get_map(location = '%s', zoom = %d, source = '%s', maptype = '%s', crop=FALSE))",
-           location, zoom, source, type)
+map_string <- function(map_name, location, zoom, source, type, extent = "normal", ...) {
+  map_source <- if (length(map_name) == 0) {
+    sprintf( "ggmap::get_map(location = '%s', zoom = %d, source = '%s', maptype = '%s', crop=FALSE)",
+             location, zoom, source, type)
+  } else {
+    map_name
+  }
+
+  sprintf("ggmap::ggmap(%s, extent = '%s')", map_source, extent)
 }
 
 # variable for facetting as a character string
@@ -73,9 +79,19 @@ log_axes_string <- function(which = c("none", "both", "x", "y")) {
     return(paste0(" + ", y))
 }
 
-layer_string <- function(var_names, geom = "point", extras = "", ...) {
-  map_list <- list()
+layer_string <- function(var_names, geom = "point", extras = "", details = NULL,
+                         data_name = NULL, formula = NULL, ...) {
+  map_list <- map_list <- list()
+  if ( ! is.null(formula)) {
+    nms <- all.vars(formula)
+    map_list$x = nms[2]
+    map_list$y = nms[1]
+  }
+
   set_list <- list()
+  if ( ! is.null(data_name)) {
+    set_list$data = data_name
+  }
   candidates <- list(...)
   aes <- .aesthetics.[[geom]]
   aes_names <- names(aes)
@@ -103,6 +119,7 @@ layer_string <- function(var_names, geom = "point", extras = "", ...) {
       }
     }
   }
+  set_list <- c(set_list, details)
   set_string <- paste(collapse = ", ",
                       paste(names(set_list), set_list, sep = " = "))
   map_string <- paste0("aes(",

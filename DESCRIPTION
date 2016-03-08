@@ -1,10 +1,10 @@
-Package: gghelper
+Package: fchart
 Type: Package
-Title: Tools for using ggplot in intro stats
-Version: 0.1.0
+Title: Interface for using ggplot with a formula interface
+Version: 0.1.1
 Author: Daniel Kaplan
 Maintainer: Daniel Kaplan <kaplan@macalester.edu>
-Description: ToolsA shiny gadget helper for ggplot2.
+Description: Functions providing a formula-based interface to ggplot.
 License: MIT + file LICENSE
 LazyData: TRUE
 Imports:
