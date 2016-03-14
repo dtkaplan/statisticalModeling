@@ -6,7 +6,7 @@
 \title{Formula interface to ggplot2}
 \usage{
 formula_to_gg(data = NULL, formula = NULL, add = FALSE, geom = NULL,
-  .use_name = NULL, ...)
+  .use_name = NULL, details = NULL, ...)
 
 formula_gg(data = NULL, formula = NULL, add = FALSE, geom = NULL, ...)
 }

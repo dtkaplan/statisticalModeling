@@ -6,7 +6,7 @@
 #' @param data data to use in drawing glyphs on the map
 #' @param formula a formula specifying which variables from data are to be latitude ~ longitude
 #' @param map one way to specify a map
-#' @param extent the way to handle the frame when overplotting glyphs on the map. See \code{ggmap()`}
+#' @param extent the way to handle the frame when overplotting glyphs on the map. See \code{ggmap()}
 #' @param location another way to specify a map: name of a country, city, etc.
 #' @param zoom if using \code{location}, then set the scale of the map.
 #' 3 = continent, 18 = city block. Each additional step zooms in by a factor of 2 in linear dim.
@@ -15,8 +15,8 @@
 #' @param type if using \code{location}, the style of the map tiles
 #' @param ... additional arguments to be passed to the layer overlaying the map
 #'
-#' @details The styles are, for google, \code("roadmap", "terrain", "hybrid", "satellite"),
-#' for stamen, \code("terrain", "toner", "watercolor")
+#' @details The styles are, for google, \code{"roadmap", "terrain", "hybrid", "satellite"},
+#' for stamen, \code{"terrain", "toner", "watercolor"}.
 #'
 #' @examples
 #' \dontrun{
