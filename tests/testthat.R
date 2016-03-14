@@ -1,4 +1,4 @@
 library(testthat)
-library(gghelper)
+library(fchart)
 
-test_check("gghelper")
+test_check("fchart")
