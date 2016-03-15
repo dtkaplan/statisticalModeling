@@ -12,6 +12,11 @@ Imports:
     miniUI,
     ggplot2,
     ggmap,
-    lazyeval
+    lazyeval,
+    rpart,
+    mosaic
 RoxygenNote: 5.0.1
-Suggests: testthat, mosaicData
+Suggests:
+    testthat,
+    mosaicData,
+    mosaicMapShapes

@@ -7,6 +7,14 @@
 fmodel(model = NULL, formula = NULL, data = NULL, nlevels = 3, ...)
 }
 \arguments{
+\item{model}{the model to display graphically}
+
+\item{formula}{setting the y ~ x + color variables}
+
+\item{data}{optional data set from which to extract levels for explanatory variables}
+
+\item{nlevels}{how many levels to display for those variables shown at discrete levels}
+
 \item{...}{arguments to predict()}
 }
 \description{

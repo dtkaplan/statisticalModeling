@@ -34,6 +34,12 @@ fborders(data = NULL, formula = NULL, map = "USA_state_20m",
 \item{type}{if using \code{location}, the style of the map tiles}
 
 \item{...}{additional arguments to be passed to the layer overlaying the map}
+
+\item{color}{color for the border}
+
+\item{size}{width of border}
+
+\item{add}{produce as a layer to another plot}
 }
 \description{
 These functions provide a formula interface to map drawing.  They
@@ -45,7 +51,8 @@ for stamen, \code{"terrain", "toner", "watercolor"}.
 }
 \examples{
 \dontrun{
-world <- ggmap::get_map(location = 'World', zoom = 3, source = 'google', maptype = 'roadmap', crop=FALSE)
+world <- ggmap::get_map(location = 'World', zoom = 3,
+                        source = 'google', maptype = 'roadmap', crop=FALSE)
 data(CountryCentroids, package = "DataComputing")
 fmap(CountryCentroids, lat ~ long, map = world)
 fborders()

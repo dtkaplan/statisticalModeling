@@ -21,6 +21,9 @@ formula_gg(data = NULL, formula = NULL, add = FALSE, geom = NULL, ...)
 
 \item{.use_name}{For internal use: holds the name of the data table input}
 
+\item{details}{for situations such as fcount() and fbar() that use the same geom
+but with different values for arguments (e.g. stat = "identity" or "count")}
+
 \item{...}{additional arguments for the ggplot2 geom, e.g. \code{bins = 10} for histogram}
 }
 \value{

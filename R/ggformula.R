@@ -32,7 +32,10 @@
 #' @param add if TRUE, create just the layer
 #' @param geom the name of the geom, e.g. "point", "line", "path". You don't need to use this.
 #' @param .use_name For internal use: holds the name of the data table input
+#' @param details for situations such as fcount() and fbar() that use the same geom
+#' but with different values for arguments (e.g. stat = "identity" or "count")
 #' @param ... additional arguments for the ggplot2 geom, e.g. \code{bins = 10} for histogram
+
 
 #' @rdname formula_gg
 #' @export

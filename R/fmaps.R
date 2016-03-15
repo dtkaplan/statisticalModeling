@@ -20,7 +20,8 @@
 #'
 #' @examples
 #' \dontrun{
-#' world <- ggmap::get_map(location = 'World', zoom = 3, source = 'google', maptype = 'roadmap', crop=FALSE)
+#' world <- ggmap::get_map(location = 'World', zoom = 3,
+#'                         source = 'google', maptype = 'roadmap', crop=FALSE)
 #' data(CountryCentroids, package = "DataComputing")
 #' fmap(CountryCentroids, lat ~ long, map = world)
 #' fborders()
@@ -53,11 +54,14 @@ fmap <- function(data = NULL, formula = NULL, map = NULL, extent = c("panel", "d
   eval(parse(text = full_command))
 }
 #' @rdname fmaps
+#' @param color color for the border
+#' @param size width of border
+#' @param add produce as a layer to another plot
 #' @export
 fborders <- function(data=NULL, formula=NULL, map = "USA_state_20m",
                      color = "grey", size = 1,
                      verbose = TRUE, add = FALSE, ...) {
-  if ( ! require(mosaicMapShapes)) stop("missing mosaicMapShapes package.")
+  if ( ! requireNamespace("mosaicMapShapes")) stop("missing mosaicMapShapes package.")
 
   command_str <- if (add) {
     sprintf("geom_path(data = %s_shapes, aes(x = long, y = lat, group = group), color = '%s', size = %g)", map, color, size)

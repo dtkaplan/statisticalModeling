@@ -1,5 +1,9 @@
 #' Plot out model values
 #'
+#' @param model the model to display graphically
+#' @param formula setting the y ~ x + color variables
+#' @param data optional data set from which to extract levels for explanatory variables
+#' @param nlevels how many levels to display for those variables shown at discrete levels
 #' @param ... arguments to predict()
 #' @export
 fmodel <- function(model=NULL, formula = NULL, data = NULL, nlevels = 3, ...) {
@@ -36,7 +40,7 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL, nlevels = 3, ...) {
 
   # TO DO
   # 1. change "model_vals" to the actual name of the reponse variable
-  # 2. for quantitative response, use geom_line() instead of geom_path()
+  # 2. provide methods for several types of variables.  for quantitative response, use geom_line() instead of geom_path()
   # 3. check for probability vector in response from gwm and create separate facets based on that
 
 
@@ -91,9 +95,18 @@ data_from_model.rpart <- function(object, ...) {
   stop("Can't extract data from models of class rpart.")
 }
 
+#' Compute sensible values from a data set for use as a baseline
+#'
+#'
 #' @param data a data frame
-#' @param n number of values for specified variables: a list
-#' @param at optional values at which to set values
+#' @param n number of values for specified variables: could be a single number or
+#' a list assigning a number of levels for individual variables
+#' @param at optional values at which to set values: a list whose names are the
+#' variables whose values are to be set.
+#'
+#' @details Variables not listed in \code{at} will be assigned levels using these principles:
+#' Categorical variables: the most populated levels.
+#' Quantitative variables: central quantiles, e.g. median for n=1, 0.33 and 0.67 for n=2, and so on.
 
 #' @export
 reference_values <- function(data, n = 1, at = list()) {
@@ -163,25 +176,31 @@ convert_to_discrete <- function(data) {
   data
 }
 
-#' Calculate effect sizes
+#' Calculate effect sizes in a model
 #'
 #' Like a derivative or finite-difference
 
+#' @param model the model from which the effect size is to be calculated
+#' @param formula a formula whose right-hand side is the variable with respect
+#' to which the effect size is to be calculated.
 #' @param at center values for evaluating the model
 #' @param step list of numbers for numerical finite-difference, or comparison groups for
 #' @param raw for 2nd-order effects, show the sets of first-order effects
 #' @param ... additional arguments for \code{predict()}
 #' categorical variables.
 #'
+#' @details If two different variables are listed in \code{formula}, the second-order (interaction) effect size
+#' will be calculated.  To Do? Allow 2nd deriv w.r.t a single variable? Get multiple effect sizes all at once.
+#'
 
 #' @export
-D.lm <- function(model, formula, at = NULL, step = NULL, raw = FALSE, ... ) {
+effect_size <- function(model, formula, at = NULL, step = NULL, raw = FALSE, ... ) {
   # grab the explanatory variable to use for the difference
   change_vars <- all.vars(mosaic::rhs(formula))
 
-  data <- fchart:::data_from_model.lm(model)
-  response <- fchart:::response_var.lm(model)
-  explan_vars <- fchart:::explanatory_vars.lm(model)
+  data <- data_from_model.lm(model)
+  response <- response_var.lm(model)
+  explan_vars <- explanatory_vars.lm(model)
 
   centers <- as.list(rep(NA, length(explan_vars)))
   names(centers) <- explan_vars
