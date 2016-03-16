@@ -19,6 +19,7 @@
 #' }
 #' @export
 fmodel <- function(model=NULL, formula = NULL, data = NULL, nlevels = 3, at = list(), prob_of = NULL, ...) {
+  extras <- list(...)
   if (is.null(model)) {
     stop("Must provide a model for graphing.")
   } else if (inherits(model, c("rpart", "glm", "lm", "groupwiseModel"))) {
@@ -55,7 +56,12 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL, nlevels = 3, at = li
   how_many <- as.list(c(Inf, rep(nlevels, length(explan_vars) - 1)))
   names(how_many) <- explan_vars
   eval_levels <- reference_values(data, n = how_many, at = at )
-  model_vals <- predict(model, newdata = eval_levels, level = prob_of, ...)
+
+  # set up so that glms are plotted, by default, as the response rather than the link
+  if (inherits(model, "glm") && ( ! "type" %in% names(extras))) {
+    extras$type = "response"
+  }
+  model_vals <- do.call(predict,c(list(model, newdata = eval_levels, level = prob_of), extras))
   if (inherits(model, "rpart")) {
     # handle the matrix values from predict.rpart()
     keepers <- colnames(model_vals) == prob_of

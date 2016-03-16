@@ -24,6 +24,7 @@
 
 #' @export
 effect_size <- function(model, formula, at = NULL, step = NULL, raw = FALSE, ... ) {
+  extras <- list(...)
   # grab the explanatory variable to use for the difference
   change_vars <- all.vars(mosaic::rhs(formula))
 
@@ -74,7 +75,12 @@ effect_size <- function(model, formula, at = NULL, step = NULL, raw = FALSE, ...
 
   input_data <- reference_values(data, at = centers)
 
-  mod_vals <- predict(model, newdata = input_data)
+  # set up so that glms are plotted, by default, as the response rather than the link
+  if (inherits(model, "glm") && (! "type" %in% names(extras))) {
+    extras$type = "response"
+  }
+
+  mod_vals <- do.call(predict, c(list(model, newdata = input_data), extras))
   input_data[[response]] <- mod_vals
   # Set the response variable
   # PROCESS
