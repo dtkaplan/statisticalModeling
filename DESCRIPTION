@@ -1,7 +1,7 @@
-Package: fchart
+Package: statisticalModeling
 Type: Package
-Title: Interface for using ggplot with a formula interface
-Version: 0.1.1
+Title: functions for working with models and data
+Version: 0.1.2
 Author: Daniel Kaplan
 Maintainer: Daniel Kaplan <kaplan@macalester.edu>
 Description: Functions providing a formula-based interface to ggplot.

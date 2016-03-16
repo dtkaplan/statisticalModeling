@@ -1,4 +1,4 @@
 library(testthat)
-library(fchart)
+library(statisticalModeling)
 
-test_check("fchart")
+test_check("statisticalModeling")

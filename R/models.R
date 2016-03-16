@@ -39,7 +39,7 @@ data_from_model.lm <- function(object, ...) {
 }
 #' @export
 data_from_model.rpart <- function(object, ...) {
-  stop("Can't extract data from models of class rpart.")
+  stop("Can't extract data from models of class rpart. Provide the data in another way, e.g. via the argument data =")
 }
 
 #' Compute sensible values from a data set for use as a baseline

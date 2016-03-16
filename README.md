@@ -1,9 +1,13 @@
-# Functions for starting out with ggplot2
+# Functions for teaching statistical modeling
 
-There are two kinds of helpers:
+This package contains model evaluation and graphing utilities for teaching statistical modeling. It's written to gather in one place the functions used in the DataCamp statistical modeling course and for a possible third edition of *Statistical Modeling: a Fresh Approach*.
 
-1. A formula-based interface to ggplot2
-2. A shiny/gadget interface
+1. `effect_size(mod)` for calculating the effect size of an explanatory on a response
+2. `fmodel(mod)` for making a nice but easy graph of model output vs inputs.
+3. A formula interface to `ggplot2` graphics (which I intend to expand to other graphic systems, particularly interactive graphics)
+4. A shiny/gadget interface for `ggplot2`. But perhas the formulas make this unnecessarily
+
+
 
 ## The formula-based interface
 

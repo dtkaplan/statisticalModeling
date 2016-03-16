@@ -14,7 +14,7 @@ test_that("glm effect sizes are on response (by default)", {
   one <- predict(mod1, newdata = data.frame(sector = "prof", sex = "M", educ = 15), type = "response")
   two <- predict(mod1, newdata = data.frame(sector = "prof", sex = "F", educ = 15), type = "response")
   three <- effect_size(mod1, ~ sex, at = list(sector = "prof", educ = 15, sex = "F"))
-  expect_equal(as.numeric(three), as.numeric(one - two), tolerance = 0.00001)
+  expect_equal(as.numeric(three), as.numeric(one - two))
 })
 
 test_that("effect sizes are properly named", {
