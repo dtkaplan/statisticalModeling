@@ -18,15 +18,19 @@
 #' fmodel(mod3, type = "response")
 #' }
 #' @export
-fmodel <- function(model=NULL, formula = NULL, data = NULL, nlevels = 3, at = list(), prob_of = NULL, ...) {
+fmodel <- function(model=NULL, formula = NULL, data = NULL, 
+                   nlevels = 3, at = list(), prob_of = NULL, ...) {
   extras <- list(...)
   if (is.null(model)) {
     stop("Must provide a model for graphing.")
-  } else if (inherits(model, c("rpart", "glm", "lm", "groupwiseModel"))) {
+  } else if (inherits(model, 
+                      c("rpart", "glm", "lm", "groupwiseModel",
+                        "randomForest", "gbm"))) {
     # nothing to do
   } else {
     stop("Model of type", class(model)[1], "not set up for fmodel().")
   }
+  if( inherits(model, "gbm")) stop("gbm models still not working.")
 
   # try to figure out what are the possible levels of variables
   if (is.null(data)) data <- data_from_model(model)
@@ -63,7 +67,9 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL, nlevels = 3, at = li
   if (inherits(model, "glm") && ( ! "type" %in% names(extras))) {
     extras$type = "response"
   }
-  model_vals <- do.call(predict,c(list(model, newdata = eval_levels, level = prob_of), extras))
+  model_vals <- 
+    do.call(predict,c(list(model, newdata = eval_levels, level = prob_of), 
+                      extras))
   if (inherits(model, "rpart") && is.data.frame(model_vals)) {
     # handle the matrix values from predict.rpart()
     keepers <- colnames(model_vals) == prob_of
@@ -100,9 +106,10 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL, nlevels = 3, at = li
 
 
   if (length(explan_vars) == 3)
-    P <- P + facet_wrap(explan_vars[3])
+    P <- P + facet_wrap(explan_vars[3], labeller = label_both)
   if (length(explan_vars) == 4)
-    P <- P + facet_grid(paste(explan_vars[3], "~", explan_vars[4]))
+    P <- P + facet_grid(paste(explan_vars[3], "~", explan_vars[4]), 
+                        labeller = label_both)
 
   P # return the plot
 }

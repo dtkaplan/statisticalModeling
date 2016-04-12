@@ -17,7 +17,9 @@ explanatory_vars <- function(object, ...) {
 explanatory_vars.lm <-
   explanatory_vars.groupwiseModel <-
   explanatory_vars.rpart <-
+  explanatory_vars.randomForest <-
   explanatory_vars.glm <- function(object, ...) all.vars(object$terms[[3]])
+explanatory_vars.gbm <- function(object, ...) all.vars(object$Terms[[3]])
 #' @rdname extract_from_model
 #' @export
 response_var <- function(object, ...) {
@@ -27,7 +29,9 @@ response_var <- function(object, ...) {
 response_var.lm <-
   response_var.groupwiseModel <-
   response_var.rpart <-
+  response_var.randomForest <-
   response_var.glm <- function(object, ...) { deparse(object$terms[[2]])}
+response_var.gbm <- function(object, ...) { deparse(object$Terms[[2]]) }
 #' @export
 data_from_model.groupwiseModel <-
   data_from_model.glm <- function(object, ...){
@@ -38,7 +42,9 @@ data_from_model.lm <- function(object, ...) {
   object$model
 }
 #' @export
-data_from_model.rpart <- function(object, ...) {
+data_from_model.randomForest <- 
+  data_from_model.gbm <-
+  data_from_model.rpart <- function(object, ...) {
   stop("Can't extract data from models of class rpart. Provide the data in another way, e.g. via the argument data =")
 }
 
