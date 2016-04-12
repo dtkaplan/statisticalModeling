@@ -27,7 +27,7 @@ response_var <- function(object, ...) {
 response_var.lm <-
   response_var.groupwiseModel <-
   response_var.rpart <-
-  response_var.glm <- function(object, ...) { all.vars(object$terms[[2]])}
+  response_var.glm <- function(object, ...) { deparse(object$terms[[2]])}
 #' @export
 data_from_model.groupwiseModel <-
   data_from_model.glm <- function(object, ...){

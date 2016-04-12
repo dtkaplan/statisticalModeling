@@ -32,7 +32,9 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL, nlevels = 3, at = li
   if (is.null(data)) data <- data_from_model(model)
   response_var <- response_var(model)
   # is the response categorical?  If so, plot the probability of the given level
-  response_values <- data[[response_var]]
+  response_values <- 
+    if (response_var %in% names(data)) {data[[response_var]]}
+    else {eval(parse(text = response_var), envir = data)}
   if (! is.numeric(response_values)) {
     # It's categorical
     if (is.null(prob_of)) prob_of <- names(sort(table(response_values), decreasing = TRUE))[1]
@@ -62,7 +64,7 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL, nlevels = 3, at = li
     extras$type = "response"
   }
   model_vals <- do.call(predict,c(list(model, newdata = eval_levels, level = prob_of), extras))
-  if (inherits(model, "rpart")) {
+  if (inherits(model, "rpart") && is.data.frame(model_vals)) {
     # handle the matrix values from predict.rpart()
     keepers <- colnames(model_vals) == prob_of
     model_vals <- model_vals[,keepers] # just the first class
@@ -71,12 +73,14 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL, nlevels = 3, at = li
   # convert any quantiles for numerical levels to discrete
   first_var_quantitative <- is.numeric(eval_levels[[explan_vars[1]]])
   eval_levels <- convert_to_discrete(eval_levels)
-  eval_levels[[response_var]] <- model_vals
+  eval_levels$response <- model_vals
 
   # figure out the components of the plot
 
-  P <- ggplot(data = eval_levels,
-              aes_string(x = explan_vars[1], y = response_var), group = NA)
+  P <- 
+    ggplot(data = eval_levels,
+           aes_string(x = explan_vars[1], y = "response"), group = NA) + 
+    ylab(response_var)
 
   if (length(explan_vars) == 1) {
     if (first_var_quantitative) {

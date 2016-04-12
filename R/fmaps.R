@@ -1,7 +1,8 @@
-#' Utilities for drawing maps
+#' Drawing a data map underlayed by a map type
 #'
-#' These functions provide a formula interface to map drawing.  They
-#' should be used instead of a frame, although you can add other layers on top of them.
+#' This function creates a ggplot2 frame. 
+#' You can add other layers on top of them but you cannot add this frame to an existing one. (Nor should you need to.)
+#' 
 #'
 #' @param data data to use in drawing glyphs on the map
 #' @param formula a formula specifying which variables from data are to be latitude ~ longitude
@@ -24,11 +25,10 @@
 #'                         source = 'google', maptype = 'roadmap', crop=FALSE)
 #' data(CountryCentroids, package = "DataComputing")
 #' fmap(CountryCentroids, lat ~ long, map = world)
-#' fborders()
 #' }
 
 
-#' @rdname fmaps
+#' @rdname fmap
 #' @export
 fmap <- function(data = NULL, formula = NULL, map = NULL, extent = c("panel", "device", "normal"),
                  location = "Saint Paul, MN", zoom = 10, verbose = TRUE,
