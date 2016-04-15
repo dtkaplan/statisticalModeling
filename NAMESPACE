@@ -2,9 +2,10 @@
 
 S3method(data_from_model,groupwiseModel)
 S3method(data_from_model,lm)
-S3method(data_from_model,rpart)
+S3method(data_from_model,randomForest)
 S3method(explanatory_vars,lm)
 S3method(response_var,lm)
+export(collinearity)
 export(data_from_model)
 export(effect_size)
 export(explanatory_vars)
