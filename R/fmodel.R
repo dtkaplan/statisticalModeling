@@ -61,7 +61,7 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL,
   # then nlevels for the remaining ones.
   how_many <- as.list(c(Inf, rep(nlevels, length(explan_vars) - 1)))
   names(how_many) <- explan_vars
-  eval_levels <- reference_values(data, n = how_many, at = at )
+  eval_levels <- reference_values(data[explan_vars], n = how_many, at = at )
 
   # set up so that glms are plotted, by default, as the response rather than the link
   if (inherits(model, "glm") && ( ! "type" %in% names(extras))) {

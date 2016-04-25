@@ -45,6 +45,11 @@ data_from_model.lm <- function(object, ...) {
 data_from_model.randomForest <- 
   data_from_model.gbm <-
   data_from_model.rpart <- function(object, ...) {
+    dots <- list(...)
+    if ("data" %in% names(dots))
+      return(dots$data)
+#    if the object has a data attribute added by train, use that
+    
   stop("Can't extract data from models of class rpart. Provide the data in another way, e.g. via the argument data =")
 }
 
@@ -79,15 +84,18 @@ reference_values <- function(data, n = 1, at = list()) {
       if (n == Inf) {
         if (is.numeric(values)) {
           if (length(unique(values)) < 100) unique(values)
-          else seq(min(values), max(values), length = 100)
+          else seq(min(values, na.rm = TRUE), 
+                   max(values, na.rm = TRUE), length = 100)
         } else {
           as.character(unique(values))
         }
       } else {
         if (is.numeric(values)) {
           conversion <- "as.discrete"
-          quant_levels <- seq(0,1, length = n + 2)[c(-1, -(n + 2))]
-          quantile(values, quant_levels)
+          most <- quantile(values, c(0.3, 0.7), na.rm = TRUE)
+          foo <- pretty(most, n = pmax(1, n - 2))
+          #quant_levels <- seq(0,1, length = n + 2)[c(-1, -(n + 2))]
+          #quantile(values, quant_levels, na.rm = TRUE)
         } else {
           level_names <- names(sort(table(values), decreasing = TRUE))
           level_names[1:pmin(n, length(level_names))]
