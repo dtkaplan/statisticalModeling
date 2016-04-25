@@ -23,12 +23,12 @@
 
 
 #' @export
-effect_size <- function(model, formula, at = NULL, step = NULL, raw = FALSE, ... ) {
+effect_size <- function(model, formula, at = NULL, step = NULL, raw = FALSE, data = NULL, ... ) {
   extras <- list(...)
   # grab the explanatory variable to use for the difference
   change_vars <- all.vars(mosaic::rhs(formula))
 
-  data <- data_from_model(model)
+  data <- data_from_model(model, data = data)
   response <- response_var(model)
   explan_vars <- explanatory_vars(model)
 
@@ -73,7 +73,8 @@ effect_size <- function(model, formula, at = NULL, step = NULL, raw = FALSE, ...
       centers[[vname]] <- c(centers[[vname]], change_ranges[[vname]])
   }
 
-  input_data <- reference_values(data, at = centers)
+  response_location <- which( response == names(data))
+  input_data <- reference_values(data[,-response_location], at = centers)
 
   # set up so that glms are plotted, by default, as the response rather than the link
   if (inherits(model, "glm") && (! "type" %in% names(extras))) {
