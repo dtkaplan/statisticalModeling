@@ -47,20 +47,21 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL,
 
   }
 
-  if (is.null(formula)) explan_vars <- explanatory_vars(model)
-  else explan_vars <- all.vars(mosaic::rhs(formula))
+  explan_vars <- explanatory_vars(model)
+  if (is.null(formula)) show_vars <- explan_vars
+  else show_vars <- all.vars(mosaic::rhs(formula))
 
   # Use the first var as <x>
   # Use the second var as <color>
   # Use the third var as <facet>
   # Use the fourth as the second <facet> variable.
 
-  if (length(explan_vars) > 4) explan_vars <- explan_vars[1:4]
+  if (length(show_vars) > 4) show_vars <- show_vars[1:4]
 
   # Set a large number of levels for the first explanatory variable,
   # then nlevels for the remaining ones.
-  how_many <- as.list(c(Inf, rep(nlevels, length(explan_vars) - 1)))
-  names(how_many) <- explan_vars
+  how_many <- as.list(c(Inf, rep(nlevels, length(show_vars) - 1)))
+  names(how_many) <- show_vars
   eval_levels <- reference_values(data[explan_vars], n = how_many, at = at )
 
   # set up so that glms are plotted, by default, as the response rather than the link
@@ -77,7 +78,7 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL,
   }
 
   # convert any quantiles for numerical levels to discrete
-  first_var_quantitative <- is.numeric(eval_levels[[explan_vars[1]]])
+  first_var_quantitative <- is.numeric(eval_levels[[show_vars[1]]])
   eval_levels <- convert_to_discrete(eval_levels)
   eval_levels$response <- model_vals
 
@@ -88,7 +89,7 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL,
            aes_string(x = explan_vars[1], y = "response"), group = NA) + 
     ylab(response_var)
 
-  if (length(explan_vars) == 1) {
+  if (length(show_vars) == 1) {
     if (first_var_quantitative) {
       P <- P + geom_line()
     }
@@ -97,18 +98,18 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL,
     }
   } else { # more than one explanatory variable
     if (first_var_quantitative) {
-      P <- P + geom_line(aes_string(color = explan_vars[2]), alpha = 0.8)
+      P <- P + geom_line(aes_string(color = show_vars[2]), alpha = 0.8)
     } else {
-      P <- P + geom_point(aes_string(color = explan_vars[2]), alpha = 0.8) +
-        geom_line(aes_string(group = explan_vars[2], color = explan_vars[2]), alpha = 0.8)
+      P <- P + geom_point(aes_string(color = show_vars[2]), alpha = 0.8) +
+        geom_line(aes_string(group = show_vars[2], color = show_vars[2]), alpha = 0.8)
     }
   }
 
 
-  if (length(explan_vars) == 3)
-    P <- P + facet_wrap(explan_vars[3], labeller = label_both)
-  if (length(explan_vars) == 4)
-    P <- P + facet_grid(paste(explan_vars[3], "~", explan_vars[4]), 
+  if (length(show_vars) == 3)
+    P <- P + facet_wrap(show_vars[3], labeller = label_both)
+  if (length(show_vars) == 4)
+    P <- P + facet_grid(paste(show_vars[3], "~", show_vars[4]), 
                         labeller = label_both)
 
   P # return the plot

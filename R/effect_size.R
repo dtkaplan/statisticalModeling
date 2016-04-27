@@ -6,8 +6,10 @@
 #' @param formula a formula whose right-hand side is the variable with respect
 #' to which the effect size is to be calculated.
 #' @param at center values for evaluating the model
-#' @param step list of numbers for numerical finite-difference, or comparison groups
-# taken out @param raw for 2nd-order effects, show the sets of first-order effects
+#' @param from optional: the value to use as baseline for the variable specified
+#' in the formula
+#' @param step the numerical stepsize for the change var, or a comparison category
+#' for a categorical change var.
 #' @param ... additional arguments for \code{predict()}. For instance, for a glm, perhaps you
 #' want \code{type = "response"}.
 #'
@@ -19,7 +21,7 @@
 #' effect_size(mod1, ~ age, at = list(sex = "F"))
 
 #' @export
-effect_size <- function(model, formula, at = NULL, step = NULL, data = NULL, ... ) {
+effect_size <- function(model, formula, from = NULL, at = NULL, step = NULL, to = step, data = NULL, ... ) {
   extras <- list(...)
   # set up so that glms are evaluated, by default, as the response rather than the link
   if (inherits(model, "glm") && (! "type" %in% names(extras))) {
@@ -44,6 +46,7 @@ effect_size <- function(model, formula, at = NULL, step = NULL, data = NULL, ...
         names(sort(table(values), decreasing = TRUE))[1]
       }
   }
+  if ( ! is.null(from)) centers[[change_var]] <- from
 
   # loop over <at> and update any nominal values
   for (k in seq_along(at)) {
@@ -52,14 +55,20 @@ effect_size <- function(model, formula, at = NULL, step = NULL, data = NULL, ...
     centers[[nm]] <- at[[k]]
   }
   # input values for the explanatory variables
-  response_location <- which(response %in% names(data))
-  input_data <- reference_values(data[,explan_vars], at = centers)
+  input_data <- reference_values(data[,explan_vars, drop = FALSE], at = centers)
 
-  base_level <- as.character(input_data[1, change_var])
-  if (is.null(step)) {
+  if (is.null(step)) { # Need to set the step
     vals <- data[[change_var]]
+
     if (is.numeric(vals)) step <- sd(vals, na.rm = TRUE)
-    else step <- names(sort(table(vals), decreasing = TRUE))[2]   
+    else {
+      if ( ! is.null(from)) 
+        vals <- vals[vals != from]
+      else {
+        vals <- vals[vals != centers[[change_var]]]
+      }
+      step <- names(sort(table(vals), decreasing = TRUE))[1] 
+    }
   }
     
   base_vals <- do.call(predict, c(list(model, newdata = input_data), extras))

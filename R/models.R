@@ -18,6 +18,8 @@ explanatory_vars.lm <-
   explanatory_vars.groupwiseModel <-
   explanatory_vars.rpart <-
   explanatory_vars.randomForest <-
+  # Need to fix this so that the items as stored in the model, 
+  # e.g., as.factor(month), get returned.
   explanatory_vars.glm <- function(object, ...) all.vars(object$terms[[3]])
 explanatory_vars.gbm <- function(object, ...) all.vars(object$Terms[[3]])
 #' @rdname extract_from_model
@@ -78,7 +80,7 @@ reference_values <- function(data, n = 1, at = list()) {
 
   get_range <- function(var_name, n) {
     # get an appropriate set of levels
-    values <- data[[var_name]]
+    values <- eval(parse(text = var_name), envir = data)
     conversion <- NA
     value_set <-
       if (n == Inf) {
@@ -92,8 +94,12 @@ reference_values <- function(data, n = 1, at = list()) {
       } else {
         if (is.numeric(values)) {
           conversion <- "as.discrete"
-          most <- quantile(values, c(0.3, 0.7), na.rm = TRUE)
-          foo <- pretty(most, n = pmax(1, n - 2))
+          if (n == 1) {
+            median(values)
+          } else {
+            most <- quantile(values, c(0.3, 0.7), na.rm = TRUE)
+            pretty(most, n = pmax(1, n - 2))
+          }
           #quant_levels <- seq(0,1, length = n + 2)[c(-1, -(n + 2))]
           #quantile(values, quant_levels, na.rm = TRUE)
         } else {
