@@ -1,4 +1,4 @@
-#' Extract parts of models
+#' Extract component parts of models
 #'
 #' Functions for extracting data and names of explanatory and response variables from a model object
 #' @rdname extract_from_model
@@ -33,7 +33,22 @@ response_var.lm <-
   response_var.rpart <-
   response_var.randomForest <-
   response_var.glm <- function(object, ...) { deparse(object$terms[[2]])}
+#' @export
 response_var.gbm <- function(object, ...) { deparse(object$Terms[[2]]) }
+# CHANGE THE ABOVE to draw on formula_from_mod()
+
+#' @export
+formula_from_mod <- function(object, ...) {
+  UseMethod("formula_from_mod")
+}
+#' @export
+formula_from_mod.lm <-
+  formula_from_mod.groupwiseModel <-
+  formula_from_mod.rpart <-
+  formula_from_mod.randomForest <-
+  formula_from_mod.glm <- function(object, ...) {formula(object$terms)}
+#' @export
+formula_from_mod.gbm <- function(object, ...) {formula(object$Terms) }
 #' @export
 data_from_model.groupwiseModel <-
   data_from_model.glm <- function(object, ...){
@@ -78,39 +93,6 @@ reference_values <- function(data, n = 1, at = list()) {
   if (inherits(n, "list")) # override any appearing in the n-list
     n_values[names(n)] <- n
 
-  get_range <- function(var_name, n) {
-    # get an appropriate set of levels
-    values <- eval(parse(text = var_name), envir = data)
-    conversion <- NA
-    value_set <-
-      if (n == Inf) {
-        if (is.numeric(values)) {
-          if (length(unique(values)) < 100) unique(values)
-          else seq(min(values, na.rm = TRUE), 
-                   max(values, na.rm = TRUE), length = 100)
-        } else {
-          as.character(unique(values))
-        }
-      } else {
-        if (is.numeric(values)) {
-          conversion <- "as.discrete"
-          if (n == 1) {
-            median(values)
-          } else {
-            most <- quantile(values, c(0.3, 0.7), na.rm = TRUE)
-            pretty(most, n = pmax(1, n - 2))
-          }
-          #quant_levels <- seq(0,1, length = n + 2)[c(-1, -(n + 2))]
-          #quantile(values, quant_levels, na.rm = TRUE)
-        } else {
-          level_names <- names(sort(table(values), decreasing = TRUE))
-          level_names[1:pmin(n, length(level_names))]
-        }
-      }
-    # will the variable ultimately be represented as discrete
-    attr(value_set, "convert") <- conversion
-    value_set
-  }
   ranges <- conversions <- as.list(rep(NA, length(var_names)))
   names(ranges) <- var_names
   for (k in 1:length(var_names)) {
@@ -120,7 +102,7 @@ reference_values <- function(data, n = 1, at = list()) {
       conversions[[k]] <- ifelse(is.numeric(ranges[[k]]), "as.discrete", NA)
 
     } else {
-      ranges[[k]] <- get_range(var_names[k], n_values[[ var_names[k] ]])
+      ranges[[k]] <- get_range(var_names[k], n_values[[ var_names[k] ]], data)
       conversions[[k]] <- attr(ranges[[k]], "convert")
     }
   }
@@ -142,6 +124,96 @@ convert_to_discrete <- function(data) {
 
   data
 }
+#' helper for reference levels
+get_range <- function(var_name, n, data) {
+  # get an appropriate set of levels
+  values <- eval(parse(text = var_name), envir = data)
+  conversion <- NA
+  value_set <-
+    if (n == Inf) {
+      if (is.numeric(values)) {
+        if (length(unique(values)) < 100) unique(values)
+        else seq(min(values, na.rm = TRUE), 
+                 max(values, na.rm = TRUE), length = 100)
+      } else {
+        as.character(unique(values))
+      }
+    } else {
+      if (is.numeric(values)) {
+        conversion <- "as.discrete"
+        if (n == 1) {
+          median(values)
+        } else {
+          most <- quantile(values, c(0.3, 0.7), na.rm = TRUE)
+          pretty(most, n = pmax(1, n - 2))
+        }
+        #quant_levels <- seq(0,1, length = n + 2)[c(-1, -(n + 2))]
+        #quantile(values, quant_levels, na.rm = TRUE)
+      } else {
+        level_names <- names(sort(table(values), decreasing = TRUE))
+        level_names[1:pmin(n, length(level_names))]
+      }
+    }
+  # will the variable ultimately be represented as discrete
+  attr(value_set, "convert") <- conversion
+  value_set
+}
 
+# make reference levels for a model evaluation
+#' @export
+create_eval_levels <- function(model, formula, from = NULL, at = NULL, data = NULL){
+  # grab the explanatory variable to use for the difference
+  change_var <- all.vars(mosaic::rhs(formula))
+  
+  if (is.null(data)) data <- data_from_model(model, data = data)
+  response <- response_var(model)
+  explan_vars <- explanatory_vars(model)
+  
+  centers <- as.list(rep(NA, length(explan_vars)))
+  names(centers) <- explan_vars
+  for (var_name in explan_vars) {
+    values <- data[[var_name]]
+    centers[[var_name]] <-
+      if (is.numeric(values)) {
+        median(values, na.rm = TRUE)
+      } else {
+        # get the most popular level
+        popular <- names(sort(table(values), decreasing = TRUE))[1]
+        if (is.factor(values)) {
+          popular <- factor(popular, levels = levels(values))
+        }
+        popular
+      }
+  }
+  if ( ! is.null(from)) centers[[change_var]] <- from
+  
+  # loop over <at> and update any nominal values
+  for (k in seq_along(at)) {
+    nm <- names(at)[k]
+    if ( ! nm %in% explan_vars) stop(nm, "isn't an explanatory variable.")
+    centers[[nm]] <- at[[k]]
+    if (is.factor(data[[nm]]))
+      centers[[nm]] <- factor(centers[[nm]], levels = levels(data[[nm]]))
+  }
+  # input values for the explanatory variables
+  reference_values(data[,explan_vars, drop = FALSE], at = centers)
+}
+
+get_step = function(ref_vals, change_var, data, step = NULL, from = NULL) {
+  if (is.null(step)) { # Need to set the step
+    vals <- data[[change_var]]
+    
+    if (is.numeric(vals)) step <- sd(vals, na.rm = TRUE)
+    else {
+      if ( ! is.null(from)) 
+        vals <- vals[vals != from]
+      else {
+        vals <- vals[vals != ref_vals[[change_var]]]
+      }
+      step <- names(sort(table(vals), decreasing = TRUE))[1] 
+    }
+  }
+  step
+}
 
 

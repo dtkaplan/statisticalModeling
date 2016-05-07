@@ -3,7 +3,8 @@
 #' This function creates a ggplot2 frame. 
 #' You can add other layers on top of them but you cannot add this frame to an existing one. (Nor should you need to.)
 #' 
-#'
+#' @rdname fmaps
+
 #' @param data data to use in drawing glyphs on the map
 #' @param formula a formula specifying which variables from data are to be latitude ~ longitude
 #' @param map one way to specify a map
@@ -28,7 +29,7 @@
 #' }
 
 
-#' @rdname fmap
+#' @rdname fmaps
 #' @export
 fmap <- function(data = NULL, formula = NULL, map = NULL, extent = c("panel", "device", "normal"),
                  location = "Saint Paul, MN", zoom = 10, verbose = TRUE,

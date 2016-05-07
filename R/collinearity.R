@@ -7,8 +7,7 @@
 #' @param format choice of \code{"SeIF"} for inflation of standard errors, 
 #' \code{"degrees"} or \code{"radians"} for collinearity described as an angle
 #' or \code{"VIF"} for the variance inflation factor (which is the square of SeIF).
-#' @example 
-#' # highly collinear ...
+#' @examples 
 #' collinearity( ~ cyl * disp * hp, data = mtcars)
 #' collinearity( ~ cyl * disp * hp, data = mtcars, format = "degrees")
 #' @export

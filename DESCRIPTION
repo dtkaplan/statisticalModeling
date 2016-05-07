@@ -1,7 +1,7 @@
 Package: statisticalModeling
 Type: Package
 Title: functions for working with models and data
-Version: 0.1.2
+Version: 0.2.0
 Author: Daniel Kaplan
 Maintainer: Daniel Kaplan <kaplan@macalester.edu>
 Description: Functions providing a formula-based interface to ggplot.

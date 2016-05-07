@@ -86,7 +86,7 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL,
 
   P <- 
     ggplot(data = eval_levels,
-           aes_string(x = explan_vars[1], y = "response"), group = NA) + 
+           aes_string(x = show_vars[1], y = "response"), group = NA) + 
     ylab(response_var)
 
   if (length(show_vars) == 1) {

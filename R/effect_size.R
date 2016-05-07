@@ -23,54 +23,15 @@
 #' @export
 effect_size <- function(model, formula, from = NULL, at = NULL, step = NULL, to = step, data = NULL, ... ) {
   extras <- list(...)
+  data <- data_from_model(model, data = data)
+  change_var <- all.vars(mosaic::rhs(formula))
   # set up so that glms are evaluated, by default, as the response rather than the link
   if (inherits(model, "glm") && (! "type" %in% names(extras))) {
     extras$type = "response"
   }
-  # grab the explanatory variable to use for the difference
-  change_var <- all.vars(mosaic::rhs(formula))
-
-  data <- data_from_model(model, data = data)
-  response <- response_var(model)
-  explan_vars <- explanatory_vars(model)
-
-  centers <- as.list(rep(NA, length(explan_vars)))
-  names(centers) <- explan_vars
-  for (var_name in explan_vars) {
-    values <- data[[var_name]]
-    centers[[var_name]] <-
-      if (is.numeric(values)) {
-        median(values, na.rm = TRUE)
-      } else {
-        # get the most popular level
-        names(sort(table(values), decreasing = TRUE))[1]
-      }
-  }
-  if ( ! is.null(from)) centers[[change_var]] <- from
-
-  # loop over <at> and update any nominal values
-  for (k in seq_along(at)) {
-    nm <- names(at)[k]
-    if ( ! nm %in% explan_vars) stop(nm, "isn't an explanatory variable.")
-    centers[[nm]] <- at[[k]]
-  }
-  # input values for the explanatory variables
-  input_data <- reference_values(data[,explan_vars, drop = FALSE], at = centers)
-
-  if (is.null(step)) { # Need to set the step
-    vals <- data[[change_var]]
-
-    if (is.numeric(vals)) step <- sd(vals, na.rm = TRUE)
-    else {
-      if ( ! is.null(from)) 
-        vals <- vals[vals != from]
-      else {
-        vals <- vals[vals != centers[[change_var]]]
-      }
-      step <- names(sort(table(vals), decreasing = TRUE))[1] 
-    }
-  }
-    
+  input_data <- create_eval_levels(model, formula, from=from, at=at, data = data, ...)
+  step <- get_step(input_data, change_var, data)
+  
   base_vals <- do.call(predict, c(list(model, newdata = input_data), extras))
   from_levels <- input_data[[change_var]]
     if (is.numeric(step)) {
