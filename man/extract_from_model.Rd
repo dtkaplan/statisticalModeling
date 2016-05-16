@@ -4,7 +4,7 @@
 \alias{data_from_model}
 \alias{explanatory_vars}
 \alias{response_var}
-\title{Extract parts of models}
+\title{Extract component parts of models}
 \usage{
 data_from_model(object, ...)
 
