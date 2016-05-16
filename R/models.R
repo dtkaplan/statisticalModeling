@@ -65,10 +65,16 @@ data_from_model.randomForest <-
     dots <- list(...)
     if ("data" %in% names(dots))
       return(dots$data)
-#    if the object has a data attribute added by train, use that
-    
-  stop("Can't extract data from models of class rpart. Provide the data in another way, e.g. via the argument data =")
-}
+    # The above is NOT YET IMPLEMENTED
+    # if the object has a data attribute added by train, use that
+    data_in_call <- which("data" == names(A$call))
+    if (length(which) == 1) {
+      the_data <- eval(A$call[[data_in_call]])
+      if (is.data.frame(the_data)) return(the_data)
+    }
+    # Fallback operation
+    stop("Can't extract data from models of class rpart. Provide the data in another way, e.g. via the argument data =")
+  }
 
 #' Compute sensible values from a data set for use as a baseline
 #'
