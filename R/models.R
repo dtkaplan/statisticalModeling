@@ -148,9 +148,13 @@ get_range <- function(var_name, n, data) {
       if (is.numeric(values)) {
         conversion <- "as.discrete"
         if (n == 1) {
-          median(values)
+          median(values, na.rm = TRUE)
         } else {
-          most <- quantile(values, c(0.3, 0.7), na.rm = TRUE)
+          bottom <- ifelse(n == 2, 0.3, 
+                           ifelse(n > 4, 
+                                  ifelse(n > 9, 0.0, 0.1), 
+                                  0.2))
+          most <- quantile(values, c(bottom, 1 - bottom), na.rm = TRUE)
           pretty(most, n = pmax(1, n - 2))
         }
         #quant_levels <- seq(0,1, length = n + 2)[c(-1, -(n + 2))]
