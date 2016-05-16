@@ -4,7 +4,8 @@
 \alias{effect_size}
 \title{Calculate effect sizes in a model}
 \usage{
-effect_size(model, formula, at = NULL, step = NULL, raw = FALSE, ...)
+effect_size(model, formula, from = NULL, at = NULL, step = NULL,
+  to = step, data = NULL, ...)
 }
 \arguments{
 \item{model}{the model from which the effect size is to be calculated}
@@ -12,11 +13,13 @@ effect_size(model, formula, at = NULL, step = NULL, raw = FALSE, ...)
 \item{formula}{a formula whose right-hand side is the variable with respect
 to which the effect size is to be calculated.}
 
+\item{from}{optional: the value to use as baseline for the variable specified
+in the formula}
+
 \item{at}{center values for evaluating the model}
 
-\item{step}{list of numbers for numerical finite-difference, or comparison groups for}
-
-\item{raw}{for 2nd-order effects, show the sets of first-order effects}
+\item{step}{the numerical stepsize for the change var, or a comparison category
+for a categorical change var.}
 
 \item{...}{additional arguments for \code{predict()}. For instance, for a glm, perhaps you
 want \code{type = "response"}.}
@@ -24,16 +27,11 @@ want \code{type = "response"}.}
 \description{
 Like a derivative or finite-difference
 }
-\details{
-If two different variables are listed in \code{formula}, the second-order (interaction) effect size
-will be calculated.  To Do? Allow 2nd deriv w.r.t a single variable? Get multiple effect sizes all at once.
-}
 \examples{
 mod1 <- lm(wage ~ age * sex * educ + sector, data = mosaicData::CPS85)
 effect_size(mod1, ~ sex)
 effect_size(mod1, ~ sector)
 effect_size(mod1, ~ age, at = list(sex = "M"))
 effect_size(mod1, ~ age, at = list(sex = "F"))
-effect_size(mod1, ~ sex + age) # the difference in differences
 }
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/collinearity.R
 \name{collinearity}
 \alias{collinearity}
-\title{Calculates measures of collinearity}
+\title{Calculate measures of collinearity}
 \usage{
 collinearity(formula, data, format = c("SeIF", "degrees", "radians", "VIF"))
 }
@@ -17,6 +17,10 @@ variables to be considered. Iteractions, etc. may also be specified.}
 or \code{"VIF"} for the variance inflation factor (which is the square of SeIF).}
 }
 \description{
-Calculates measures of collinearity
+Calculate measures of collinearity
+}
+\examples{
+collinearity( ~ cyl * disp * hp, data = mtcars)
+collinearity( ~ cyl * disp * hp, data = mtcars, format = "degrees")
 }
 
