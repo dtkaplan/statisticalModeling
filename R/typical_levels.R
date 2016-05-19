@@ -1,7 +1,7 @@
 #' Find typical levels of explanatory variables in a model/dataset.
 #' 
 #' This function tries to choose sensible values of the explanatory variables 
-#' from the data used to build a model 
+#' from the data used to build a model or any other specified data. 
 #' (or from data specified with the \code{data =} argument.)
 #' 
 #' @details For categorical variables, the most populated levels are used. For quantitative 
@@ -12,7 +12,7 @@
 #' there will be about \code{nlevels^p} cases.
 #'
 #' @param model the model to display graphically
-#' @param data optional data set from which to extract levels for explanatory variables
+#' @param data optional data frame from which to extract levels for explanatory variables
 #' @param nlevels how many levels to construct for input variables.
 #' For quantitative variables, this is a suggestion. \code{pretty()} will determine 
 #' @param at named list giving specific values at which to hold the variables. Use this to 

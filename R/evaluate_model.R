@@ -23,6 +23,7 @@
 #' mod3 <- glm(married == "Married" ~ age + sex * sector,
 #'             data = mosaicData::CPS85, family = "binomial")
 #' evaluate_model(mod3, nlevels = 2, type = "response")
+#' evaluate_model(mod3, nlevels = 2, type = "response", at = list(sex = "F"))
 #' }
 #' @export
 evaluate_model <- function(model=NULL, data = NULL, 
@@ -39,8 +40,9 @@ evaluate_model <- function(model=NULL, data = NULL,
   }
   if( inherits(model, "gbm")) stop("gbm models still not working.")
   
-  eval_levels <- typical_levels(model = model, data = data, 
-                                nlevels = nlevels, at = at)
+  eval_levels <- if (is.null(data)) 
+    typical_levels(model = model, data = data, nlevels = nlevels, at = at)
+  else data
 
   model_vals <- 
     do.call(predict,c(list(model, newdata = eval_levels), 

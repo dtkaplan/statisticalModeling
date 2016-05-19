@@ -67,9 +67,9 @@ data_from_model.randomForest <-
       return(dots$data)
     # The above is NOT YET IMPLEMENTED
     # if the object has a data attribute added by train, use that
-    data_in_call <- which("data" == names(A$call))
+    data_in_call <- which("data" == names(object$call))
     if (length(which) == 1) {
-      the_data <- eval(A$call[[data_in_call]])
+      the_data <- eval(object$call[[data_in_call]])
       if (is.data.frame(the_data)) return(the_data)
     }
     # Fallback operation
@@ -125,7 +125,7 @@ convert_to_discrete <- function(data) {
   for (k in 1:ncol(data)) {
     tmp <- convert_to_what[[k]]
     if( (! is.na(tmp)) && tmp == "as.discrete")
-      data[[k]] <- as.character(data[[k]])
+      data[[k]] <- factor(data[[k]], levels = as.character(sort(unique(data[[k]]))))
   }
 
   data

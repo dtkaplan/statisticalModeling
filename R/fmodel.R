@@ -13,6 +13,10 @@
 #' \dontrun{mod1 <- lm(wage ~ age * sex + sector, data = mosaicData::CPS85)
 #' fmodel(mod1)
 #' fmodel(mod1, ~ sector + sex + age) # not necessarily a good ordering
+#' require(ggplot2)
+#' fmodel(mod1, ~ age + sex + sector, nlevels = 8) + 
+#'   geom_point(data = mosaicData::CPS85, alpha = 0.1) +
+#'   ylim(0, 20)
 #' mod3 <- glm(married == "Married" ~ age + sex * sector,
 #'             data = mosaicData::CPS85, family = "binomial")
 #' fmodel(mod3, type = "response")
@@ -71,7 +75,7 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL,
   model_vals <- 
     do.call(predict,c(list(model, newdata = eval_levels, level = prob_of), 
                       extras))
-  if (inherits(model, "rpart") && is.data.frame(model_vals)) {
+  if (inherits(model, "rpart") && inherits(model_vals, c("data.frame", "matrix"))) {
     # handle the matrix values from predict.rpart()
     keepers <- colnames(model_vals) == prob_of
     model_vals <- model_vals[,keepers] # just the first class
@@ -80,13 +84,13 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL,
   # convert any quantiles for numerical levels to discrete
   first_var_quantitative <- is.numeric(eval_levels[[show_vars[1]]])
   eval_levels <- convert_to_discrete(eval_levels)
-  eval_levels$response <- model_vals
+  eval_levels[[response_var]] <- model_vals
 
   # figure out the components of the plot
 
   P <- 
     ggplot(data = eval_levels,
-           aes_string(x = show_vars[1], y = "response"), group = NA) + 
+           aes_string(x = show_vars[1], y = response_var), group = NA) + 
     ylab(response_var)
 
   if (length(show_vars) == 1) {
@@ -98,9 +102,13 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL,
     }
   } else { # more than one explanatory variable
     if (first_var_quantitative) {
-      P <- P + geom_line(aes_string(color = show_vars[2]), alpha = 0.8)
+      P <- P + geom_line(
+        aes_string(color = show_vars[2], linetype = show_vars[2]), 
+        alpha = 0.8)
     } else {
-      P <- P + geom_point(aes_string(color = show_vars[2]), alpha = 0.8) +
+      P <- P + geom_point(
+        aes_string(color = show_vars[2], linetype = show_vars[2]), 
+        alpha = 0.8) +
         geom_line(aes_string(group = show_vars[2], color = show_vars[2]), alpha = 0.8)
     }
   }

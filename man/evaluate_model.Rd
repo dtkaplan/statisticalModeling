@@ -9,7 +9,7 @@ evaluate_model(model = NULL, data = NULL, nlevels = 3, at = list(), ...)
 \arguments{
 \item{model}{the model to display graphically}
 
-\item{data}{optional data set from which to extract levels for explanatory variables}
+\item{data}{optional data set containing values for explanatory variables}
 
 \item{nlevels}{how many levels to construct for input variables.
 For quantitative variables, this is a suggestion. \code{pretty()} will determine}
@@ -35,6 +35,7 @@ evaluate_model(mod1)
 mod3 <- glm(married == "Married" ~ age + sex * sector,
             data = mosaicData::CPS85, family = "binomial")
 evaluate_model(mod3, nlevels = 2, type = "response")
+evaluate_model(mod3, nlevels = 2, type = "response", at = list(sex = "F"))
 }
 }
 
