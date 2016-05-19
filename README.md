@@ -1,3 +1,14 @@
+# To install from GitHub
+
+```
+# Install devtools if necessary
+install.packages("devtools")
+
+# Install statisticalModeling
+devtools::install_github("dtkaplan/statisticalModeling")
+```
+
+
 # Functions for teaching statistical modeling
 
 This package contains model evaluation and graphing utilities for teaching statistical modeling. It's written to gather in one place the functions used in the DataCamp statistical modeling course and for a possible third edition of *Statistical Modeling: a Fresh Approach*.
