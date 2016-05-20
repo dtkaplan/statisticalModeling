@@ -37,7 +37,10 @@ response_var.lm <-
 response_var.gbm <- function(object, ...) { deparse(object$Terms[[2]]) }
 # CHANGE THE ABOVE to draw on formula_from_mod()
 
-#' @export
+response_values <- function(model) {
+  Data <- data_from_model(model)
+  Data[[response_var(model)]]
+}
 formula_from_mod <- function(object, ...) {
   UseMethod("formula_from_mod")
 }
