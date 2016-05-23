@@ -11,9 +11,9 @@
 #'
 #' @docType data
 #'
-#' @usage data(Houses_for_sales)
+#' @usage data(Houses_for_sale)
 #'
-#' @format A \code{data.frame} \code{Houses_for_sale}
+#' @format A dataframe with 1728 cases, each of which is a house for sale. 
 #'
 #' @keywords datasets
 #'

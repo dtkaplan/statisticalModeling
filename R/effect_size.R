@@ -5,11 +5,14 @@
 #' @param model the model from which the effect size is to be calculated
 #' @param formula a formula whose right-hand side is the variable with respect
 #' to which the effect size is to be calculated.
-#' @param at center values for evaluating the model
-#' @param from optional: the value to use as baseline for the variable specified
-#' in the formula
+#' @param at center values for evaluating the model. These should be in the form of a 
+#' list or data.frame so that the variables involved can be named. Any variables that you do not set
+#' will be set for you automatically.
 #' @param step the numerical stepsize for the change var, or a comparison category
-#' for a categorical change var.
+#' for a categorical change var. This will be either a character string or a number,
+#' depending on the type of variable specified in the formula.
+#' @param to a synonym for step. (In English, "to" is more appropriate for a 
+#' categorical input, "step" for a quantitative. But you can use either.)
 #' @param ... additional arguments for \code{predict()}. For instance, for a glm, perhaps you
 #' want \code{type = "response"}.
 #'
@@ -18,10 +21,11 @@
 #' effect_size(mod1, ~ sex)
 #' effect_size(mod1, ~ sector)
 #' effect_size(mod1, ~ age, at = list(sex = "M"))
-#' effect_size(mod1, ~ age, at = list(sex = "F"))
+#' effect_size(mod1, ~ age, at = list(sex = "F", age = 34), step = 1)
+#' effect_size(mod1, ~ sex, at = list(age = 35, sex = "M"), to = "F" )
 
 #' @export
-effect_size <- function(model, formula, from = NULL, at = NULL, step = NULL, to = step, data = NULL, ... ) {
+effect_size <- function(model, formula, at = NULL, step = NULL, to = step, data = NULL, ... ) {
   extras <- list(...)
   data <- data_from_model(model, data = data)
   change_var <- all.vars(mosaic::rhs(formula))
@@ -29,8 +33,8 @@ effect_size <- function(model, formula, from = NULL, at = NULL, step = NULL, to 
   if (inherits(model, "glm") && (! "type" %in% names(extras))) {
     extras$type = "response"
   }
-  input_data <- create_eval_levels(model, formula, from=from, at=at, data = data, ...)
-  step <- get_step(input_data, change_var, data)
+  input_data <- create_eval_levels(model, formula, at=at, data = data, ...)
+  step <- get_step(input_data, change_var, data, step = unlist(to))
   
   base_vals <- do.call(predict, c(list(model, newdata = input_data), extras))
   from_levels <- input_data[[change_var]]
@@ -44,10 +48,8 @@ effect_size <- function(model, formula, from = NULL, at = NULL, step = NULL, to 
    
   if (is.numeric(step)) {
     res <- data.frame(slope =  (offset_vals - base_vals) / step)
-    names(res) <- paste0("slope")
   } else {
     res <- - data.frame(change = base_vals - offset_vals)
-    names(res) <- paste0("change")
   }
   
   input_data[[change_var]] <- NULL # remove it temporarily

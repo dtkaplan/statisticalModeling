@@ -66,9 +66,10 @@ data_from_model.randomForest <-
   data_from_model.gbm <-
   data_from_model.rpart <- function(object, ...) {
     dots <- list(...)
-    if ("data" %in% names(dots))
+    if ("data" %in% names(dots) && ! is.null(dots$data))
       return(dots$data)
     # The above is NOT YET IMPLEMENTED
+    # When/If I add the train function ...
     # if the object has a data attribute added by train, use that
     data_in_call <- which("data" == names(object$call))
     if (length(which) == 1) {

@@ -4,8 +4,8 @@
 \alias{effect_size}
 \title{Calculate effect sizes in a model}
 \usage{
-effect_size(model, formula, from = NULL, at = NULL, step = NULL,
-  to = step, data = NULL, ...)
+effect_size(model, formula, at = NULL, step = NULL, to = step,
+  data = NULL, ...)
 }
 \arguments{
 \item{model}{the model from which the effect size is to be calculated}
@@ -13,13 +13,16 @@ effect_size(model, formula, from = NULL, at = NULL, step = NULL,
 \item{formula}{a formula whose right-hand side is the variable with respect
 to which the effect size is to be calculated.}
 
-\item{from}{optional: the value to use as baseline for the variable specified
-in the formula}
-
-\item{at}{center values for evaluating the model}
+\item{at}{center values for evaluating the model. These should be in the form of a 
+list or data.frame so that the variables involved can be named. Any variables that you do not set
+will be set for you automatically.}
 
 \item{step}{the numerical stepsize for the change var, or a comparison category
-for a categorical change var.}
+for a categorical change var. This will be either a character string or a number,
+depending on the type of variable specified in the formula.}
+
+\item{to}{a synonym for step. (In English, "to" is more appropriate for a 
+categorical input, "step" for a quantitative. But you can use either.)}
 
 \item{...}{additional arguments for \code{predict()}. For instance, for a glm, perhaps you
 want \code{type = "response"}.}
@@ -32,6 +35,7 @@ mod1 <- lm(wage ~ age * sex * educ + sector, data = mosaicData::CPS85)
 effect_size(mod1, ~ sex)
 effect_size(mod1, ~ sector)
 effect_size(mod1, ~ age, at = list(sex = "M"))
-effect_size(mod1, ~ age, at = list(sex = "F"))
+effect_size(mod1, ~ age, at = list(sex = "F", age = 34), step = 1)
+effect_size(mod1, ~ sex, at = list(age = 35, sex = "M"), to = "F" )
 }
 

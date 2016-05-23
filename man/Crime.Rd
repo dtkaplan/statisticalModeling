@@ -4,7 +4,16 @@
 \name{Crime}
 \alias{Crime}
 \title{Data from the US FBI Uniform Crime Report, 1960}
-\format{A \code{data.frame} \code{Crime}}
+\format{A data frame with 47 cases, each of which is a US state, with observations on the following variables.
+  \itemize{
+    \item{\code{R}} {Crime rate: number of offenses reported to police per million population.}
+    \item{\code{Age}} {Number of males aged 14-24 per 1000 population}
+    \item{\code{N}} {State population (in 100,000s)}
+    \item{\code{W}} {State-wise median value of transferable goods and assets or family income in tens of dollars.}
+    \item{\code{X}} {Number of families per 1000 earning below half the median income.}
+    \item{\code{ExDiff}} {Change in per capita expenditure on police by state and local government from 1950 to 1960}
+    \item{\code{Ex0}} {1960 per capita expenditures on police.}
+  }}
 \source{
 FBI Uniform Crime Report via \href{http://dasl.datadesk.com/data/view/114}{DASL: Data and Story Library}
 }

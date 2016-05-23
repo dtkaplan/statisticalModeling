@@ -5,15 +5,13 @@
 #' case corresponds to a state in the US.
 #' 
 #' @docType data
-#'
+#' @name Crime
 #' @usage data(Crime, package = "statisticalModeling")
-#'
-#' @format A \code{data.frame} \code{Crime}
 #'
 #' @keywords datasets
 #'
 #' @format
-#'   A data frame with 90 observations on the following variables.
+#'   A data frame with 47 cases, each of which is a US state, with observations on the following variables.
 #'   \itemize{
 #'     \item{\code{R}} {Crime rate: number of offenses reported to police per million population.}
 #'     \item{\code{Age}} {Number of males aged 14-24 per 1000 population}
@@ -23,6 +21,7 @@
 #'     \item{\code{ExDiff}} {Change in per capita expenditure on police by state and local government from 1950 to 1960}
 #'     \item{\code{Ex0}} {1960 per capita expenditures on police.}
 #'   }
+#'   
 #' @source FBI Uniform Crime Report via \href{http://dasl.datadesk.com/data/view/114}{DASL: Data and Story Library}
 #' 
 #' @examples
