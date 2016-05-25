@@ -48,10 +48,15 @@ evaluate_model <- function(model=NULL, data = NULL, on_training = FALSE,
   }
   if( inherits(model, "gbm")) stop("gbm models still not working.")
   
-  eval_levels <- if (is.null(data)) 
-    typical_levels(model = model, data = data, nlevels = nlevels, at = at)
-  else data
-
+  eval_levels <- 
+    if (on_training) {
+      data_from_model(model)
+    } else {
+      if (is.null(data)) 
+        typical_levels(model = model, data = data, nlevels = nlevels, at = at)
+      else data
+    }
+  
   model_vals <- 
     if (on_training) { 
       do.call(predict, c(list(model), extras))
