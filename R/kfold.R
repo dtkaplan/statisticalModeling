@@ -55,6 +55,10 @@ kfold_trial <- function(mod,
   type <- match.arg(type)
   # Grab the data and the call from the model.
   data <- data_from_model(mod)
+  # For cross validation, we don't want the constructed terms
+  constructed <- grep("\\(.*\\)", names(data))
+  if (length(constructed) > 0) data[[constructed]] <- NULL # get rid of them
+  
   architecture <- mod$call[[1]]
   fit_call <- mod$call
   fit_call[["data"]] <- as.name("training")
@@ -68,9 +72,9 @@ kfold_trial <- function(mod,
     type <- "prob"
   }
   for (group in 1:k) {
-    training <- data[group != groups, ]
+    training <- data[group != groups, , drop = FALSE ]
 
-    testing  <- data[group == groups, ]
+    testing  <- data[group == groups, , drop = FALSE ]
     this_model <- eval(fit_call)
     output[group == groups, ] <- evaluate_model(this_model, data = testing, type = type)
   }

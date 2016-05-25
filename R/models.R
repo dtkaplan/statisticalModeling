@@ -220,9 +220,9 @@ get_step = function(ref_vals, change_var, data, step = NULL, from = NULL) {
     if (is.numeric(vals)) step <- sd(vals, na.rm = TRUE)
     else {
       if ( ! is.null(from)) 
-        vals <- vals[vals != from]
+        vals <- vals[ ! vals %in% from]
       else {
-        vals <- vals[vals != ref_vals[[change_var]]]
+        vals <- vals[ ! vals %in% ref_vals[[change_var]]]
       }
       step <- names(sort(table(vals), decreasing = TRUE))[1] 
     }
