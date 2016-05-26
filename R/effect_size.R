@@ -27,36 +27,65 @@
 #' @export
 effect_size <- function(model, formula, at = NULL, step = NULL, to = step, data = NULL, ... ) {
   extras <- list(...)
-  data <- data_from_model(model, data = data)
-  change_var <- all.vars(mosaic::rhs(formula))
+  
+  if (inherits(model, "bootstrap_ensemble")) {
+    ensemble <- model$replications # that is, the list of bootstrapped models
+    original_model <- model$original_model
+    ensemble_flag  <- TRUE
+  } else {
+    ensemble <- list(model) # Just the one model to be evaluated
+    original_model <- model
+    ensemble_flag <- FALSE
+  }
+  
+  data <- data_from_model(original_model, data = data)
+  change_var <- all.vars(mosaic::rhs(formula))[1]
   # set up so that glms are evaluated, by default, as the response rather than the link
   if (inherits(model, "glm") && (! "type" %in% names(extras))) {
     extras$type = "response"
   }
-  input_data <- create_eval_levels(model, formula, at=at, data = data, ...)
-  step <- get_step(input_data, change_var, data, step = unlist(to))
+  from_inputs <- to_inputs <- 
+    create_eval_levels(original_model, formula, at=at, data = data, ...)
+  step <- get_step(from_inputs, change_var, data, step = unlist(to))
   
-  base_vals <- do.call(predict, c(list(model, newdata = input_data), extras))
-  from_levels <- input_data[[change_var]]
-    if (is.numeric(step)) {
-    input_data[[change_var]] = input_data[[change_var]] + step
-  } else {
-    input_data[[change_var]] <- step
-  }
-  to_levels <- input_data[[change_var]]
-  offset_vals <- do.call(predict, c(list(model, newdata = input_data), extras))
-   
+  # construct inputs for step from baseline
   if (is.numeric(step)) {
-    res <- data.frame(slope =  (offset_vals - base_vals) / step)
+    to_inputs[[change_var]] <- from_inputs[[change_var]] + step
   } else {
-    res <- - data.frame(change = base_vals - offset_vals)
+    to_inputs[[change_var]] <- step
   }
   
-  input_data[[change_var]] <- NULL # remove it temporarily
-  input_data <- rev(input_data)
-  input_data[[paste0("to:", change_var)]] <- to_levels
-  input_data[[change_var]] <- from_levels
+  # Create the output data frame with vars in desired order.
+  # change_var and to:change_var should be first two columns
 
-  return(cbind(res, rev(input_data)))
+  output_form <- from_inputs
+  output_form[[change_var]] <- NULL # remove it temporarily
+  output_form <- rev(output_form) 
+  output_form[[paste0("to:", change_var)]] <- to_inputs[[change_var]]
+  output_form[[change_var]] <- from_inputs[[change_var]]
+  output_form <- rev(output_form) 
+  
+  # set up for accumulated output 
+
+  Result <- NULL
+  # if the "model" input was a single model, rather than an ensemble,
+  # that single model is being stored as an ensemble of 1, so that
+  # the same loop covers both cases.
+  for (k in 1:length(ensemble)) {
+    base_vals <-   do.call(predict, c(list(ensemble[[k]], newdata = from_inputs), extras))
+    # model output after the step (or "offset")
+    offset_vals <- do.call(predict, c(list(ensemble[[k]], newdata = to_inputs),   extras))
+   
+    res <- if (is.numeric(step)) {
+      data.frame(slope =  (offset_vals - base_vals) / step)
+    } else {
+      data.frame(change = offset_vals - base_vals)
+    }
+    if (ensemble_flag) output_form$bootstrap_rep <- k
+    
+    Result <- rbind(Result, cbind(res, output_form))
+  }
+  
+  Result
 }  
   
