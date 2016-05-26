@@ -19,6 +19,8 @@ boot_rsq <- function(bsreps) {
 # Also, in bootstrap_rep() use `try()` to deal with situations where there is a
 # missing level in a categorical variable.
 
+#' @export
+
 boot_effect_size <- function(bsreps, formula, data = NULL){
   n_mods <- length(bsreps$replications)
   res <- list(n_mods)
