@@ -3,8 +3,8 @@
 #' Annual production of crude oil, in millions of barrels (mbbl).
 #' 
 #' @docType data
-#' @name Historical_oil
-#' @usage data(Historical_oil, package = "statisticalModeling")
+#' @name Oil_history
+#' @usage data(Oil_history, package = "statisticalModeling")
 #'
 #' @keywords datasets
 #'
@@ -19,6 +19,6 @@
 #' data from \code{data.oecd.org}.
 #' 
 #' @examples
-#' model <- lm(log(mbbl) ~ year, data = Historical_oid)
+#' model <- lm(log(mbbl) ~ year, data = Oil_history)
 #' fmodel(model)
-"Historical_oil"
+"Oil_history"
