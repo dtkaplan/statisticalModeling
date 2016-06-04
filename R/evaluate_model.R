@@ -16,7 +16,7 @@
 #' For quantitative variables, this is a suggestion. \code{pretty()} will determine 
 #' @param at named list giving specific values at which to hold the variables. Use this to 
 #' override the automatic generation of levels for any or all explanatory variables.
-#' @param ... arguments to predict()
+#' @param ... arguments about the kind of output to be passed along to predict().
 #'
 #'
 #' @details There are two ways to evaluate the model on the training data. The first is
