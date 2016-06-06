@@ -11,6 +11,8 @@
 #' @param step the numerical stepsize for the change var, or a comparison category
 #' for a categorical change var. This will be either a character string or a number,
 #' depending on the type of variable specified in the formula.
+#' @param bootstrap If \code{TRUE}, calculate a standard error using bootstrapping. Alternatively, you can 
+#' specify the number of bootstrap replications (default:100).
 #' @param to a synonym for step. (In English, "to" is more appropriate for a 
 #' categorical input, "step" for a quantitative. But you can use either.)
 #' @param ... additional arguments for \code{predict()}. For instance, for a glm, perhaps you
@@ -25,7 +27,7 @@
 #' effect_size(mod1, ~ sex, at = list(age = 35, sex = "M"), to = "F" )
 
 #' @export
-effect_size <- function(model, formula, at = NULL, step = NULL, to = step, data = NULL, ... ) {
+effect_size <- function(model, formula, at = NULL, step = NULL, bootstrap = FALSE, to = step, data = NULL, ... ) {
   extras <- list(...)
   
   if (inherits(model, "bootstrap_ensemble")) {
@@ -85,7 +87,16 @@ effect_size <- function(model, formula, at = NULL, step = NULL, to = step, data 
     
     Result <- rbind(Result, cbind(res, output_form))
   }
-  
+
+  if ( ! ensemble_flag && bootstrap) {
+    if (is.logical(bootstrap)) bootstrap = 100  # set the default
+    model <- ensemble(model, bootstrap)
+    Bootstrap_reps <- effect_size(model, formula, at = at, step = step, to = to, data = data, ...)
+    # find the sd for each set of replications
+    set_number <- rep(1:(nrow(Bootstrap_reps) / bootstrap), length_out = nrow(Bootstrap_reps))
+    std_errors <- mosaic::sd(Bootstrap_reps[[1]] ~ set_number)
+    Result <- cbind(Result[1], sd = std_errors, Result[2:length(Result)])
+  }
   Result
 }  
   
