@@ -4,8 +4,8 @@
 \alias{effect_size}
 \title{Calculate effect sizes in a model}
 \usage{
-effect_size(model, formula, at = NULL, step = NULL, to = step,
-  data = NULL, ...)
+effect_size(model, formula, at = NULL, step = NULL, bootstrap = FALSE,
+  to = step, data = NULL, ...)
 }
 \arguments{
 \item{model}{the model from which the effect size is to be calculated}
@@ -20,6 +20,9 @@ will be set for you automatically.}
 \item{step}{the numerical stepsize for the change var, or a comparison category
 for a categorical change var. This will be either a character string or a number,
 depending on the type of variable specified in the formula.}
+
+\item{bootstrap}{If \code{TRUE}, calculate a standard error using bootstrapping. Alternatively, you can 
+specify the number of bootstrap replications (default:100).}
 
 \item{to}{a synonym for step. (In English, "to" is more appropriate for a 
 categorical input, "step" for a quantitative. But you can use either.)}

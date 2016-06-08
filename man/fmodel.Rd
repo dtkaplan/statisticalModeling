@@ -36,6 +36,9 @@ fmodel(mod1, ~ age + sex + sector, nlevels = 8) +
 mod3 <- glm(married == "Married" ~ age + sex * sector,
             data = mosaicData::CPS85, family = "binomial")
 fmodel(mod3, type = "response")
+# Adding the raw data requires a trick when it's TRUE/FALSE
+fmodel(mod3, ~ age + sex + sector, data = CPS85, nlevels = 10, type = "response") + 
+  geom_point(data = CPS85, aes(x = age, y = 0 + (married == "Married")), alpha = .1)
 }
 }
 

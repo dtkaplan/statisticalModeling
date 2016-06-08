@@ -1,19 +1,20 @@
 # Helper function to build the specific types
-.ffactory <- function(type, details=NULL) {
+.gf_factory <- function(type, details=NULL) {
   res <-
-    function(data=NULL, formula=NULL, add=FALSE, verbose = TRUE, system = "ggplot2", ...) {
-    data_name <- as.character(substitute(data))
-
-    # Eventually, test whether <system> is ggplot2 and translate accordingly
-
-    gg_command_string <-
-      formula_to_gg(data=data, formula=formula, add=add,
-                    geom=type, .use_name = data_name,
-                    details = details, ...)
-    if (verbose) cat(gsub("+", "+\n", gg_command_string, fixed = TRUE), "\n")
-    eval(parse(text = gg_command_string))
+    function(data=NULL, formula=NULL, add=FALSE, verbose = TRUE, 
+             system = "ggplot2", ...) {
+      data_name <- as.character(substitute(data))
+      
+      # Eventually, test whether <system> is ggplot2 and translate accordingly
+      
+      gg_command_string <-
+        formula_to_gg(data=data, formula=formula, add=add,
+                      geom=type, .use_name = data_name,
+                      details = details, ...)
+      if (verbose) cat(gsub("+", "+\n", gg_command_string, fixed = TRUE), "\n")
+      eval(parse(text = gg_command_string))
     }
-
+  
   res
 }
 
@@ -24,7 +25,7 @@
 #'
 #'
 #'
-#' @rdname fchart
+#' @rdname gf_functions
 
 #' @param data A data frame with the variables to be plotted
 #' @param formula A formula describing the x and y (if any) variables and other aesthetics in
@@ -34,29 +35,29 @@
 #' @param verbose If \code{TRUE} print the ggplot2 command in the console.
 #' @param system Which graphics system to use, e.g. ggplot2, and so on.
 #' @param ... Other arguments such as \code{position="dodge"},
-#' @rdname fchart
+#' @rdname gf_functions
 #' @export
-fframe <- .ffactory(type = "blank")
-#' @rdname fchart
+gf_frame <- .gf_factory(type = "blank")
+#' @rdname gf_functions
 #' @export
-fpoint <- .ffactory(type = "point")
-#' @rdname fchart
+gf_point <- .gf_factory(type = "point")
+#' @rdname gf_functions
 #' @export
-fline <- .ffactory(type = "line")
-#' @rdname fchart
+gf_line <- .gf_factory(type = "line")
+#' @rdname gf_functions
 #' @export
-fdensity <- .ffactory(type = "density")
-#' @rdname fchart
+gf_density <- .gf_factory(type = "density")
+#' @rdname gf_functions
 #' @export
-fboxplot <- .ffactory(type = "boxplot")
-#' @rdname fchart
+gf_boxplot <- .gf_factory(type = "boxplot")
+#' @rdname gf_functions
 #' @export
-fhistogram <- .ffactory(type = "histogram")
+gf_histogram <- .gf_factory(type = "histogram")
 # Separate functions for a count-type bar chart and a value-based bar chart.
-#' @rdname fchart
+#' @rdname gf_functions
 #' @export
-fcounts <- .ffactory(type = "bar", details = list(stat = '"count"'))
-#' @rdname fchart
+gf_counts <- .gf_factory(type = "bar", details = list(stat = '"count"'))
+#' @rdname gf_functions
 #' @export
-fbar <- .ffactory(type = "bar", details = list(stat = '"identity"'))
+gf_bar <- .gf_factory(type = "bar", details = list(stat = '"identity"'))
 

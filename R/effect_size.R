@@ -95,7 +95,7 @@ effect_size <- function(model, formula, at = NULL, step = NULL, bootstrap = FALS
     # find the sd for each set of replications
     set_number <- rep(1:(nrow(Bootstrap_reps) / bootstrap), length_out = nrow(Bootstrap_reps))
     std_errors <- mosaic::sd(Bootstrap_reps[[1]] ~ set_number)
-    Result <- cbind(Result[1], sd = std_errors, Result[2:length(Result)])
+    Result <- cbind(Result[1], stderr_effect = signif(std_errors,2), Result[2:length(Result)])
   }
   Result
 }  
