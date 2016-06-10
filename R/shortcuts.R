@@ -19,45 +19,4 @@
 }
 
 
-#' Shortcuts for formula_gg
-#'
-#' These are intended for user convenience, just a small set of plots.
-#'
-#'
-#'
-#' @rdname gf_functions
-
-#' @param data A data frame with the variables to be plotted
-#' @param formula A formula describing the x and y (if any) variables and other aesthetics in
-#' a form like \code{y ~ x + color:red + shape:sex + alpha:0.5}
-#' @param add If \code{TRUE} then construct just the layer with no frame.  The result
-#' can be added to an existing frame.
-#' @param verbose If \code{TRUE} print the ggplot2 command in the console.
-#' @param system Which graphics system to use, e.g. ggplot2, and so on.
-#' @param ... Other arguments such as \code{position="dodge"},
-#' @rdname gf_functions
-#' @export
-gf_frame <- .gf_factory(type = "blank")
-#' @rdname gf_functions
-#' @export
-gf_point <- .gf_factory(type = "point")
-#' @rdname gf_functions
-#' @export
-gf_line <- .gf_factory(type = "line")
-#' @rdname gf_functions
-#' @export
-gf_density <- .gf_factory(type = "density")
-#' @rdname gf_functions
-#' @export
-gf_boxplot <- .gf_factory(type = "boxplot")
-#' @rdname gf_functions
-#' @export
-gf_histogram <- .gf_factory(type = "histogram")
-# Separate functions for a count-type bar chart and a value-based bar chart.
-#' @rdname gf_functions
-#' @export
-gf_counts <- .gf_factory(type = "bar", details = list(stat = '"count"'))
-#' @rdname gf_functions
-#' @export
-gf_bar <- .gf_factory(type = "bar", details = list(stat = '"identity"'))
 

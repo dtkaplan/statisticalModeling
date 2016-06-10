@@ -14,10 +14,14 @@ Imports:
     ggmap,
     lazyeval,
     rpart,
-    mosaic
+    mosaic,
+    magrittr
 RoxygenNote: 5.0.1
 Suggests:
     testthat,
     mosaicData,
     mosaicMapShapes,
-    rpart.plot
+    rpart.plot,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
