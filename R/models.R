@@ -4,16 +4,13 @@
 #' @rdname extract_from_model
 #' @param object the model you are extracting features from.
 #' @param ... additional arguments (not used)
-#' @export
 data_from_model <- function(object, ...) {
   UseMethod("data_from_model")
 }
 #' @rdname extract_from_model
-#' @export
 explanatory_vars <- function(object, ...) {
   UseMethod("explanatory_vars")
 }
-#' @export
 explanatory_vars.lm <-
   explanatory_vars.groupwiseModel <-
   explanatory_vars.rpart <-
@@ -27,13 +24,12 @@ explanatory_vars.gbm <- function(object, ...) all.vars(object$Terms[[3]])
 response_var <- function(object, ...) {
   UseMethod("response_var")
 }
-#' @export
 response_var.lm <-
   response_var.groupwiseModel <-
   response_var.rpart <-
   response_var.randomForest <-
   response_var.glm <- function(object, ...) { deparse(object$terms[[2]])}
-#' @export
+
 response_var.gbm <- function(object, ...) { deparse(object$Terms[[2]]) }
 # CHANGE THE ABOVE to draw on formula_from_mod()
 
@@ -44,25 +40,18 @@ response_values <- function(model) {
 formula_from_mod <- function(object, ...) {
   UseMethod("formula_from_mod")
 }
-#' @export
+
 formula_from_mod.lm <-
   formula_from_mod.groupwiseModel <-
   formula_from_mod.rpart <-
   formula_from_mod.randomForest <-
   formula_from_mod.glm <- function(object, ...) {formula(object$terms)}
-#' @export
+
 formula_from_mod.gbm <- function(object, ...) {formula(object$Terms) }
-#' @export
-data_from_model.groupwiseModel <-
-  data_from_model.glm <- function(object, ...){
-  object$data
-}
-#' @export
-data_from_model.lm <- function(object, ...) {
-  object$model
-}
-#' @export
-data_from_model.randomForest <- 
+
+data_from_model.lm <-
+  data_from_model.glm <-
+  data_from_model.randomForest <- 
   data_from_model.gbm <-
   data_from_model.rpart <- function(object, ...) {
     dots <- list(...)

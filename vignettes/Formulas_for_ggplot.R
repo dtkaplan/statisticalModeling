@@ -63,4 +63,5 @@ gf_density_2d(net ~ age, data = Runners) + facet_grid( ~ sex)
 gf_density_2d(net ~ age, data = Runners) + facet_grid(start_position ~ sex)
 
 ## ------------------------------------------------------------------------
+gf_jitter(age ~ sex + alpha:0.01, data = Runners)
 
