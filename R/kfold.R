@@ -4,10 +4,12 @@
 cv_pred_error <- function(..., k = 10, ntrials = 10, 
                      output = c("mse", "likelihood", "error_rate")) {
   output <- match.arg(output)
-  models <- list(...)
-  # default_names <- paste0("mod_", 1:length(models)) # not using
+  
+  # Get just the names of the models
   full_names <- as.character(lapply(lazyeval::lazy_dots(...), FUN = function(x) x$expr))
-  # model can be a list. If so, repeat over all the models.
+  # Now for the models themselves
+  models <- list(...)
+    # model can be a list. If so, repeat over all the models.
   # If it's a single model, put it in a list.
 #  if (! inherits(model, c("list"))) 
 #    model <- list(model)
