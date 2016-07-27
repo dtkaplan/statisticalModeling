@@ -29,9 +29,16 @@ Plot out model values
 \dontrun{mod1 <- lm(wage ~ age * sex + sector, data = mosaicData::CPS85)
 fmodel(mod1)
 fmodel(mod1, ~ sector + sex + age) # not necessarily a good ordering
+require(ggplot2)
+fmodel(mod1, ~ age + sex + sector, nlevels = 8) + 
+  geom_point(data = mosaicData::CPS85, alpha = 0.1) +
+  ylim(0, 20)
 mod3 <- glm(married == "Married" ~ age + sex * sector,
             data = mosaicData::CPS85, family = "binomial")
 fmodel(mod3, type = "response")
+# Adding the raw data requires a trick when it's TRUE/FALSE
+fmodel(mod3, ~ age + sex + sector, data = CPS85, nlevels = 10, type = "response") + 
+  geom_point(data = CPS85, aes(x = age, y = 0 + (married == "Married")), alpha = .1)
 }
 }
 

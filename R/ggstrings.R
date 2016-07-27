@@ -3,8 +3,10 @@
 # Internals: nothing to export here!
 
 
-frame_string <- function(data = NULL, x = NULL, y = NULL) {
+frame_string <- function(data = NULL, x = NULL, y = NULL, aes_pairs = NULL) {
   ystring <- ifelse(is.null(y), "", paste0(", y = ", y) )
+  for (nm in names(aes_pairs)) 
+    ystring <- paste0(ystring, ", ", nm, " = ", aes_pairs[[nm]] )
   res <- sprintf("ggplot(%s, aes(x = %s%s))", data, x, ystring)
   res
 }
@@ -163,23 +165,6 @@ add_NA <- function(levels) {
   names(res) <- levels
 
   c(list(none = ""), res)
-}
-
-# pull out the pairs from a formula like color::red + alpha:0.5
-# return them as a named list
-pairs_in_formula <- function(formula) {
-  fc <- as.character(formula)
-  parts <- unlist(strsplit(fc, "+", fixed = TRUE))
-  # trim leading blanks
-  parts <- gsub("^\\s+|\\s+$", "", parts)
-  # identify the pairs
-  pairs <- parts[grep(":+", parts)]
-  res <- list()
-  for (pair in pairs) {
-    this_pair <- unlist(strsplit(pair, ":+"))
-    res[this_pair[1] ] <- this_pair[2]
-  }
-  res
 }
 
 

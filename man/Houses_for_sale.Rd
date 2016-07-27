@@ -4,12 +4,12 @@
 \name{Houses_for_sale}
 \alias{Houses_for_sale}
 \title{Houses for sale}
-\format{A \code{data.frame} \code{Houses_for_sale}}
+\format{A dataframe with 1728 cases, each of which is a house for sale.}
 \source{
 \href{http://community.amstat.org/stats101/home}{Stat 101}
 }
 \usage{
-data(Houses_for_sales)
+data(Houses_for_sale)
 }
 \description{
 A random sample of 1,728 homes taken from public records 

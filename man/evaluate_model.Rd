@@ -4,12 +4,16 @@
 \alias{evaluate_model}
 \title{Evaluate a model for specified inputs}
 \usage{
-evaluate_model(model = NULL, data = NULL, nlevels = 3, at = list(), ...)
+evaluate_model(model = NULL, data = NULL, on_training = FALSE,
+  nlevels = 3, at = list(), ...)
 }
 \arguments{
 \item{model}{the model to display graphically}
 
-\item{data}{optional data set containing values for explanatory variables}
+\item{data}{optional data set from which to extract levels for explanatory variables}
+
+\item{on_training}{flag whether to use the training data for evaluation. Only needed
+when there are random terms, e.g. from \code{rand()}, \code{shuffle()}, .... See details.}
 
 \item{nlevels}{how many levels to construct for input variables.
 For quantitative variables, this is a suggestion. \code{pretty()} will determine}
@@ -17,7 +21,7 @@ For quantitative variables, this is a suggestion. \code{pretty()} will determine
 \item{at}{named list giving specific values at which to hold the variables. Use this to 
 override the automatic generation of levels for any or all explanatory variables.}
 
-\item{...}{arguments to predict()}
+\item{...}{arguments about the kind of output to be passed along to predict().}
 }
 \value{
 A dataframe containing both the explanatory variable inputs and
@@ -28,6 +32,12 @@ of \code{predict()}, which for many model classes/architectures may be a vector 
 Find the model outputs for specified inputs. This is equivalent to the 
 generic \code{predict()} function, except it will choose sensible values
 by default.  This simplifies getting a quick look at model values.
+}
+\details{
+There are two ways to evaluate the model on the training data. The first is
+to set the \code{data} argument to the same data frame used to train the model. The second
+is to use the \code{on_training = TRUE} argument. These are equivalent unless there is
+some random component among the explanatory terms, as with `mosaic::rand()`, `mosaic::shuffle()` and so on.
 }
 \examples{
 \dontrun{mod1 <- lm(wage ~ age * sex + sector, data = mosaicData::CPS85)

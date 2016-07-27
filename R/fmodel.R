@@ -20,6 +20,9 @@
 #' mod3 <- glm(married == "Married" ~ age + sex * sector,
 #'             data = mosaicData::CPS85, family = "binomial")
 #' fmodel(mod3, type = "response")
+#' # Adding the raw data requires a trick when it's TRUE/FALSE
+#' fmodel(mod3, ~ age + sex + sector, data = CPS85, nlevels = 10, type = "response") + 
+#'   geom_point(data = CPS85, aes(x = age, y = 0 + (married == "Married")), alpha = .1)
 #' }
 #' @export
 fmodel <- function(model=NULL, formula = NULL, data = NULL, 
@@ -43,7 +46,7 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL,
   response_values <- 
     if (response_var %in% names(data)) {data[[response_var]]}
     else {eval(parse(text = response_var), envir = data)}
-  if (! is.numeric(response_values)) {
+  if (! inherits(response_values, c("numeric", "logical"))) {
     # It's categorical
     if (is.null(prob_of)) prob_of <- names(sort(table(response_values), decreasing = TRUE))[1]
     if ( ! prob_of %in% response_values) stop("Level '", prob_of, "' doesn't exist in the response variable.")
@@ -84,13 +87,18 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL,
   # convert any quantiles for numerical levels to discrete
   first_var_quantitative <- is.numeric(eval_levels[[show_vars[1]]])
   eval_levels <- convert_to_discrete(eval_levels)
-  eval_levels[[response_var]] <- model_vals
+  # Deal with the response variable being a complex name
+  # e.g. when it includes operations on a data variable.
+  clean_response_name <- response_var
+  if( ! response_var %in% names(data))
+    clean_response_name <- "clean"
+  eval_levels[[clean_response_name]] <- model_vals
 
   # figure out the components of the plot
 
   P <- 
     ggplot(data = eval_levels,
-           aes_string(x = show_vars[1], y = response_var), group = NA) + 
+           aes_string(x = show_vars[1], y = clean_response_name), group = NA) + 
     ylab(response_var)
 
   if (length(show_vars) == 1) {

@@ -9,7 +9,7 @@ typical_levels(model = NULL, data = NULL, nlevels = 3, at = list(), ...)
 \arguments{
 \item{model}{the model to display graphically}
 
-\item{data}{optional data set from which to extract levels for explanatory variables}
+\item{data}{optional data frame from which to extract levels for explanatory variables}
 
 \item{nlevels}{how many levels to construct for input variables.
 For quantitative variables, this is a suggestion. \code{pretty()} will determine}
@@ -24,7 +24,7 @@ there will be about \code{nlevels^p} cases.
 }
 \description{
 This function tries to choose sensible values of the explanatory variables 
-from the data used to build a model 
+from the data used to build a model or any other specified data. 
 (or from data specified with the \code{data =} argument.)
 }
 \details{

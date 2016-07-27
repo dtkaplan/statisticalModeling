@@ -39,7 +39,7 @@
 
 #' @rdname formula_gg
 #' @export
-formula_to_gg <- function(data=NULL, formula=NULL, add=FALSE,
+formula_to_gg <- function(data = NULL, formula = NULL, add=FALSE,
                           geom = NULL, .use_name = NULL, details = NULL, ...) {
   if (is.null(formula)) stop("Must provide a graphing formula, e.g. y ~ x")
   if (is.null(data)) stop("Must provide a data frame for graphing")
@@ -54,21 +54,20 @@ formula_to_gg <- function(data=NULL, formula=NULL, add=FALSE,
   # Pull out the frame and aesthetic info from the formula
   # and put it in list form suitable for ggstring functions
   nms <- all.vars(formula, unique = FALSE)
-
+  aes_and_set_list <- pairs_in_formula(formula) # get the pairs (e.g. color:red)
+  extras <- capture_extras(...) # get the extra arguments (if any) to the geom
+  
   # generate the frame.
   # Default geoms are density (1-var) and point (2-vars)
   for_frame <-
     if (length(formula) == 2) {
       if (is.null(geom)) geom <- "density"
-      frame_string(data_name, nms[1])
+      frame_string(data_name, nms[1], aes_pairs = aes_and_set_list)
     } else {
       if (is.null(geom)) geom <- "point"
-      frame_string(data_name, nms[2], nms[1])
+      frame_string(data_name, nms[2], nms[1], aes_pairs = aes_and_set_list)
     }
 
-  extras <- capture_extras(...) # get the extra arguments (if any) to the geom
-
-  aes_and_set_list <- pairs_in_formula(formula) # get the pairs (e.g. color:red)
 
   for_layer_fun <- if (add){
     function(...) layer_string(names(data), geom = geom, extras = extras,
