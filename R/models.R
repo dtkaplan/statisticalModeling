@@ -61,7 +61,7 @@ data_from_model.lm <-
     # When/If I add the train function ...
     # if the object has a data attribute added by train, use that
     data_in_call <- which("data" == names(object$call))
-    if (length(which) == 1) {
+    if (length(data_in_call) == 1) {
       the_data <- eval(object$call[[data_in_call]])
       if (is.data.frame(the_data)) return(the_data)
     }
