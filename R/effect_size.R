@@ -40,7 +40,9 @@ effect_size <- function(model, formula, at = NULL, step = NULL, bootstrap = FALS
     ensemble_flag <- FALSE
   }
   
-  data <- data_from_model(original_model, data = data)
+  # If data not explicitly provided, get from model
+  if(is.null(data)) data <- data_from_model(original_model)
+  
   change_var <- all.vars(mosaic::rhs(formula))[1]
   # set up so that glms are evaluated, by default, as the response rather than the link
   if (inherits(model, "glm") && (! "type" %in% names(extras))) {
