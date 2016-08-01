@@ -39,8 +39,10 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL,
   }
   if( inherits(model, "gbm")) stop("gbm models still not working.")
 
-  # try to figure out what are the possible levels of variables
+  # If data not explicitly provided, get from model
   if (is.null(data)) data <- data_from_model(model)
+  
+  # try to figure out what are the possible levels of variables
   response_var <- response_var(model)
   # is the response categorical?  If so, plot the probability of the given level
   response_values <- 
