@@ -35,7 +35,7 @@ response_var.gbm <- function(object, ...) { deparse(object$Terms[[2]]) }
 
 response_values <- function(model) {
   Data <- data_from_model(model)
-  Data[[response_var(model)]]
+  eval(parse(text = response_var(model)), envir = Data) 
 }
 formula_from_mod <- function(object, ...) {
   UseMethod("formula_from_mod")
