@@ -22,6 +22,10 @@ explanatory_vars.lm <-
   # Need to fix this so that the items as stored in the model, 
   # e.g., as.factor(month), get returned.
   explanatory_vars.glm <- function(object, ...) all.vars(object$terms[[3]])
+#' @export
+explanatory_vars.bootstrap_ensemble <- function(object, ...) {
+  explanatory_vars(object$original_model, ...)
+}
 explanatory_vars.gbm <- function(object, ...) all.vars(object$Terms[[3]])
 #' @rdname extract_from_model
 #' @export
@@ -34,6 +38,10 @@ response_var.lm <-
   response_var.rpart <-
   response_var.randomForest <-
   response_var.glm <- function(object, ...) { deparse(object$terms[[2]])}
+#' @export
+response_var.bootstrap_ensemble <- function(object, ...) {
+  response_var(object$original_model, ...)
+}
 
 response_var.gbm <- function(object, ...) { deparse(object$Terms[[2]]) }
 # CHANGE THE ABOVE to draw on formula_from_mod()
