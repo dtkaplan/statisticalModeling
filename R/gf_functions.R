@@ -3,8 +3,8 @@
 #' These functions provide a formula interface to \code{ggplot2} and 
 #' various geoms. For plots with just one layer, the formula interface
 #' is more compact and is consistent with modeling and mosaic notation.
-#' The functions generate a \code{ggplot} command string. The \code{gf_geom_str()} 
-#' versions return that string, while the \code{gf_geom()} return the plot object itself.
+#' The functions generate a \code{ggplot} command string which can be displayed by
+#' setting \code{verbose = TRUE} as an argument.
 #' 
 #' @rdname gf_functions
 #'
@@ -19,10 +19,10 @@
 #' 
 #  See the functions at the bottom of this file
 
-# These are unexported helper functions ...
+# These are unexported helper functions to create the gf_ functions. The gf_ functions
+# themselves are at the end of this file....
 
-
-add_arg_list_to_function_string <- function(S, extras) {
+.add_arg_list_to_function_string <- function(S, extras) {
   empty <- grepl("\\(\\s?\\)$", S)
   res <- if (length(extras) == 0 ) { 
     S
@@ -112,7 +112,7 @@ gf_master <- function(formula = NULL, data = NULL, add = FALSE,
       main_arguments <- 
         df_to_aesthetics(from_formula, 
                          var_names, prefix = data_string)
-      add_arg_list_to_function_string(
+      .add_arg_list_to_function_string(
         paste0("geom_", geom, main_arguments),
         extras)
     } else {
@@ -123,7 +123,7 @@ gf_master <- function(formula = NULL, data = NULL, add = FALSE,
         df_to_aesthetics(subset(from_formula, ! map), var_names)
       paste0("ggplot", main_arguments, " + ", 
              # always add extras to geom string
-             add_arg_list_to_function_string(
+             .add_arg_list_to_function_string(
                paste0("geom_", geom, geom_arguments),
                extras
              ))

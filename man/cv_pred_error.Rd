@@ -5,7 +5,7 @@
 \title{Compare models with k-fold cross-validation}
 \usage{
 cv_pred_error(..., k = 10, ntrials = 10, output = c("mse", "likelihood",
-  "error_rate"))
+  "error_rate", "class"))
 }
 \description{
 Compare models with k-fold cross-validation
