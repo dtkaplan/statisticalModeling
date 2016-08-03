@@ -33,8 +33,8 @@ cv_pred_error <- function(..., k = 10, ntrials = 10,
         if( type == "class") {
           mean(truth != mod_output, na.rm = TRUE)
         } else if (type == "likelihood") {
-          sum(log(mod_output))
-        } else mean((truth - mod_output)^2, rm.na = TRUE)
+          sum(log(mod_output), na.rm = FALSE )
+        } else mean((truth - mod_output)^2, na.rm = TRUE)
     }
     from_this_mod <- data.frame(pred_error_results, model = full_names[counter],
                                 stringsAsFactors = FALSE)

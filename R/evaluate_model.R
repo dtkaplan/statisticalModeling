@@ -16,14 +16,17 @@
 #' For quantitative variables, this is a suggestion. \code{pretty()} will determine 
 #' @param at named list giving specific values at which to hold the variables. Use this to 
 #' override the automatic generation of levels for any or all explanatory variables.
-#' @param ... arguments about the kind of output to be passed along to predict().
+#' @param ... arguments about or values at which to evaluate the model or the kind of output to be passed along to predict().
 #'
 #'
 #' @details There are two ways to evaluate the model on the training data. The first is
 #' to set the \code{data} argument to the same data frame used to train the model. The second
 #' is to use the \code{on_training = TRUE} argument. These are equivalent unless there is
 #' some random component among the explanatory terms, as with `mosaic::rand()`, `mosaic::shuffle()` and so on.
-#' 
+#' When you want to restrict/force the evaluation at specified values of an explanatory variable,
+#' include a vector of those variables in ... for instance \code{sex = "F"} will restrict the evaluation
+#' to females.
+#'  
 #'
 #' @examples
 #' \dontrun{mod1 <- lm(wage ~ age * sex + sector, data = mosaicData::CPS85)
@@ -35,8 +38,10 @@
 #' }
 #' @export
 evaluate_model <- function(model=NULL, data = NULL, on_training = FALSE,
-                   nlevels = 3, at = list(), ...) {
-  extras <- list(...)
+                   nlevels = 3, ...) {
+  dots <- handle_dots_as_variables(model, ...)
+  extras <- dots$extras
+  at <- dots$at
   if (is.null(model)) {
     stop("Must provide a model to evaluate.")
   } else if (inherits(model, 

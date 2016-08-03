@@ -4,18 +4,14 @@
 \alias{effect_size}
 \title{Calculate effect sizes in a model}
 \usage{
-effect_size(model, formula, at = NULL, step = NULL, bootstrap = FALSE,
-  to = step, data = NULL, ...)
+effect_size(model, formula, step = NULL, bootstrap = FALSE, to = step,
+  data = NULL, ...)
 }
 \arguments{
 \item{model}{the model from which the effect size is to be calculated}
 
 \item{formula}{a formula whose right-hand side is the variable with respect
 to which the effect size is to be calculated.}
-
-\item{at}{center values for evaluating the model. These should be in the form of a 
-list or data.frame so that the variables involved can be named. Any variables that you do not set
-will be set for you automatically.}
 
 \item{step}{the numerical stepsize for the change var, or a comparison category
 for a categorical change var. This will be either a character string or a number,
@@ -27,18 +23,25 @@ specify the number of bootstrap replications (default:100).}
 \item{to}{a synonym for step. (In English, "to" is more appropriate for a 
 categorical input, "step" for a quantitative. But you can use either.)}
 
-\item{...}{additional arguments for \code{predict()}. For instance, for a glm, perhaps you
+\item{...}{additional arguments for evaluation levels of explanatory variables or to be passed to  \code{predict()}. For instance, for a glm, perhaps you
 want \code{type = "response"}.}
 }
 \description{
 Like a derivative or finite-difference
 }
+\details{
+When you want to force or restrict the effect size calculation to specific values for 
+explanatory variables, list those variables and levels as a vector in ...
+For example, \code{educ = c(10, 12, 16)} will cause the effect size to be calculated
+at each of those three levels of education. Any variables whose levels are not specified in 
+... will have values selected automatically.
+}
 \examples{
 mod1 <- lm(wage ~ age * sex * educ + sector, data = mosaicData::CPS85)
 effect_size(mod1, ~ sex)
 effect_size(mod1, ~ sector)
-effect_size(mod1, ~ age, at = list(sex = "M"))
-effect_size(mod1, ~ age, at = list(sex = "F", age = 34), step = 1)
-effect_size(mod1, ~ sex, at = list(age = 35, sex = "M"), to = "F" )
+effect_size(mod1, ~ age, sex = "M", educ = c(10, 12, 16), age = c(30, 40))
+effect_size(mod1, ~ age, sex = "F", age = 34, step = 1)
+effect_size(mod1, ~ sex, age = 35, sex = "M", to = "F" )
 }
 

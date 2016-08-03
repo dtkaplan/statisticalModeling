@@ -4,14 +4,18 @@
 #' @rdname extract_from_model
 #' @param object the model you are extracting features from.
 #' @param ... additional arguments (not used)
+#' @export
 data_from_model <- function(object, ...) {
   UseMethod("data_from_model")
 }
 #' @rdname extract_from_model
+#' @export
 explanatory_vars <- function(object, ...) {
   UseMethod("explanatory_vars")
 }
+#' @export
 explanatory_vars.lm <-
+  explanatory_vars.gwm <-
   explanatory_vars.groupwiseModel <-
   explanatory_vars.rpart <-
   explanatory_vars.randomForest <-
@@ -24,6 +28,7 @@ explanatory_vars.gbm <- function(object, ...) all.vars(object$Terms[[3]])
 response_var <- function(object, ...) {
   UseMethod("response_var")
 }
+#' @export
 response_var.lm <-
   response_var.groupwiseModel <-
   response_var.rpart <-
@@ -49,7 +54,9 @@ formula_from_mod.lm <-
 
 formula_from_mod.gbm <- function(object, ...) {formula(object$Terms) }
 
+#' @export
 data_from_model.lm <-
+  data_from_model.groupwiseModel <-
   data_from_model.glm <-
   data_from_model.randomForest <- 
   data_from_model.gbm <-
@@ -65,8 +72,6 @@ data_from_model.lm <-
       the_data <- eval(object$call[[data_in_call]], envir = parent.frame(3))
       if (is.data.frame(the_data)) return(the_data)
     }
-    # Fallback operation
-    stop("Can't extract data from models of class rpart. Provide the data in another way, e.g. via the argument data =")
   }
 
 #' Compute sensible values from a data set for use as a baseline
@@ -219,4 +224,16 @@ get_step = function(ref_vals, change_var, data, step = NULL, from = NULL) {
   step
 }
 
+# separate ... into the components that match explanatory variables ($at) 
+# and those that don't ($extras)
+
+handle_dots_as_variables <- function(mod, ...) {
+  xvars <- explanatory_vars(mod)
+  All <- list(...)
+  res <- list()
+  res$at <- All[names(All) %in% xvars]
+  res$extras <- All[ ! names(All) %in% xvars]
+  
+  res
+}
 
