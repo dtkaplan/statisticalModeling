@@ -12,8 +12,14 @@
 #' specify the number of bootstrap replications (default:100).
 #' @param to a synonym for step. (In English, "to" is more appropriate for a 
 #' categorical input, "step" for a quantitative. But you can use either.)
-#' @param ... additional arguments for evaluation levels of explanatory variables or to be passed to  \code{predict()}. For instance, for a glm, perhaps you
+#' @param ... additional arguments for evaluation levels of explanatory 
+#' variables or to be passed to  \code{predict()}. For instance, for a glm, perhaps you
 #' want \code{type = "response"}.
+#' @param at similar to \code{...} but expects a list or dataframe of the values you want to set.
+#' Like \code{...}, all combinations of the values specified will be used as inputs.
+#' @param data Specifies exactly the cases at which you want to calculate the effect size.
+#' Unlike \code{...} or \code{at}, no new combinations will be created.
+#' 
 #'
 #' @details 
 #' When you want to force or restrict the effect size calculation to specific values for 
@@ -32,9 +38,12 @@
 
 #' @export
 effect_size <- function(model, formula, step = NULL, 
-                        bootstrap = FALSE, to = step, data = NULL, ... ) {
+                        bootstrap = FALSE, to = step, data = NULL, at = NULL, ... ) {
   dots <- handle_dots_as_variables(model, ...)
-  at <- dots$at
+  inline_vals <- dots$at
+  # combine values set inline with those set in <at>, overriding the ones in <at>
+  at[names(inline_vals)] <- NULL
+  at <- c(at, inline_vals)
   extras <- dots$extras
   
   if (inherits(model, "bootstrap_ensemble")) {
@@ -46,10 +55,7 @@ effect_size <- function(model, formula, step = NULL,
     original_model <- model
     ensemble_flag <- FALSE
   }
-  
-  # If data not explicitly provided, get from model
-  if(is.null(data)) 
-    data <- data_from_model(original_model)
+
   
   change_var <- all.vars(mosaic::rhs(formula))[1]
   # set up so that glms are evaluated, by default, as the response rather than the link
@@ -57,7 +63,14 @@ effect_size <- function(model, formula, step = NULL,
     extras$type = "response"
   }
   from_inputs <- to_inputs <- 
-    create_eval_levels(original_model, formula, at=at, data = data)
+    if(is.null(data)) {
+      # if data not specified, pull 'typical' levels from the training data
+      data <- data_from_model(original_model)
+      create_eval_levels(original_model, formula, at=at, data = data)
+    } else {
+      # if data explicitly stated, use exactly those inputs
+      data
+    }
   step <- get_step(from_inputs, change_var, data, step = unlist(to))
   
   # construct inputs for step from baseline

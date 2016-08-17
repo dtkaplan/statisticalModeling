@@ -28,3 +28,20 @@ test_that("effect sizes work for rpart", {
   one <- effect_size(mod2, ~ sex, sector = "prof", sex = "F")
   expect_true(all(c("change.Married", "change.Single") %in% names(one)))
 })
+
+test_that("effect sizes are calculated for all combinations of variables specified as arguments", {
+  one <- effect_size(mod1, ~ sex, sector = c("prof", "clerical"), educ = 10:11)
+  expect_equal(nrow(one), 2 ^ 2) # two variables at two levels
+  two <- effect_size(mod1, ~ sex, at = list(sector = c("prof", "clerical")),
+                     educ = 10:11)
+  expect_equal(nrow(two), 2 ^ 2)
+})
+
+test_that("effect sizes work with a <data> argument.", {
+  one <- effect_size(mod1, ~ sex, data = head(mosaicData::CPS85, 5))
+  expect_equal(nrow(one), 5)
+})
+
+test_that("default values for inputs are made if no explicit values in at, data or ...", {
+  one <- effect_size(mod1, ~ sex, sector = c("prof", "clerical"))
+})

@@ -4,7 +4,7 @@
 \alias{cv_pred_error}
 \title{Compare models with k-fold cross-validation}
 \usage{
-cv_pred_error(..., k = 10, ntrials = 10, output = c("mse", "likelihood",
+cv_pred_error(..., k = 10, ntrials = 5, output = c("mse", "likelihood",
   "error_rate", "class"))
 }
 \description{

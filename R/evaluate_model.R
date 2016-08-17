@@ -9,17 +9,28 @@
 #' of \code{predict()}, which for many model classes/architectures may be a vector or matrix.
 #'
 #' @param model the model to display graphically
-#' @param data optional data set from which to extract levels for explanatory variables
+#' @param data optional set of cases from which to extract levels for explanatory variables
 #' @param on_training flag whether to use the training data for evaluation. Only needed
 #' when there are random terms, e.g. from \code{rand()}, \code{shuffle()}, .... See details.
 #' @param nlevels how many levels to construct for input variables.
-#' For quantitative variables, this is a suggestion. \code{pretty()} will determine 
+#' For quantitative variables, this is a suggestion. \code{pretty()} will refine your choice. (default: 3) 
 #' @param at named list giving specific values at which to hold the variables. Use this to 
-#' override the automatic generation of levels for any or all explanatory variables.
+#' override the automatic generation of levels for any or all explanatory variables. 
+#' Unlike \code{data =} the variables given in \code{at =} or \code{...} will be crossed, so that
+#' the evaluation will occur at all combinations of the various levels.
 #' @param ... arguments about or values at which to evaluate the model or the kind of output to be passed along to predict().
 #'
+#' @return A data frame containing both the inputs to the model and the corresponding outputs.
 #'
-#' @details There are two ways to evaluate the model on the training data. The first is
+#' @details This function is set up to let you look easily at typical outputs. The function 
+#' will choose "typical" levels of the explanatory variables at which to evaluate the model. 
+#' (See the examples.) The \code{nlevels} controls 
+#' how many levels of these levels to use. If you wish to choose your own levels for one or more
+#' explanatory variables, give those variables as named arguments assigned to the levels you want. If you have
+#' a data frame with the desired inputs for some or all of the explanatory variables, 
+#' use the \code{data} argument to pass those values.
+#' 
+#' There are two ways to evaluate the model on the training data. The first is
 #' to set the \code{data} argument to the same data frame used to train the model. The second
 #' is to use the \code{on_training = TRUE} argument. These are equivalent unless there is
 #' some random component among the explanatory terms, as with `mosaic::rand()`, `mosaic::shuffle()` and so on.
@@ -38,10 +49,14 @@
 #' }
 #' @export
 evaluate_model <- function(model=NULL, data = NULL, on_training = FALSE,
-                   nlevels = 3, ...) {
+                   nlevels = 3, at = NULL,...) {
   dots <- handle_dots_as_variables(model, ...)
   extras <- dots$extras
-  at <- dots$at
+  inline_values <- dots$at
+  # Override the values in <at> with any set as inline arguments.
+  at[names(inline_values)] <- NULL
+  at <- c(at, inline_values)
+  
   if (is.null(model)) {
     stop("Must provide a model to evaluate.")
   } else if (inherits(model, 
@@ -57,9 +72,11 @@ evaluate_model <- function(model=NULL, data = NULL, on_training = FALSE,
     if (on_training) {
       data_from_model(model)
     } else {
-      if (is.null(data)) 
+      if (is.null(data)) {
         typical_levels(model = model, data = data, nlevels = nlevels, at = at)
-      else data
+      } else {
+        data
+      }
     }
   
   model_vals <- 

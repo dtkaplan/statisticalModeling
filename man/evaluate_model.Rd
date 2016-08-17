@@ -5,28 +5,32 @@
 \title{Evaluate a model for specified inputs}
 \usage{
 evaluate_model(model = NULL, data = NULL, on_training = FALSE,
-  nlevels = 3, ...)
+  nlevels = 3, at = NULL, ...)
 }
 \arguments{
 \item{model}{the model to display graphically}
 
-\item{data}{optional data set from which to extract levels for explanatory variables}
+\item{data}{optional set of cases from which to extract levels for explanatory variables}
 
 \item{on_training}{flag whether to use the training data for evaluation. Only needed
 when there are random terms, e.g. from \code{rand()}, \code{shuffle()}, .... See details.}
 
 \item{nlevels}{how many levels to construct for input variables.
-For quantitative variables, this is a suggestion. \code{pretty()} will determine}
-
-\item{...}{arguments about or values at which to evaluate the model or the kind of output to be passed along to predict().}
+For quantitative variables, this is a suggestion. \code{pretty()} will refine your choice. (default: 3)}
 
 \item{at}{named list giving specific values at which to hold the variables. Use this to 
-override the automatic generation of levels for any or all explanatory variables.}
+override the automatic generation of levels for any or all explanatory variables. 
+Unlike \code{data =} the variables given in \code{at =} or \code{...} will be crossed, so that
+the evaluation will occur at all combinations of the various levels.}
+
+\item{...}{arguments about or values at which to evaluate the model or the kind of output to be passed along to predict().}
 }
 \value{
 A dataframe containing both the explanatory variable inputs and
 the resulting model output (in the `model_value` field). This differs from the output
 of \code{predict()}, which for many model classes/architectures may be a vector or matrix.
+
+A data frame containing both the inputs to the model and the corresponding outputs.
 }
 \description{
 Find the model outputs for specified inputs. This is equivalent to the 
@@ -34,6 +38,14 @@ generic \code{predict()} function, except it will choose sensible values
 by default.  This simplifies getting a quick look at model values.
 }
 \details{
+This function is set up to let you look easily at typical outputs. The function 
+will choose "typical" levels of the explanatory variables at which to evaluate the model. 
+(See the examples.) The \code{nlevels} controls 
+how many levels of these levels to use. If you wish to choose your own levels for one or more
+explanatory variables, give those variables as named arguments assigned to the levels you want. If you have
+a data frame with the desired inputs for some or all of the explanatory variables, 
+use the \code{data} argument to pass those values.
+
 There are two ways to evaluate the model on the training data. The first is
 to set the \code{data} argument to the same data frame used to train the model. The second
 is to use the \code{on_training = TRUE} argument. These are equivalent unless there is

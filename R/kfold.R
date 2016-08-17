@@ -1,7 +1,7 @@
 #' Compare models with k-fold cross-validation
 #'
 #' @export 
-cv_pred_error <- function(..., k = 10, ntrials = 10, 
+cv_pred_error <- function(..., k = 10, ntrials = 5, 
                      output = c("mse", "likelihood", "error_rate", "class")) {
   output <- match.arg(output)
   

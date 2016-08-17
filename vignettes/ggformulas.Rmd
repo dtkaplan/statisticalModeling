@@ -2,9 +2,7 @@
 title: "A formula interface to ggplot"
 author: "Daniel Kaplan"
 date: "`r Sys.Date()`"
-output: 
-  rmarkdown::html_vignette:
-    fig.caption: yes
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
@@ -26,7 +24,6 @@ Formulas in R --- the objects whose notation uses a tilde as in `y ~ x` --- prov
 plot(mpg ~ wt, data = mtcars) # base graphics
 xyplot(mpg ~ wt, data = mtcars) # lattice graphics
 ```
-
 
 Formulas are also used in model-building functions. The response variable appears on the left and explanatory variables on the right. For instance, Figure 2 shows a model built with the recursive partitioning architecture that attempts to account for fuel economy (`mpg`) as a function of engine power (`hp`) and the number of cylinders (`cyl`).
 

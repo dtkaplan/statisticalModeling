@@ -5,7 +5,7 @@
 \title{Calculate effect sizes in a model}
 \usage{
 effect_size(model, formula, step = NULL, bootstrap = FALSE, to = step,
-  data = NULL, ...)
+  data = NULL, at = NULL, ...)
 }
 \arguments{
 \item{model}{the model from which the effect size is to be calculated}
@@ -23,7 +23,14 @@ specify the number of bootstrap replications (default:100).}
 \item{to}{a synonym for step. (In English, "to" is more appropriate for a 
 categorical input, "step" for a quantitative. But you can use either.)}
 
-\item{...}{additional arguments for evaluation levels of explanatory variables or to be passed to  \code{predict()}. For instance, for a glm, perhaps you
+\item{data}{Specifies exactly the cases at which you want to calculate the effect size.
+Unlike \code{...} or \code{at}, no new combinations will be created.}
+
+\item{at}{similar to \code{...} but expects a list or dataframe of the values you want to set.
+Like \code{...}, all combinations of the values specified will be used as inputs.}
+
+\item{...}{additional arguments for evaluation levels of explanatory 
+variables or to be passed to  \code{predict()}. For instance, for a glm, perhaps you
 want \code{type = "response"}.}
 }
 \description{
