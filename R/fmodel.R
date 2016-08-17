@@ -4,9 +4,10 @@
 #' @param formula setting the y ~ x + color variables
 #' @param data optional data set from which to extract levels for explanatory variables
 #' @param nlevels how many levels to display for those variables shown at discrete levels
-#' @param at named list giving specific values at which to hold the variables.
+#' @param at named list giving specific values at which to hold the variables. You can accomplish 
+#' this without forming a list by using \code{...}. See examples.
 #' @param prob_of if to show probability of a given level of the output, name the class here as a character string.
-#' @param ... arguments to predict()
+#' @param ... specific values for explantory variables and/or arguments to predict()
 #'
 #'
 #' @examples
@@ -27,7 +28,13 @@
 #' @export
 fmodel <- function(model=NULL, formula = NULL, data = NULL, 
                    nlevels = 3, at = list(), prob_of = NULL, ...) {
-  extras <- list(...)
+  dots <- handle_dots_as_variables(model, ...)
+  extras <- dots$extras
+  inline_values <- dots$at
+  # Override the values in <at> with any set as inline arguments.
+  at[names(inline_values)] <- NULL
+  at <- c(at, inline_values)
+  
   if (is.null(model)) {
     stop("Must provide a model for graphing.")
   } else if (inherits(model, 
