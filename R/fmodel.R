@@ -9,11 +9,18 @@
 #' @param prob_of if to show probability of a given level of the output, name the class here as a character string.
 #' @param ... specific values for explantory variables and/or arguments to predict()
 #'
+#' @details Often you will want to show some data along with the model functions. 
+#' You can do this with `ggplot2::geom_point()` making sure to set the \code{data} argument
+#' to be a data frame with the cases you want to plot.
 #'
 #' @examples
-#' \dontrun{mod1 <- lm(wage ~ age * sex + sector, data = mosaicData::CPS85)
+#' \dontrun{
+#' mod1 <- lm(wage ~ age * sex + sector, data = mosaicData::CPS85)
 #' fmodel(mod1)
 #' fmodel(mod1, ~ sector + sex + age) # not necessarily a good ordering
+#' # show the data used for fitting along with the model
+#' fmodel(mod1, ~ age + sex + sector, nlevels = 8) + 
+#'   ggplot2::geom_point(data = mosaicData::CPS85, alpha = 0.1)
 #' require(ggplot2)
 #' fmodel(mod1, ~ age + sex + sector, nlevels = 8) + 
 #'   geom_point(data = mosaicData::CPS85, alpha = 0.1) +
@@ -21,9 +28,10 @@
 #' mod3 <- glm(married == "Married" ~ age + sex * sector,
 #'             data = mosaicData::CPS85, family = "binomial")
 #' fmodel(mod3, type = "response")
-#' # Adding the raw data requires a trick when it's TRUE/FALSE
-#' fmodel(mod3, ~ age + sex + sector, data = CPS85, nlevels = 10, type = "response") + 
-#'   geom_point(data = CPS85, aes(x = age, y = 0 + (married == "Married")), alpha = .1)
+#' # Adding the raw data requires an as.numeric() trick when it's TRUE/FALSE
+#' fmodel(mod3, ~ age + sex + sector, nlevels = 10, type = "response") + 
+#'   geom_point(data = mosaicData::CPS85, 
+#'   aes(x = age, y = as.numeric(married == "Married")), alpha = .1)
 #' }
 #' @export
 fmodel <- function(model=NULL, formula = NULL, data = NULL, 
@@ -106,9 +114,19 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL,
   # figure out the components of the plot
 
   P <- 
+    if (length(show_vars) > 1 ) {
+      ggplot(data = eval_levels, 
+             aes_string(x = show_vars[1], 
+                        color = show_vars[2], 
+                        y = clean_response_name),
+             group = NA)
+    } else {
     ggplot(data = eval_levels,
-           aes_string(x = show_vars[1], y = clean_response_name), group = NA) + 
-    ylab(response_var)
+           aes_string(x = show_vars[1], 
+                      y = clean_response_name), 
+           group = NA) 
+    }
+    P <- P + ylab(response_var)
 
   if (length(show_vars) == 1) {
     if (first_var_quantitative) {

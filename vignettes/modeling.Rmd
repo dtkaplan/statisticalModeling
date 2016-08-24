@@ -1,0 +1,351 @@
+---
+title: "A Basic Software Framework for Statistical Modeling"
+author: "Daniel Kaplan"
+date: "August 22, 2016"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r include = FALSE}
+library(statisticalModeling)
+library(dplyr)
+library(ggplot2)
+library(mosaic)
+```
+
+A course named "data analysis" is a common gateway to the concepts and techniques for drawing information from data. In this context, as in so many, "analysis" is used to infuse a scientific flavor into the word it modifies; it has no precise meaning.^[The character Spock in *Star Trek* says in one episode, "I have no analysis due to insufficient information." That sounds more scientific or logical than its simpler equivalent: "I don't know."] Strictly speaking, "analysis" is the opposite of "synthesis." Synthesis brings parts together to form a whole; analysis splits the whole into its parts. In statistics, "analysis of variance" uses "analysis" in precisely this sense: dividing the whole variance into parts.
+
+[Wikipedia](https://en.wikipedia.org/wiki/Data_analysis) describes "data analysis" as having "multiple facets and approaches, encompassing diverse techniques under a variety of names, in different business, science, and social science domains." This means that "data analysis" is, ironically, the synthesis of many different things.
+
+Many, but not all, of the techniques taught in a typical "data analysis" course are really about modeling. In my experience, "modeling" provides a useful framework for describing much of what we want to accomplish by looking at data. The goal of this vignette is to motivate, describe, and document some software --- the `statisticalModeling` package --- designed to make it easier for students and their teachers to discuss, study, and carry out modeling.
+
+# Modeling
+
+My favorite definition of a model comes from a book, *How to Model It: Problem Solving for the Computer Age*, by Starfield, Smith, and Blelock. They wrote that 
+
+> a model is a representation for a purpose.
+
+This definition points out that a model is not the thing itself, it is a representation, it stands for, it displays important facets of the thing itself. The definition also emphasizes that the best representation depends in large part on the purpose for which that representation will be used. The definition provides a useful framework for organizing concepts, e.g.
+
+* What "material" are representations made from?
+* What are typical purposes for models?
+* What operations are performed on models?
+
+In teaching and conducting statistical modeling, I think it's important to be able to hold in one's head the answers to these questions. With this accomplished, building a model is a matter of making choices from the possibilities.
+
+With respect to data, models are typically created to:
+
+1. Make predictions about new events based on observations of events that have already occurred.
+2. Provide a description of the real-world mechanisms that underlie the system being modeled.
+3. Look for (potentially complex) relationships in a mass of data.
+
+The `statisticalModeling` package is intended to make it straightforward to carry out these objectives. This is achieved by using notation that is consistent across different operations for modeling and by providing specific operations most importantly needed for building and interpreting models.
+
+# Data
+
+The starting point for using `statisticalModeling` is data organized into the usual tabular form: cases and variables. The package does not provide facilities for collecting and organizing raw data. There are many excellent packages already in wide use for that, e.g., `dplyr`, `tidyr`, and `data.table`. So start working with `statisticalModeling` with a data table (e.g. a "data.frame"", a "tibble", etc.) already in hand. 
+
+Throughout the operations provided by `statisticalModeling`, you will access a variable by its column name, and direct the operation to a particular data table by using a `data =` argument.
+
+Some data tables used for examples are provided directly by `statisticalModeling`. There is nothing special or essential about these data. They are in the package because it is helpful in examples or demonstrations to work with data that the learner also has access to, and because over-familiarity with ever-popular data sets such as the famous `iris`, `mtcars`, and `diamonds` can lead to a failure to see what's new about a demonstration.
+
+# Graphics
+
+One of the main materials from which statistical models are made is graphics. A data graphic is a representation of a data table which has particular resonance with human cognitive abilities and which builds on topics found in widely taught math curricula, e.g. cartesian coordinates.
+
+There are many excellent graphics packages provided for R. The `statisticalModeling` package currently builds on one of them, `ggplot2`. The purpose of the graphics functions in `statisticalModeling` is to provide a clear, concise, and consistent interface to the underlying graphics package.
+
+A simple example:
+```{r}
+library(statisticalModeling)
+gf_point(mpg ~ hp, data = mtcars)
+```
+
+Each of the marks in the plot is a *glyph*. Every glyph has graphical *attributes*. In the above plot, the attributes are x- and y-position. Other possible graphical attributes for a point glyph are color, shape, size, stroke, fill, and alpha (transparency).
+
+
+Experts, of course, will want to use the underlying package directly in order to maximize expressiveness and minimize the "bureaucracy" induced by intervening layers of software. The `statisticalModeling` graphics are suited for beginners because they reduce the number of elements used in notation.
+
+There are three aspects to describing graphics using `statisticalModeling`:
+
+1. The "kind of graphic" to be created, e.g. scatter plots, density plots, bar plots, maps, etc.
+2. The role that each variable plays in the graphic, e.g. x- or y-axis, color, shape, facet.
+3. And, of course, the data table(s) on which the graphic is to be based.
+
+The "kind of graphic" is specified by the name of the graphics function. All of the `statisticalModeling` data graphics functions have names starting with `gf_`, which is intended to remind the user that they are formula-based interfaces to `ggplot2`: `g` for `ggplot2` and `f` for "formula." Commonly used functions are 
+
+- `gf_points()` for scatter plots
+- `gf_density()` or `gf_histogram()` or `gf_freqpoly()` to display distributions
+- `gf_boxplot()` for comparing distributions side-by-side
+- `gf_counts()` for bar-graph style depictions of counts.
+- `gf_bar()` for more general bar-graph style graphics
+
+The function names generally match the corresponding operation in `ggplot2`, although `gf_counts()` is a simplified special case.
+
+Each of the `gf_` functions creates the coordinate axes and fills it in one operation. (In `ggplot2` nomenclature, `gf_` function create a frame and add a geom layer, all in one operation.)
+
+In the `gf_` functions, you specify the graphical attributes using a formula. Each such specification takes the form `attribute:value`, where `attribute` is one of `color`, `shape`, etc. and `value` is either a constant (e.g. `"red"` or `0.5` as appropriate) or a variable (e.g. `cyl`). For instance:
+```{r}
+gf_point(mpg ~ hp + color:cyl + size:carb + alpha:0.75, data = mtcars) +
+  ggplot2::ylab("Miles per gallon") +
+  ggplot2::xlab("Horsepower")
+```
+
+You add labels and facets using the standard `ggplot2` notation.  `xlab()` and `ylab()` are adding the axis labels in the above. (For faceting, see below.)
+
+## Density and related plots
+
+To illustrate, we'll use the density style `gf_density()`, but the same instructions apply to `gf_histogram()` and `gf_freqpolygon()`.  *Note that in the one-variable density graphics, the variable whose density is to be calculated goes to the right of the tilde, in the position reserved for the x-axis variable.*
+
+```{r fig.show = "hold", out.width = "30%", warning=FALSE}
+gf_density( ~ net, data = Runners)
+gf_density( ~ net + fill:sex + alpha:0.5, data = Runners)
+gf_density( ~ net + fill:sex + color:NA + alpha:0.5, data = Runners)
+```
+
+When the `fill` or `color` or `group` aesthetics are mapped to a variable, the default behavior is to lay the group-wise densities on top of one another. Other behavior is also available by using `position` in the formula. Using the value `"stack"` causes the densities to be laid one on top of another, so that the overall height of the stack is the density across all groups. The value `"fill"` produces a conditional probability graphic.
+```{r fig.show = "hold", warning=FALSE}
+gf_density( ~ net + fill:sex + color:NA + position:"stack", data = Runners)
+gf_density( ~ net + fill:sex + color:NA + position:"fill", data = Runners)
+```
+
+Similar commands can be constructed with `gf_histogram()` and `gf_freqpoly()`, but note that `color`, not `fill`, is the active aesthetic for frequency polygons and `position:"fill"` doesn't work.
+
+Box and whisker plots show the distribution of a quantitative variable as a function of a categorical variable. The formula used in `gf_boxplot()` should have the quantitative variable to the left of the tilde.
+
+```{r fig.show = "hold", warning = FALSE}
+gf_boxplot(net ~ sex + color:"red", data = Runners)
+gf_boxplot(net ~ sex + color:start_position, data = Runners)
+```
+
+To use a discrete quantitative variable for grouping, you should convert it to a categorical variable. This can be done in several ways:
+```{r}
+Runners$the_year <- as.character(Runners$year) # in base R
+Runners <- Runners %>% mutate(the_year = as.character(year)) # in dplyr
+gf_boxplot(net ~ the_year + color:sex, data = Runners)
+```
+
+Two-dimensional plots of density also have both a left and right component to the formula.
+```{r fig.show = "hold"}
+gf_density_2d(net ~ age, data = Runners)
+gf_hex(net ~ age, data = Runners)
+```
+
+## Paths and lines
+
+The `ggplot` system offers two ways to connect points. `gf_line()` ignores the order of the points in the data draws the line going from left to right. `gf_path()` goes from point to point according to the order in the data. Both forms can use a `color` or `group` aesthetic as a flag to draw groupwise lines.
+
+```{r fig.show = "hold", out.width = "30%"}
+# use a categorical variable
+mtcars <- mtcars %>% mutate(n_cylinders = as.character(cyl)) 
+gf_line(mpg ~ hp, data = mtcars)
+gf_path(mpg ~ hp, data = mtcars)
+gf_line(mpg ~ hp + color:n_cylinders, data = mtcars)
+```
+
+The above are examples of *bad plots*. The viewer is unnecessarily distracted by the zigs and zags in the connecting lines. It would be better to use `gf_point()` here, but then you wouldn't see how `gf_line()` and `gf_path()` work!
+
+## Faceting
+
+The `ggplot` system allows you to make subplots --- called "facets" --- based on the values of one or two categorical variables. This is done by "adding" a `facet_grid()` directive. The directive uses a formula to specify which variable(s) are to be used in the grid.
+
+```{r fig.show = "hold", warning=FALSE}
+gf_density_2d(net ~ age, data = Runners) + facet_grid( ~ sex)
+gf_density_2d(net ~ age, data = Runners) + facet_grid(start_position ~ sex)
+```
+
+## Overlapping cases
+
+Sometimes you have so many points in a scatter plot that they obscure one another. The `ggplot` system provides two easy ways to deal with this: translucency and jittering.
+
+Use `alpha:0.5` to make the points semi-translucent. If there are many points overlapping at one point, a much smaller value of alpha, say `alpha:0.01`.
+
+Using `gf_jitter()` in place of `gf_point()` will move the plotted points to reduce overlap.  You can use both of these techniques, e.g. 
+
+```{r}
+gf_jitter(age ~ sex + alpha:0.01, data = Runners)
+```
+
+
+## For ggplot2 users: gf and gg together
+
+gf generates a ggplot object
+
+Use `verbose = TRUE` to see the string being generated.
+
+# Models and functions
+
+Models are built using the standard R functions for such things, e.g. `lm()`, `glm()`, `rpart()` and so on. 
+
+Each of these model-building functions takes the same kinds of inputs:
+
+1. a data table passed via the `data = ` argument.
+2. a formula specifying the response variable on the left and the explanatory variables on the right. Depending on the model architecture, e.g. `lm()` or `rpart()`, the formula may also specify interactions, transformations, etc.
+3. whatever parameters are specific to the model architecture, e.g. the complexity parameter `cp` for recursive partitioning models or the `family` for generalized linear models.
+
+This vignette isn't about how to select response and explanatory variables, or which model architectures are appropriate for any given purpose. For our purposes here, it suffices to say that the choice depends on (among other things) the *purpose* for building the model:
+
+- Prediction. Include whatever explanatory terms produce the best predictions. (See cross-validation, below.) It doesn't matter what causes what, just what variables are known *before* you need to make the prediction.
+- Description of the system under study. Think carefully about covariates.
+- Looking for patterns in masses of data. Graphics (see above) are, of course, a nice way to start. Architectures such as `rpart()` that provide facilities for selecting subsets of variables can be useful for winnowing out the irrelevant.
+
+Accomplishing these purposes of course involves constructing models. R already provides many relevant model-fitting capabilities in regression, machine learning, classification, etc. Typically, constructing a model means investigating several or many competing models, comparing them, and evaluating and interpreting them to extract information of interest.
+
+The `statisticalModeling` package proviodes a small set of operations on models to make it straightforward to compare, evaluate, and interpret models. My goals in choosing these operations were:
+
+* generality. The operations should apply to a wide range of model architectures.
+* ease of use. There should be a minimal amount of set up needed to apply the operations.
+* direct applicability to making the decisions that modelers need to make in carrying out their work.
+
+1. Evaluating a model for "new" inputs: see `evaluate_model()`.
+2. Calculating the influence of a variable on the output of the model: see `effect_size()`.
+3. Supporting comparison of multiple models: see `cv_pred_error()`.
+4. Estimating uncertainty in model results: see, e.g. `ensemble()` which works hand-in-hand with `evaluate_model()` and `effect_size()`.
+
+## Graphics of model functions
+
+The function `fmodel()` draws a graph of the function induced by a model. I'll start with this because it illustrates well how the `statisticalModeling` functions provide ease of use.
+
+When graphing a model, choices need to be made about the levels at which to evaluate the explanatory variables, and which explanatory variable is to be mapped to which feature of the graph: x-axis, color, facets.  The only required argument to `fmodel()` is a model object. You can use a formula if you want to control which the roles played by the explanatory variables.
+
+Example: The `Houses_for_sale` dataset was organized by Prof. Dick de Veau of Williams college as a demonstration of confounding for introductory statistics students. Here is a model of the asking prices of houses as a function of several familiar attributes of the property.
+```{r fig.show = "hold"}
+house_mod <- lm(price ~ fireplaces * living_area + land_value + bedrooms, data = Houses_for_sale)
+```
+
+Since five variables are involved in the model, some quantitative and some categorical, decisions need to be made about how to depict the model in a graph. `fmodel()` provides plausible defaults so that a graph of the model function can be made without specifying any details. `fmodel()` also provides a simple mechanism, via a formula, to set the roles of the various explanatory variables in the graph.
+```{r fig.show = "hold"}
+fmodel(house_mod)
+fmodel(house_mod, ~ living_area + fireplaces)
+```
+```{r}
+fmodel(house_mod, ~ living_area + land_value + bedrooms, bedrooms = 1:4)
+```
+
+
+Note that the argument `bedrooms = 1:4` indicates to `fmodel()` that it should use the values 1, 2, 3, and 4 as levels shown in the plot for the number of bedrooms.
+
+Data can be added to the graphic using `geom_point()`. Here's an example of a model linking wages to age, sex, and the sector of work:
+```{r}
+library(ggplot2)
+wage_mod <- lm(wage ~ age * sex + sector, data = mosaicData::CPS85)
+fmodel(wage_mod, ~ age + sex + sector, nlevels = 8) + 
+  ggplot2::geom_point(data = mosaicData::CPS85, alpha = 0.1)
+```
+
+## Evaluating models
+
+Evaluating a model means to provide a set of inputs for the explanatory variables and then compute the output of the model at each of those inputs. In base R, the `predict()` method provides this functionality, but it has several deficiencies:
+
+1. The default inputs are the data used to train the model. But often, the modeller wants a quick view of the model output for just a few different inputs. Accomplishing this involves creating a new data frame.
+2. `predict()` has an argument interface that is inconsistent among different model types. 
+3. `predict()` does not record which inputs got mapped to which outputs.
+
+The `evaluate_model()` function in the `statisticalModeling` package addresses these difficulties. It's default inputs are a small set of "typical" values derived from the training data. It's easy to override this default for any particular explanatory variable, while continuing to use the defaults for the others. The interface is consistent across kinds of model objects. And the output of `evaluate_model()` is a data frame that includes both the inputs and the corresponding output. 
+
+To illustrate:
+```{r}
+evaluate_model(wage_mod)
+```
+
+Or, to override the levels selected for evaluation:
+```{r}
+evaluate_model(wage_mod, nlevels = 2)
+evaluate_model(wage_mod, sector = "service", age = c(25, 55))
+```
+
+Use the `data = ` argument to provide an explicit set of cases, or set `on_training = TRUE` to evaluate the model on the training data. When this is done, the response variable used for training will also be in the output of `evaluate_model()`, making it easy to calculate residuals or prediction error.
+
+## Effect sizes
+
+A simple but effective way to interpret a model is to look at how a change in an explanatory variable leads to a change in model output: the effect size. Conventionally, this is done by looking at model coefficients, but this can become complicated in the presence of interactions or with models involving link functions.
+
+A short-cut is to use `evaluate_model()` with inputs at different levels, for example:
+```{r}
+evaluate_model(wage_mod, sector = "service", sex = "F", age = 50)
+evaluate_model(wage_mod, sector = "service", sex = "F", age = 55)
+```
+
+The `effect_size()` function provides a simpler interface:
+```{r}
+effect_size(wage_mod, ~ age, age = 50, sector = "service")
+```
+
+The explanatory variable whose effect size is being calculated is set by the one-sided formula, e.g. `~ age` in the above example. Note also that the effect size is specified as a *slope* when the explanatory variable is quantitative, and as a *change* when the explanatory variable is categorical.
+
+Also notice that for quantitative variables, the two levels being compared are set to a mid-sized value (based on the range in the training data). This finite-difference can be more appropriate when working with discontinuous architectures such as recursive partitioning.
+
+## Inference 
+
+Statistical inference is one of the most daunting subjects that a beginning student faces. Students need to learn about parameters like degrees of freedom, the null hypothesis plays an outside role, there are several different kinds of sampling distribution involved.
+
+Any inference technique provided by a model object is, of course, always available for your use. For instance, regression tables and ANOVA are often used in linear models.
+
+The `statisticalModeling` package attempts to provide a much simpler basis for inference. There are two elements behind the strategy for doing so:
+
+1. Use conceptually simple techniques, e.g. the bootstrap, that work in the same way across many different model architectures. 
+2. Use cross-validation to avoid having to worry about the consequences of in-sample evaluation of data.
+
+To illustrate, let's draw on the question that motivated the collection of the `Houses_for_sale` data: how much does a fireplace influence the sales price of a house? It's hardly reasonable to claim that a fireplace is a primary determinant of a house's price: there are covariates that are likely much more important.  Here's a baseline model of price based on some of these covariates:
+
+```{r}
+baseline_mod <- lm(price ~ living_area + bathrooms + land_value, data = Houses_for_sale)
+```
+
+And here's a model that adds `fireplaces` to the mix:
+```{r}
+fireplace_mod <- lm(price ~ living_area + bathrooms + land_value + fireplaces, 
+                    data = Houses_for_sale)
+```
+
+A conventional comparison of the two models is done using in-sample residuals and therefore needs to take into account degrees of freedom, the shape of the F distribution, etc. 
+
+```{r}
+anova(baseline_mod, fireplace_mod)
+```
+
+This is fine, but somewhat complicated and abstract.
+
+A cross-validation approach looks at the prediction error of the models on out-of-sample data (implemented in this case with k-fold cross-validation). That prediction error will vary depending on the data used for training and the data used for evaluation. The `cv_pred_error()` function calculates several random replicates of cross-validation, producing an output of mean-squared error for each replicate.
+
+```{r}
+Trials <- cv_pred_error(baseline_mod, fireplace_mod, ntrials = 10)
+Trials
+```
+
+Assessing whether `fireplaces` shows up as determining the house's price is a matter of comparing the MSE for the two models:
+```{r}
+boxplot(mse ~ model, data = Trials)
+```
+
+Not so much. Or, if you want to generate a p-value, try
+```{r}
+t.test(mse ~ model, data = Trials)
+```
+
+Cross-validation tests the performance of models when assessed on *out-of-sample* data. Here, we see that `fireplaces` is not a major player.
+
+We might also look at the effect size of `fireplaces`.
+```{r}
+effect_size(fireplace_mod, ~ fireplaces)
+```
+This indicates that a fireplace adds about $4000 to the price of a house.  How precise is this estimate?  We can address this by bootstrapping. 
+
+In the `statisticalModeling` package, the process is to create an ensemble of bootstrap replicates of a model:
+```{r}
+E <- ensemble(fireplace_mod, nreps = 50)
+```
+
+Calculating the effect size on this ensemble will produce an ensemble of effect sizes, the spread of which gives the precision of the estimate.
+
+```{r}
+EE <- effect_size(E, ~ fireplaces)
+with(data = EE, sd(slope))
+```
+
+
+
+
