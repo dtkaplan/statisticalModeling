@@ -1,0 +1,1 @@
+name,fit_function,class,formula,dataframe,data_store,response_var,explanatory_varslm,lm,lm,yes,both,object$model,deparse(object$terms[[2]]),deparse(object$terms[[3]])gbm,gbm,gbm,yes,both,,deparse(object$Terms[[2]]),deparse(object$Terms[[3]])glm,glm,glm,yes,explanatory,object$model,object$response.name,,,,,neither,,,
