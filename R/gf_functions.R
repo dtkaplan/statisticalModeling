@@ -204,11 +204,37 @@ pairs_in_formula <- function(formula) {
   parts <- gsub("^\\s+|\\s+$", "", parts)
   # identify the pairs
   pairs <- parts[grep(":+", parts)]
+  xy <- parts[ ! grepl(":", parts)][-1] # logic for x:, y: explicit
   res <- list()
   for (pair in pairs) {
     this_pair <- unlist(strsplit(pair, ":+"))
     res[this_pair[1] ] <- this_pair[2]
   }
+  # more logic for x:, y: explicit.
+  error("Haven't yet updated logic in frame_string. See comment.")
+  # BUT ... not yet replaced explicit "x" and "y" arguments in 
+  # frame_string()
+  if (length(xy) == 2) {
+    if ("y" %in% names(res)) 
+      warning("duplicate specification of y aesthetic")
+    else res["y"] <- xy[1]
+
+    
+    if ("x" %in% names(res))
+      warning("duplicate specification of x aesthetic")
+    else res["x"] <- xy[2]
+  } else if (length(xy) == 1) {
+    if ("y" %in% names(res)) {
+      if ("x" %in% names(res))
+        warning("duplicate specification of x aesthetic")
+      else res["x"] <- xy
+    } else if ("x" %in% names(res)) {
+      if ("y" %in% names(res))
+        warning("duplicate specification of y aesthetic")
+      else res["y"] <- xy
+    }
+  }
+
   res
 }
 
