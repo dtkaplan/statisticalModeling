@@ -7,6 +7,7 @@
 #' @param at named list giving specific values at which to hold the variables. You can accomplish 
 #' this without forming a list by using \code{...}. See examples.
 #' @param prob_of if to show probability of a given level of the output, name the class here as a character string.
+#' @param intervals show confidence or prediction intervals: values "none", "confidence", "prediction"
 #' @param ... specific values for explantory variables and/or arguments to predict()
 #'
 #' @details Often you will want to show some data along with the model functions. 
@@ -35,13 +36,15 @@
 #' }
 #' @export
 fmodel <- function(model=NULL, formula = NULL, data = NULL, 
-                   nlevels = 3, at = list(), prob_of = NULL, ...) {
+                   nlevels = 3, at = list(), prob_of = NULL,
+                   intervals = c("none", "confidence", "prediction"), ...) {
   dots <- handle_dots_as_variables(model, ...)
   extras <- dots$extras
   inline_values <- dots$at
   # Override the values in <at> with any set as inline arguments.
   at[names(inline_values)] <- NULL
   at <- c(at, inline_values)
+  intervals <- match.arg(intervals)
   
   if (is.null(model)) {
     stop("Must provide a model for graphing.")
@@ -92,13 +95,31 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL,
   if (inherits(model, "glm") && ( ! "type" %in% names(extras))) {
     extras$type = "response"
   }
+  if ( ! inherits(model, c("lm", "glm", "nls")) ) {
+    warning("No intervals available for model type", class(model))
+    intervals = "none"
+  }
   model_vals <- 
-    do.call(predict,c(list(model, newdata = eval_levels, level = prob_of), 
+    do.call(predict,c(list(model, newdata = eval_levels), 
                       extras))
   if (inherits(model, "rpart") && inherits(model_vals, c("data.frame", "matrix"))) {
     # handle the matrix values from predict.rpart()
     keepers <- colnames(model_vals) == prob_of
     model_vals <- model_vals[,keepers] # just the first class
+  }
+  
+  # get the confidence or prediction intervals
+  if (intervals == "none") {
+    # do nothing
+    Intervals <- NULL
+  } else {
+    if ( ! inherits(model, c("lm", "glm", "nls"))) {
+      warning("Intervals not yet available for models of class ", class(model))
+      Intervals <- NULL
+    } else {
+      Intervals <-
+        do.call(predict, c(list(model, newdata = eval_levels, interval = intervals)))
+    }
   }
 
   # convert any quantiles for numerical levels to discrete
@@ -111,6 +132,9 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL,
     clean_response_name <- "clean"
   eval_levels[[clean_response_name]] <- model_vals
 
+  if ( ! is.null(Intervals))
+    Intervals <- cbind(eval_levels[show_vars], data.frame(Intervals))
+  
   # figure out the components of the plot
 
   P <- 
@@ -126,17 +150,20 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL,
                       y = clean_response_name), 
            group = NA) 
     }
-    P <- P + ylab(response_var)
-
+ 
+    
+    
+  
   if (length(show_vars) == 1) {
     if (first_var_quantitative) {
-      P <- P + geom_line()
+      P <- P + geom_line() 
     }
     else {
       P <- P + geom_point()
     }
   } else { # more than one explanatory variable
     if (first_var_quantitative) {
+      
       P <- P + geom_line(
         aes_string(color = show_vars[2], linetype = show_vars[2]), 
         alpha = 0.8)
@@ -148,13 +175,38 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL,
     }
   }
 
-
+  if (first_var_quantitative) {
+    Qfun <- geom_ribbon
+  } else {
+    Qfun <- geom_errorbar
+  }
+  
+  Q <- NULL # nothing to show, unless ...
+  if ( ! is.null(Intervals)) {
+    if (length(show_vars) > 1) {
+      Q <- Qfun(data = Intervals, 
+                aes_string(x = show_vars[1], 
+                           y = NULL, # don't need this
+                           ymax = "upr", ymin = "lwr", fill = show_vars[2]), 
+                color = NA, alpha = 0.2) 
+    } else {
+      Q <- Qfun(data = Intervals, 
+                aes_string(x = show_vars[1], 
+                           y = NULL, # don't need this
+                           ymax = "upr", ymin = "lwr"), 
+                color = NA, alpha = 0.2, fill = "blue")
+    }
+  }
+  
+  
+    
   if (length(show_vars) == 3)
     P <- P + facet_wrap(show_vars[3], labeller = label_both)
   if (length(show_vars) == 4)
     P <- P + facet_grid(paste(show_vars[3], "~", show_vars[4]), 
                         labeller = label_both)
 
-  P # return the plot
+  P <- P + ylab(response_var)
+  P + Q # return the plot
 }
 
