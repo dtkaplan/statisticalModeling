@@ -61,11 +61,11 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL,
   if (is.null(data)) data <- data_from_model(model)
   
   # try to figure out what are the possible levels of variables
-  response_var <- response_var(model)
+  response_var_name <- response_var(model)
   # is the response categorical?  If so, plot the probability of the given level
   response_values <- 
-    if (response_var %in% names(data)) {data[[response_var]]}
-    else {eval(parse(text = response_var), envir = data)}
+    if (response_var_name %in% names(data)) {data[[response_var_name]]}
+    else {eval(parse(text = response_var_name), envir = data)}
   if (! inherits(response_values, c("numeric", "logical"))) {
     # It's categorical
     if (is.null(prob_of)) prob_of <- names(sort(table(response_values), decreasing = TRUE))[1]
@@ -127,8 +127,8 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL,
   eval_levels <- convert_to_discrete(eval_levels)
   # Deal with the response variable being a complex name
   # e.g. when it includes operations on a data variable.
-  clean_response_name <- response_var
-  if( ! response_var %in% names(data))
+  clean_response_name <- response_var_name
+  if( ! response_var_name %in% names(data))
     clean_response_name <- "clean"
   eval_levels[[clean_response_name]] <- model_vals
 
@@ -206,7 +206,7 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL,
     P <- P + facet_grid(paste(show_vars[3], "~", show_vars[4]), 
                         labeller = label_both)
 
-  P <- P + ylab(response_var)
+  P <- P + ylab(response_var_name)
   P + Q # return the plot
 }
 
