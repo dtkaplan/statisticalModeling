@@ -8,6 +8,8 @@
 #' this without forming a list by using \code{...}. See examples.
 #' @param prob_of if to show probability of a given level of the output, name the class here as a character string.
 #' @param intervals show confidence or prediction intervals: values "none", "confidence", "prediction"
+#' @param post_transform a scalar transformation and new name for the response variable, 
+#' e.g. \code{post_transform = c(price = exp)} to undo a log transformation of price.
 #' @param ... specific values for explantory variables and/or arguments to predict()
 #'
 #' @details Often you will want to show some data along with the model functions. 
@@ -26,6 +28,8 @@
 #' fmodel(mod1, ~ age + sex + sector, nlevels = 8) + 
 #'   geom_point(data = mosaicData::CPS85, alpha = 0.1) +
 #'   ylim(0, 20)
+#' mod2 <- lm(log(wage) ~ age + sex + sector, data = mosaicData::CPS85)
+#' fmodel(mod2, post_transform = c(wage = exp)) # undo the log in the display
 #' mod3 <- glm(married == "Married" ~ age + sex * sector,
 #'             data = mosaicData::CPS85, family = "binomial")
 #' fmodel(mod3, type = "response")
@@ -37,7 +41,8 @@
 #' @export
 fmodel <- function(model=NULL, formula = NULL, data = NULL, 
                    nlevels = 3, at = list(), prob_of = NULL,
-                   intervals = c("none", "confidence", "prediction"), ...) {
+                   intervals = c("none", "confidence", "prediction"),
+                   post_transform = NULL, ...) {
   dots <- handle_dots_as_variables(model, ...)
   extras <- dots$extras
   inline_values <- dots$at
@@ -107,6 +112,7 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL,
     keepers <- colnames(model_vals) == prob_of
     model_vals <- model_vals[,keepers] # just the first class
   }
+  if ( ! is.null(post_transform)) model_vals <- post_transform[[1]](model_vals)
   
   # get the confidence or prediction intervals
   if (intervals == "none") {
@@ -119,6 +125,11 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL,
     } else {
       Intervals <-
         do.call(predict, c(list(model, newdata = eval_levels, interval = intervals)))
+      if ( ! is.null(post_transform)) {
+        the_transform <- post_transform[[1]]
+        for (k in 1:length(Intervals))
+          Intervals[[k]] <- the_transform(Intervals[[k]])
+      }
     }
   }
 
@@ -186,15 +197,15 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL,
     if (length(show_vars) > 1) {
       Q <- Qfun(data = Intervals, 
                 aes_string(x = show_vars[1], 
-                           y = NULL, # don't need this
+                           y = "NULL", # don't need this
                            ymax = "upr", ymin = "lwr", fill = show_vars[2]), 
                 color = NA, alpha = 0.2) 
     } else {
       Q <- Qfun(data = Intervals, 
                 aes_string(x = show_vars[1], 
-                           y = NULL, # don't need this
+                           y = "NULL", # don't need this
                            ymax = "upr", ymin = "lwr"), 
-                color = NA, alpha = 0.2, fill = "blue")
+                color = "black", alpha = 0.2) #, fill = "blue")
     }
   }
   
@@ -206,6 +217,7 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL,
     P <- P + facet_grid(paste(show_vars[3], "~", show_vars[4]), 
                         labeller = label_both)
 
+  if ( ! is.null(post_transform)) response_var_name <- names(post_transform)
   P <- P + ylab(response_var_name)
   P + Q # return the plot
 }

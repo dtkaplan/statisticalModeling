@@ -5,7 +5,8 @@
 \title{Plot out model values}
 \usage{
 fmodel(model = NULL, formula = NULL, data = NULL, nlevels = 3,
-  at = list(), prob_of = NULL, ...)
+  at = list(), prob_of = NULL, intervals = c("none", "confidence",
+  "prediction"), post_transform = NULL, ...)
 }
 \arguments{
 \item{model}{the model to display graphically}
@@ -20,6 +21,11 @@ fmodel(model = NULL, formula = NULL, data = NULL, nlevels = 3,
 this without forming a list by using \code{...}. See examples.}
 
 \item{prob_of}{if to show probability of a given level of the output, name the class here as a character string.}
+
+\item{intervals}{show confidence or prediction intervals: values "none", "confidence", "prediction"}
+
+\item{post_transform}{a scalar transformation and new name for the response variable, 
+e.g. \code{post_transform = c(price = exp)} to undo a log transformation of price.}
 
 \item{...}{specific values for explantory variables and/or arguments to predict()}
 }
@@ -43,6 +49,8 @@ require(ggplot2)
 fmodel(mod1, ~ age + sex + sector, nlevels = 8) + 
   geom_point(data = mosaicData::CPS85, alpha = 0.1) +
   ylim(0, 20)
+mod2 <- lm(log(wage) ~ age + sex + sector, data = mosaicData::CPS85)
+fmodel(mod2, post_transform = c(wage = exp)) # undo the log in the display
 mod3 <- glm(married == "Married" ~ age + sex * sector,
             data = mosaicData::CPS85, family = "binomial")
 fmodel(mod3, type = "response")
