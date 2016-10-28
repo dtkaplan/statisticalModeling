@@ -73,6 +73,11 @@ effect_size <- function(model, formula, step = NULL,
     }
   step <- get_step(from_inputs, change_var, data, step = unlist(to))
   
+  # deal with the architectures written only for factors by
+  # converting the step to a factor
+  if (inherits(from_inputs[[change_var]], "factor"))
+    step <- factor(step, levels = levels(from_inputs[[change_var]]))
+  
   # construct inputs for step from baseline
   if (is.numeric(step)) {
     to_inputs[[change_var]] <- from_inputs[[change_var]] + step
