@@ -7,21 +7,18 @@ Maintainer: Daniel Kaplan <kaplan@macalester.edu>
 Description: Functions providing a formula-based interface to ggplot.
 License: MIT + file LICENSE
 LazyData: TRUE
+Depends:
+    R (>= 3.1), ggplot2
 Imports:
-    shiny,
-    miniUI,
-    ggplot2,
-    ggmap,
     lazyeval,
     rpart,
     mosaic,
     magrittr
 RoxygenNote: 5.0.1
 Suggests:
+    dplyr,
     testthat,
     mosaicData,
-    mosaicMapShapes,
-    rpart.plot,
     knitr,
     rmarkdown
 VignetteBuilder: knitr

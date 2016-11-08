@@ -5,9 +5,6 @@
 \alias{Houses_for_sale}
 \title{Houses for sale}
 \format{A dataframe with 1728 cases, each of which is a house for sale.}
-\source{
-\href{http://community.amstat.org/stats101/home}{Stat 101}
-}
 \usage{
 data(Houses_for_sale)
 }
@@ -15,7 +12,7 @@ data(Houses_for_sale)
 A random sample of 1,728 homes taken from public records 
 from the Saratoga County 
 (http://www.saratogacountyny.gov/departments/real-property-tax-service-agency/).
-Collected by Candice Corvetti (Williams College ’07) for her senior thesis.
+Collected by Candice Corvetti (Williams College '07) for her senior thesis.
 }
 \details{
 These data are part of a case study developed by Prof. Dick de Veaux at 

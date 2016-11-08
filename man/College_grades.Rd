@@ -24,7 +24,7 @@ The data were helpfully provided by the registrar of the college with the provis
 that the de-identification steps outlined above be performed.
 }
 \usage{
-data(College_grades, package = "statisticalModeling")
+data(College_grades)
 }
 \description{
 These are the actual grades for 400+ individual students in the courses they took
@@ -35,7 +35,9 @@ As another form of de-identification, only half of the courses each student, sel
 are included. Only courses with 10 or more students enrolled were included.
 }
 \examples{
-GPA <- mosaic::mean(gradepoint ~ sid, data = College_grades)
+\dontrun{
+GPA <- lm(gradepoint ~ sid - 1, data = College_grades)
+}
 }
 \keyword{datasets}
 

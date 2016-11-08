@@ -6,7 +6,7 @@
 #' 
 #' @docType data
 #' @name Crime
-#' @usage data(Crime, package = "statisticalModeling")
+#' @usage data(Crime)
 #'
 #' @keywords datasets
 #'

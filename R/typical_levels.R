@@ -17,7 +17,7 @@
 #' For quantitative variables, this is a suggestion. \code{pretty()} will determine 
 #' @param at named list giving specific values at which to hold the variables. Use this to 
 #' override the automatic generation of levels for any or all explanatory variables.
-#'
+#' @param ... a more concise mechanism to passing desired values for variables
 #'
 #' @examples
 #' \dontrun{mod1 <- lm(wage ~ age * sex + sector, data = mosaicData::CPS85)

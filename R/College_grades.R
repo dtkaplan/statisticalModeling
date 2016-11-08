@@ -8,8 +8,8 @@
 #' are included. Only courses with 10 or more students enrolled were included.
 #' 
 #' @docType data
-#'
-#' @usage data(College_grades, package = "statisticalModeling")
+#' @name College_grades
+#' @usage data(College_grades)
 #'
 #' @keywords datasets
 #' 
@@ -34,5 +34,7 @@
 #'   }
 #' 
 #' @examples
-#' GPA <- mosaic::mean(gradepoint ~ sid, data = College_grades)
+#' \dontrun{
+#' GPA <- lm(gradepoint ~ sid - 1, data = College_grades)
+#' }
 "College_grades"

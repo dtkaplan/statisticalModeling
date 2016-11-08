@@ -3,14 +3,14 @@
 #' A random sample of 1,728 homes taken from public records 
 #' from the Saratoga County 
 #' (http://www.saratogacountyny.gov/departments/real-property-tax-service-agency/).
-#' Collected by Candice Corvetti (Williams College ’07) for her senior thesis.
+#' Collected by Candice Corvetti (Williams College '07) for her senior thesis.
 #' 
 #' These data are part of a case study developed by Prof. Dick de Veaux at 
 #' Williams. They are available from the American Statistical Association's \href{http://community.amstat.org/stats101/home}{Stat 101} collection
 #' of case studies and included in this package for convenience.
 #'
 #' @docType data
-#'
+#' @name Houses_for_sale
 #' @usage data(Houses_for_sale)
 #'
 #' @format A dataframe with 1728 cases, each of which is a house for sale. 
@@ -19,7 +19,7 @@
 #'
 #' @references Dick De Veaux (2015) "How much is a fireplace worth?" Stats 101: A resource for teaching introductory statistics, American Statistical Association
 #'
-#' @source \href{http://community.amstat.org/stats101/home}{Stat 101}
+# @source \href{http://community.amstat.org/stats101/home}{Stat 101}
 #' 
 #' @examples
 #' mod_1 <- lm(price ~ fireplaces, data = Houses_for_sale)

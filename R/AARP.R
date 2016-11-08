@@ -12,8 +12,8 @@
 #' changes as the insured person ages.) 
 #' 
 #' @docType data
-#'
-#' @usage data(AARP, package = "statisticalModeling")
+#' @name AARP
+#' @usage data(AARP)
 #'
 #' @keywords datasets
 #' 

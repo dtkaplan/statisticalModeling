@@ -21,7 +21,7 @@
 #' 
 #' @docType data
 #' @name School_data
-#' @usage data(School_data, package = "statisticalModeling")
+#' @usage data(School_data)
 #'
 #' @keywords datasets
 #'

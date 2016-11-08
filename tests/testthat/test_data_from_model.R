@@ -16,7 +16,7 @@ test_that("data from glm", {
   one <- predict(mod1, newdata = data.frame(sector = "prof", sex = "M", educ = 15), type = "link")
   two <- predict(mod1, newdata = data.frame(sector = "prof", sex = "F", educ = 15), type = "link")
   three <- effect_size(mod1, ~ sex, at = list(sector = "prof", educ = 15, sex = "F"), type = "link")
-  expect_equal(as.numeric(three$change), as.numeric(two - one))
+  expect_equal(as.numeric(three$change), as.numeric(one - two))
 })
 
 test_that("can deal with odd scoping situations", {

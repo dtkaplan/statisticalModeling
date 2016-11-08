@@ -4,7 +4,7 @@
 #' 
 #' @docType data
 #' @name Oil_history
-#' @usage data(Oil_history, package = "statisticalModeling")
+#' @usage data(Oil_history)
 #'
 #' @keywords datasets
 #'

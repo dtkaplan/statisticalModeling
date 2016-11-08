@@ -221,4 +221,3 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL,
   P <- P + ylab(response_var_name)
   P + Q # return the plot
 }
-

@@ -13,11 +13,11 @@
     \item{\code{income}}{Family yearly income in 2500USD increments 0 = under 2500, 1=2500-4999, ..., 8= 12,500-14,999, 9=15000+}
   }}
 \source{
-The "AARP Bulletin". 
-A copy of the ad is available \href{http://tiny.cc/mosaic/AARP-insurance-ad.pdf}{at this link.}
+D. Nolan and T.P. Speed (2009) "Stat Labs: Mathematical
+Statistics Through Applications"
 }
 \usage{
-data(Birth_weight, package = "statisticalModeling")
+data(Birth_weight)
 }
 \description{
 Birth weight, date, and gestational period collected as part 
@@ -26,8 +26,7 @@ Information about the baby's parents --- age, education, height,
 weight, and whether the mother smoked is also recorded.  
 The data were present by Nolan and Speed to address the question 
 of whether there is a link between maternal smoking and the 
-baby's health. (See D. Nolan and T.P. Speed (2009) "Stat Labs: Mathematical
-Statistics Through Applications")
+baby's health.
 }
 \examples{
 mod_1 <- lm(baby_wt ~ gestation + mother_wt, data = Birth_weight)

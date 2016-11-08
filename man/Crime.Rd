@@ -18,7 +18,7 @@
 FBI Uniform Crime Report via \href{http://dasl.datadesk.com/data/view/114}{DASL: Data and Story Library}
 }
 \usage{
-data(Crime, package = "statisticalModeling")
+data(Crime)
 }
 \description{
 A report of the number of offenses reported to police per million

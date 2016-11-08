@@ -16,7 +16,7 @@ The "AARP Bulletin".
 A copy of the ad is available \href{http://tiny.cc/mosaic/AARP-insurance-ad.pdf}{at this link.}
 }
 \usage{
-data(AARP, package = "statisticalModeling")
+data(AARP)
 }
 \description{
 The AARP (original named the "American Association of Retired People" 

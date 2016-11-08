@@ -1,5 +1,27 @@
 #' Compare models with k-fold cross-validation
 #'
+#' @param ... one or more models on which to perform the cross-validation
+#' @param k the k in k-fold. cross-validation will use k-1/k of the data for training.
+#' @param ntrials how many random partitions to make. Each partition will be one case in the 
+#' output of the function
+#' @param output The kind of output to produce from each cross-validation. See details.
+#' 
+#' @details The purpose of cross-validation is to provide "new" data on which to test a model's 
+#' performance. In k-fold cross-validation, the data set used to train the model is broken into 
+#' new training and testing data. This is accomplished simply by using most of the data for training while 
+#' reserving the remaining data for evaluating the model: testing. Rather than training a single model, k models
+#' are trained, each with its own particular testing set. The testing sets in the k models are arranged to cover the
+#' whole of the data set. On each of the k testing sets, a performance output is calculated. Which output is 
+#' most appropriate depends on the kind of model: regression model or classifier. The most basic measure is the mean square error: the 
+#' difference between the actual response variable in the testing data and the output of the model 
+#' when presented with inputs from the testing data. This is appropriate in many regression models.
+#'
+#' For classification models, two different outputs are appropriate. The first is the error rate: the frequency
+#' with which the classifier produces an incorrect output when presented with inputs from the testing data. This 
+#' is a rather course measure. A more graded measure is the likelihood: the probability of the response values
+#' from the test data given the model. (The "class" method is exactly the same as "error rate", but provided 
+#' for compatibility purposes with other software under development.)  
+#' 
 #' @export 
 cv_pred_error <- function(..., k = 10, ntrials = 5, 
                      output = c("mse", "likelihood", "error_rate", "class")) {
@@ -47,53 +69,6 @@ cv_pred_error <- function(..., k = 10, ntrials = 5,
   result
 }
 
-#' returns a vector of predictions or likelihoods
-#' @export
-kfold_trial <- function(mod, 
-                        k=10, 
-                        type = c("response", "prob", "likelihood", "class")) {
-  # This isn't working for null models
-  # null_mod <- lm(net ~ 1, data = Runners)
-  # null_output <- kfold_trial(null_mod)
-  
-  
-  
-  type <- match.arg(type)
-  # Grab the data and the call from the model.
-  data <- data_from_model(mod)
-  # For cross validation, we don't want the constructed terms
-  constructed <- grep("\\(.*\\)", names(data))
-  if (length(constructed) > 0) data[[constructed]] <- NULL # get rid of them
-  
-  # set up the call for fitting the model to the training data
-  architecture <- mod$call[[1]]
-  fit_call <- mod$call
-  fit_call[["data"]] <- as.name("training")
-  # construct the groups for the k-fold divisions
-  groups <- sample(rep(1:k, length.out = nrow(data) ))
-  # Create a holder for the result
-  # output <- evaluate_model(mod, data = data, type = type)
-  output <- numeric(nrow(data))
-  
-  for (group in 1:k) {
-    training <- data[group != groups, , drop = FALSE ]
-
-    testing  <- data[group == groups, , drop = FALSE ]
-    
-    this_model <- eval(fit_call)
-
-    output[group == groups] <- 
-      if (type == "likelihood") {
-        likelihood_helper(this_model, data = testing)
-      } else if (type == "class") {
-        class_helper(this_model, data = testing)
-      } else {
-        mse_helper(this_model, data = testing)
-      }
-  }
-  
-  output
-}
 
 class_helper <- function(mod, data) {
   # find the classifier output for each case

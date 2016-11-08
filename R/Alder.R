@@ -47,7 +47,7 @@
 
 #'
 #' @docType data
-#'
+#' @name Alder
 #' @usage data(Alder)
 #'
 #' @keywords datasets

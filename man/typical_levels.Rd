@@ -16,6 +16,8 @@ For quantitative variables, this is a suggestion. \code{pretty()} will determine
 
 \item{at}{named list giving specific values at which to hold the variables. Use this to 
 override the automatic generation of levels for any or all explanatory variables.}
+
+\item{...}{a more concise mechanism to passing desired values for variables}
 }
 \value{
 A dataframe containing all combinations of the selected values for 

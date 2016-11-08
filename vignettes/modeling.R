@@ -4,51 +4,6 @@ library(dplyr)
 library(ggplot2)
 library(mosaic)
 
-## ------------------------------------------------------------------------
-library(statisticalModeling)
-gf_point(mpg ~ hp, data = mtcars)
-
-## ------------------------------------------------------------------------
-gf_point(mpg ~ hp + color:cyl + size:carb + alpha:0.75, data = mtcars) +
-  ggplot2::ylab("Miles per gallon") +
-  ggplot2::xlab("Horsepower")
-
-## ----fig.show = "hold", out.width = "30%", warning=FALSE-----------------
-gf_density( ~ net, data = Runners)
-gf_density( ~ net + fill:sex + alpha:0.5, data = Runners)
-gf_density( ~ net + fill:sex + color:NA + alpha:0.5, data = Runners)
-
-## ----fig.show = "hold", warning=FALSE------------------------------------
-gf_density( ~ net + fill:sex + color:NA + position:"stack", data = Runners)
-gf_density( ~ net + fill:sex + color:NA + position:"fill", data = Runners)
-
-## ----fig.show = "hold", warning = FALSE----------------------------------
-gf_boxplot(net ~ sex + color:"red", data = Runners)
-gf_boxplot(net ~ sex + color:start_position, data = Runners)
-
-## ------------------------------------------------------------------------
-Runners$the_year <- as.character(Runners$year) # in base R
-Runners <- Runners %>% mutate(the_year = as.character(year)) # in dplyr
-gf_boxplot(net ~ the_year + color:sex, data = Runners)
-
-## ----fig.show = "hold"---------------------------------------------------
-gf_density_2d(net ~ age, data = Runners)
-gf_hex(net ~ age, data = Runners)
-
-## ----fig.show = "hold", out.width = "30%"--------------------------------
-# use a categorical variable
-mtcars <- mtcars %>% mutate(n_cylinders = as.character(cyl)) 
-gf_line(mpg ~ hp, data = mtcars)
-gf_path(mpg ~ hp, data = mtcars)
-gf_line(mpg ~ hp + color:n_cylinders, data = mtcars)
-
-## ----fig.show = "hold", warning=FALSE------------------------------------
-gf_density_2d(net ~ age, data = Runners) + facet_grid( ~ sex)
-gf_density_2d(net ~ age, data = Runners) + facet_grid(start_position ~ sex)
-
-## ------------------------------------------------------------------------
-gf_jitter(age ~ sex + alpha:0.01, data = Runners)
-
 ## ----fig.show = "hold"---------------------------------------------------
 house_mod <- lm(price ~ fireplaces * living_area + land_value + bedrooms, data = Houses_for_sale)
 

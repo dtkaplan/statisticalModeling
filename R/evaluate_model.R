@@ -8,6 +8,10 @@
 #' the resulting model output (in the `model_value` field). This differs from the output
 #' of \code{predict()}, which for many model classes/architectures may be a vector or matrix.
 #'
+#' @importFrom stats formula lm median model.matrix predict quantile sd
+#' @importFrom ggplot2 aes_string facet_grid facet_wrap geom_errorbar geom_line geom_point geom_ribbon ggplot label_both ylab
+#' @importFrom utils data
+#' 
 #' @param model the model to display graphically
 #' @param data optional set of cases from which to extract levels for explanatory variables
 #' @param on_training flag whether to use the training data for evaluation. Only needed

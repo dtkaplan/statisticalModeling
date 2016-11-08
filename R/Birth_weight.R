@@ -6,18 +6,16 @@
 #' weight, and whether the mother smoked is also recorded.  
 #' The data were present by Nolan and Speed to address the question 
 #' of whether there is a link between maternal smoking and the 
-#' baby's health. (See D. Nolan and T.P. Speed (2009) "Stat Labs: Mathematical
-#' Statistics Through Applications")
+#' baby's health.
 #' 
 #' @docType data
-#'
-#' @usage data(Birth_weight, package = "statisticalModeling")
+#' @name Birth_weight
+#' @usage data(Birth_weight)
 #'
 #' @keywords datasets
 #' 
-#' @source The "AARP Bulletin". 
-#' A copy of the ad is available \href{http://tiny.cc/mosaic/AARP-insurance-ad.pdf}{at this link.}
-#'
+#' @source D. Nolan and T.P. Speed (2009) "Stat Labs: Mathematical
+#' Statistics Through Applications"
 #' @format
 #'   A data frame with 886 observations on the following variables.
 #'   \itemize{

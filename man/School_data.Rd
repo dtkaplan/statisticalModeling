@@ -15,7 +15,7 @@
     potentially an issue because a large majority of urban private schools are Catholic.}
   }}
 \usage{
-data(School_data, package = "statisticalModeling")
+data(School_data)
 }
 \description{
 In the US, there have been controversial proposals to provide vouchers 
