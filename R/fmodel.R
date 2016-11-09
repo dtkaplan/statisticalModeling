@@ -100,7 +100,7 @@ fmodel <- function(model=NULL, formula = NULL, data = NULL,
   if (inherits(model, "glm") && ( ! "type" %in% names(extras))) {
     extras$type = "response"
   }
-  if ( ! inherits(model, c("lm", "glm", "nls")) ) {
+  if ( ! inherits(model, c("lm", "glm", "nls")) && intervals != "none" ) {
     warning("No intervals available for model type", class(model))
     intervals = "none"
   }

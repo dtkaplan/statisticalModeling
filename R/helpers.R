@@ -133,6 +133,7 @@ get_step = function(ref_vals, change_var, data, step = NULL, from = NULL) {
         vals <- vals[ ! vals %in% from]
       else {
         vals <- vals[ ! vals %in% ref_vals[[change_var]]]
+        if (length(vals) == 0) vals <- data[[change_var]]
       }
       step <- names(sort(table(vals), decreasing = TRUE))[1] 
     }

@@ -62,9 +62,11 @@ effect_size <- function(model, formula, step = NULL,
   if (inherits(model, "glm") && (! "type" %in% names(extras))) {
     extras$type = "response"
   }
+  if (length(at) > 0 && !is.null(data)) {
+    warning("You specified 'at' levels. Using these instead of raw data.") 
+  }
   from_inputs <- to_inputs <- 
-    if(is.null(data)) {
-      # if data not specified, pull 'typical' levels from the training data
+    if (is.null(data) || length(at) > 0) {
       data <- data_from_model(original_model)
       create_eval_levels(original_model, formula, at=at, data = data)
     } else {
@@ -75,9 +77,12 @@ effect_size <- function(model, formula, step = NULL,
   
   # deal with the architectures written only for factors by
   # converting the step to a factor
-  if (inherits(from_inputs[[change_var]], "factor"))
-    step <- factor(step, levels = levels(from_inputs[[change_var]]))
-  
+  if (inherits(from_inputs[[change_var]], "factor")) {
+    levels_for_change_var <- unique(as.character(data[[change_var]]))
+    from_inputs[[change_var]] = factor(from_inputs[[change_var]], 
+                                       levels = levels_for_change_var)
+    step <- factor(step, levels = levels_for_change_var)
+  }
   # construct inputs for step from baseline
   if (is.numeric(step)) {
     to_inputs[[change_var]] <- from_inputs[[change_var]] + step

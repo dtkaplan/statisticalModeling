@@ -114,8 +114,14 @@ reference_values <- function(data, n = 1, at = list()) {
       conversions[[k]] <- attr(ranges[[k]], "convert")
     }
   }
-  res <- do.call(expand.grid, ranges)
+  res <- do.call(expand.grid, c(ranges, stringsAsFactors = FALSE))
   attr(res, "convert") <- conversions
+  
+  vnames <- names(res)
+  for (name in vnames) {
+    if (inherits(data[[name]], "factor") && !inherits(res[[name]], "factor"))
+      res[[name]] <- factor(res[[name]], levels = levels(data[[name]]))
+  }
 
   res
 }

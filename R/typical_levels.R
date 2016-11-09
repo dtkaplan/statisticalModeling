@@ -50,6 +50,11 @@ typical_levels <- function(model=NULL, data = NULL,
   how_many <- as.list(c(rep(nlevels, length(explan_vars))))
   names(how_many) <- explan_vars
   eval_levels <- reference_values(data[explan_vars], n = how_many, at = at )
+  vnames <- names(eval_levels)
+  for (name in vnames) {
+    if (inherits(data[[name]], "factor") && !inherits(eval_levels[[name]], "factor"))
+      eval_levels[[name]] <- factor(eval_levels[[name]], levels = levels(data[[name]]))
+  }
 
   eval_levels
 }
