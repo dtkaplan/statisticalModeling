@@ -1,8 +1,8 @@
-![Travis-CI Build Status](https://travis-ci.org/dtkaplan/statisticalModeling.svg?branch=master)](https://travis-ci.org/dtkaplan/statisticalModeling)
+[![Travis-CI Build Status](https://travis-ci.org/dtkaplan/statisticalModeling.svg?branch=master)](https://travis-ci.org/dtkaplan/statisticalModeling)
 
 # R Functions for teaching statistics and statistical modeling
 
-This package reflects my evolving thinking about how to teach statistics and the importance of integrating *modeling* into how students think about statistics. Many of the basic ideas have been expressed in my book [*Statistical Modeling: A Fresh Approach](http://project-mosaic-books.com/?page_id=13) (2/e, 2011):
+This package reflects my evolving thinking about how to teach statistics and the importance of integrating *modeling* into how students think about statistics. Many of the basic ideas have been expressed in my book [*Statistical Modeling: A Fresh Approach*](http://project-mosaic-books.com/?page_id=13) (2/e, 2011):
 
 * make statistics about *explaining* variation rather than comparing means
 * place covariation at the center, since almost all modern studies, including those in the news contain some adjustment for covariates, often signalled by the phrase "after adjusting for ...."
