@@ -2,53 +2,42 @@
 
 # R Functions for teaching statistics and statistical modeling
 
+Detailed examples of the use of the `statisticalModeling` package are contained in the package vignettes. This document is directed to instructors to explain the motivation behind `statisticalModeling`. 
+
 This package reflects my evolving thinking about how to teach statistics and the importance of integrating *modeling* into how students think about statistics. Many of the basic ideas have been expressed in my book [*Statistical Modeling: A Fresh Approach*](http://project-mosaic-books.com/?page_id=13) (2/e, 2011):
 
-* make statistics about *explaining* variation rather than comparing means
-* place covariation at the center, since almost all modern studies, including those in the news contain some adjustment for covariates, often signalled by the phrase "after adjusting for ...."
-* use modern computation not merely to make easier traditional calculations, such as means, standard deviations, and table lookups. Instead use the power of modern computation to create the conceptual basis for thinking about statistical problems.
+1. make statistics about *explaining* variation rather than comparing means
+2. place covariation at the center, since almost all modern studies, including those in the news, contain some adjustment for covariates, often signalled by the phrase "after adjusting for ...."
+3. use modern computation to establish a conceptual framework for thinking about modeling, not merely to make easier traditional calculations, such as means, standard deviations, and table lookups.
 
-For the *Statistical Modeling* book, I wrote a set of R functions, which were a light gloss on standard R that made it possible to avoid esoteric R commands in favor of a straightforward notation. With Randy Pruim and Nicholas Horton, we expanded and systemetized this into the `mosaic` package, distributed via CRAN. I think that's still a good way to teach statistics.
+This package is about (3).
 
-But there have been many changes in the decade since Randy, Nick, and I started working together.
+Teaching about statistical modeling often starts with linear regression. I think there is an advantage to introducing other modeling techniques at the same time or even before linear regression. Why?
 
-```{r}
-library(randomForest)
-data(CPS85, package = "mosaicData")
+- Regression models are useful for some problems, classifiers are useful for others. For many audiences, classification can be a more intuitive and compelling problem type to study.
+- Model forms such as classification and regression trees can be much easier for statistics students to interpret, and can tell a richer story that makes interactions among explanatory variables easier to see and understand.
+- A modern sort of statistical problem is searching through masses of data for patterns and relationships. Students should see early on approaches to this problem.
 
-linear_mod <-           lm(wage ~ educ + sex + age, data = CPS85)
-forest_mod <- randomForest(wage ~ educ + sex + age, data = CPS85)
+R provides an infrastructure to support teaching about linear regression. This includes, of course, the `lm()` function, but also supporting functions for inference and graphics, e.g.
 
-fmodel(forest_mod)
-```
+- `summary()` when applied to an `lm` object produces the traditional regression table and other information such as R$^2$.
+- `abline()` makes it easy to plot a (single-variable) regression line over data. Functions such as `stat_smooth()` in the `ggplot2` package make it easy to extend this to functions of several variables.
+- `confint()` produces confidence intervals on coefficients. 
+- The `mosaic` package has added support for bootstrapping, randomization tests, and the like, as well as extending base functions such as `mean()` to allow the formula interface to modeling and to provide a straightforward and consistent template that covers a wide variety of statistical techniques.
 
+This `statisticalModeling` package provides an alternative interface that generalizes to many different statistical modeling types, both regression and classification.  It includes:
 
-This package contains model evaluation and graphing utilities for teaching statistical modeling. It's written to gather in one place the functions used in the DataCamp statistical modeling course and for a possible third edition of *Statistical Modeling: a Fresh Approach*.
+* `evaluate_model()` produces model outputs that correspond to inputs. It simplifies quickly examining multi-variate models, since it will choose sensible values for any inputs that have not been given specific values. It also generalizes across model architectures in ways that the `predict()` family of methods does not.
+* `effect_size()` for examining how a change in a model input is related to a change in model output. It is, in effect, a generalization of regression coefficients.
+* `cv_pred_error()` makes it simple to apply cross-validation to compare models.
+* `ensemble()` provides simple support for bootstrapping effect sizes.
 
-1. `effect_size(mod)` for calculating the effect size of an explanatory on a response
-2. `fmodel(mod)` for making a nice but easy graph of model output vs inputs.
-3. A formula interface to `ggplot2` graphics (which I intend to expand to other graphic systems, particularly interactive graphics)
-4. A shiny/gadget interface for `ggplot2`. But perhas the formulas make this unnecessarily
+In terms of graphics
 
+* `fmodel()` is the extension to `abline()`. The `fmodel()` function makes it straightforward to visualize models with multiple variables --- variation with up to four explanatory variables can be shown (with variables beyond four being held constant). It works for many different regression model architectures as well as classification models.
+* A family of graphics functions, `gf_point()`, `gf_density()`, and so on, bring the formula interface to `ggplot()`. This captures and extends the excellent simplicity of the `lattice`-graphics formula interface, while providing the intuitive "add this component" capabilities of `ggplot()`.
 
-
-## The formula-based interface
-
-Making a ggplot involves mapping variables to aesthetics, setting constants to other aesthetics, and choosing a `geom_`.
-
-In the formula interface, the function name specifies the `geom_` and a formula controls the mapping and setting of aesthetics.  For instance,
-```r
-data(KidsFeet, package = "mosaicData")
-library(gghelper)
-fpoint(width ~ length + color:sex, data = KidsFeet)
-```
-Note that the `x` and `y` aesthetics are derived from the formula in the usual way.  Other aesthetics are set by `property:value` pairs.  The value
-may be either a variable from the data table, or a constant, e.g. color:blue.
-
-
-
-
-# To install most recent version from GitHub
+Installations from CRAN are done in the usual way. The development version of the package is here on GitHub. To install it, use the following commands in your R system.
 
 ```
 # Install devtools if necessary

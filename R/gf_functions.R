@@ -36,3 +36,4 @@
 #' @aliases gf_frame
 #' @export
 gf_frame <- gf_factory(type = "blank")
+# see the other gf_ functions in file gf_function_helpers.R
