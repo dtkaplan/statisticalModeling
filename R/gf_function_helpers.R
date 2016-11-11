@@ -220,9 +220,7 @@ pairs_in_formula <- function(formula) {
   res
 }
 
-#' @rdname gf_functions
-#' @export
-gf_frame <- gf_factory(type = "blank")
+
 #' @rdname gf_functions
 #' @export
 gf_point <- gf_factory(type = "point")

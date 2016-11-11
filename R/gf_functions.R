@@ -10,7 +10,7 @@
 #' 
 #' @aliases gf_abline gf_bar gf_boxplot gf_counts gf_density 
 #' @aliases gf_density_2d gf_frame gf_freqpoly gf_hex gf_histogram 
-#' @aliases gf_hline gf_jitter gf_line gf_path gf_point 
+#' @aliases gf_hline gf_jitter gf_line gf_path gf_point gf_text
 
 #'
 #' @param placeholder Ignore this argument. See details.
@@ -32,4 +32,7 @@
 #' gf_line(mpg ~ hp + group:cyl, data = mtcars) + facet_grid(~ am)
 #' gf_histogram(~ Sepal.Length + fill:Species, data = iris)
 #' gf_text(Sepal.Length ~ Sepal.Width + label:Species + color:Species , data = iris)
-"gf_point"
+#' @rdname gf_functions
+#' @aliases gf_frame
+#' @export
+gf_frame <- gf_factory(type = "blank")
