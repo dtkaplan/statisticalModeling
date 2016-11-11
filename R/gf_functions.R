@@ -7,6 +7,11 @@
 #' setting \code{verbose = TRUE} as an argument.
 #' 
 #' @rdname gf_functions
+#' 
+#' @aliases gf_abline gf_bar gf_boxplot gf_counts gf_density 
+#' @aliases gf_density_2d gf_frame gf_freqpoly gf_hex gf_histogram 
+#' @aliases gf_hline gf_jitter gf_line gf_path gf_point 
+
 #'
 #' @param placeholder Ignore this argument. See details.
 #' @param data A data frame with the variables to be plotted
