@@ -4,7 +4,7 @@ Title: Functions for Teaching Statistical Modeling
 Version: 0.3.0
 Author: Daniel Kaplan
 Maintainer: Daniel Kaplan <kaplan@macalester.edu>
-Description: This package provides graphics and other functions that evaluate and display models across many different kinds of model architecture. For instance, you can evaluate the effect size of a model input in the same way, regardless of architecture, interaction terms, etc.
+Description: Provides graphics and other functions that evaluate and display models across many different kinds of model architecture. For instance, you can evaluate the effect size of a model input in the same way, regardless of architecture, interaction terms, etc.
 License: MIT + file LICENSE
 LazyData: TRUE
 Depends:
