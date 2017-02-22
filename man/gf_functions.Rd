@@ -3,26 +3,59 @@
 \name{gf_point}
 \alias{gf_abline}
 \alias{gf_area}
+\alias{gf_ash}
 \alias{gf_bar}
 \alias{gf_boxplot}
+\alias{gf_contour}
 \alias{gf_counts}
+\alias{gf_crossbar}
+\alias{gf_curve}
+\alias{gf_dens}
 \alias{gf_density}
+\alias{gf_density2d}
 \alias{gf_density_2d}
+\alias{gf_dotplot}
+\alias{gf_errorbar}
+\alias{gf_errorbarh}
 \alias{gf_frame}
 \alias{gf_freqpoly}
 \alias{gf_hex}
 \alias{gf_histogram}
 \alias{gf_hline}
 \alias{gf_jitter}
+\alias{gf_label}
 \alias{gf_line}
+\alias{gf_linerange}
 \alias{gf_path}
 \alias{gf_point}
+\alias{gf_pointrange}
+\alias{gf_qq}
+\alias{gf_quantile}
+\alias{gf_rect}
 \alias{gf_ribbon}
+\alias{gf_rug}
+\alias{gf_segment}
+\alias{gf_smooth}
+\alias{gf_spline}
+\alias{gf_spoke}
+\alias{gf_step}
 \alias{gf_text}
+\alias{gf_tile}
+\alias{gf_violin}
 \alias{gf_vline}
 \title{gf_ plotting functions}
 \usage{
 gf_point(placeholder = NULL, formula = NULL, data = NULL, geom = type,
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+
+gf_rug(placeholder = NULL, formula = NULL, data = NULL, geom = type,
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+
+gf_quantile(placeholder = NULL, formula = NULL, data = NULL,
+  geom = type, verbose = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
+
+gf_qq(placeholder = NULL, formula = NULL, data = NULL, geom = type,
   verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
 
 gf_jitter(placeholder = NULL, formula = NULL, data = NULL, geom = type,
@@ -34,12 +67,31 @@ gf_line(placeholder = NULL, formula = NULL, data = NULL, geom = type,
 gf_path(placeholder = NULL, formula = NULL, data = NULL, geom = type,
   verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
 
+gf_smooth(placeholder = NULL, formula = NULL, data = NULL, geom = type,
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+
+gf_spline(placeholder = NULL, formula = NULL, data = NULL, geom = type,
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+
+gf_curve(placeholder = NULL, formula = NULL, data = NULL, geom = type,
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+
+gf_segment(placeholder = NULL, formula = NULL, data = NULL, geom = type,
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+
 gf_density(placeholder = NULL, formula = NULL, data = NULL, geom = type,
   verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
 
 gf_density_2d(placeholder = NULL, formula = NULL, data = NULL,
   geom = type, verbose = FALSE, add = inherits(placeholder, c("gg",
   "ggplot")), ...)
+
+gf_density2d(placeholder = NULL, formula = NULL, data = NULL,
+  geom = type, verbose = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
+
+gf_contour(placeholder = NULL, formula = NULL, data = NULL, geom = type,
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
 
 gf_hex(placeholder = NULL, formula = NULL, data = NULL, geom = type,
   verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
@@ -59,15 +111,17 @@ gf_hex(placeholder = NULL, formula = NULL, data = NULL, geom = type,
 gf_boxplot(placeholder = NULL, formula = NULL, data = NULL, geom = type,
   verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
 
-gf_freqpoly(placeholder = NULL, formula = NULL, data = NULL,
-  geom = type, verbose = FALSE, add = inherits(placeholder, c("gg",
-  "ggplot")), ...)
-
 gf_histogram(placeholder = NULL, formula = NULL, data = NULL,
   geom = type, verbose = FALSE, add = inherits(placeholder, c("gg",
   "ggplot")), ...)
 
+gf_dotplot(placeholder = NULL, formula = NULL, data = NULL, geom = type,
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+
 gf_text(placeholder = NULL, formula = NULL, data = NULL, geom = type,
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+
+gf_label(placeholder = NULL, formula = NULL, data = NULL, geom = type,
   verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
 
 gf_ribbon(placeholder = NULL, formula = NULL, data = NULL, geom = type,
@@ -80,6 +134,51 @@ gf_counts(placeholder = NULL, formula = NULL, data = NULL, geom = type,
   verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
 
 gf_bar(placeholder = NULL, formula = NULL, data = NULL, geom = type,
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+
+gf_freqpoly(placeholder = NULL, formula = NULL, data = NULL,
+  geom = type, verbose = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
+
+gf_ash(placeholder = NULL, formula = NULL, data = NULL, geom = type,
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+
+gf_linerange(placeholder = NULL, formula = NULL, data = NULL,
+  geom = type, verbose = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
+
+gf_pointrange(placeholder = NULL, formula = NULL, data = NULL,
+  geom = type, verbose = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
+
+gf_crossbar(placeholder = NULL, formula = NULL, data = NULL,
+  geom = type, verbose = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
+
+gf_errorbar(placeholder = NULL, formula = NULL, data = NULL,
+  geom = type, verbose = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
+
+gf_errorbarh(placeholder = NULL, formula = NULL, data = NULL,
+  geom = type, verbose = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
+
+gf_dens(placeholder = NULL, formula = NULL, data = NULL, geom = type,
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+
+gf_violin(placeholder = NULL, formula = NULL, data = NULL, geom = type,
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+
+gf_spoke(placeholder = NULL, formula = NULL, data = NULL, geom = type,
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+
+gf_step(placeholder = NULL, formula = NULL, data = NULL, geom = type,
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+
+gf_rect(placeholder = NULL, formula = NULL, data = NULL, geom = type,
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+
+gf_tile(placeholder = NULL, formula = NULL, data = NULL, geom = type,
   verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
 
 gf_frame(placeholder = NULL, formula = NULL, data = NULL, geom = type,
