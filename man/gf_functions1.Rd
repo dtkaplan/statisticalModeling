@@ -73,6 +73,7 @@ argument is part of this interaction system; the end user can ignore it.
 \examples{
 gf_histogram(~ Sepal.Length + fill:Species, data = iris)
 gf_density(~ Sepal.Length + color:Species, data = iris)
+gf_dens(~ Sepal.Length + color:Species, data = iris)
 gf_ash(~ Sepal.Length + color:Species, data = iris)
 gf_freqpoly(~ Sepal.Length + color:Species, data = iris)
 gf_dotplot(~ Sepal.Length + fill:Species, data = iris)
