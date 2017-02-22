@@ -1,3 +1,4 @@
+
 # The actual graphing functions are created dynamically.
 #  See the functions at the bottom of this file
 
@@ -285,6 +286,12 @@ gf_histogram <- gf_factory(type = "histogram")
 #' @rdname gf_functions
 #' @export
 gf_text <- gf_factory(type = "text")
+#' @rdname gf_functions
+#' @export
+gf_ribbon <- gf_factory(type = "ribbon")
+#' @rdname gf_functions
+#' @export
+gf_area <- gf_factory(type = "area")
 #
 # Separate functions for a count-type bar chart and a value-based bar chart.
 #' @rdname gf_functions

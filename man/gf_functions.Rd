@@ -2,6 +2,7 @@
 % Please edit documentation in R/gf_function_helpers.R, R/gf_functions.R
 \name{gf_point}
 \alias{gf_abline}
+\alias{gf_area}
 \alias{gf_bar}
 \alias{gf_boxplot}
 \alias{gf_counts}
@@ -16,6 +17,7 @@
 \alias{gf_line}
 \alias{gf_path}
 \alias{gf_point}
+\alias{gf_ribbon}
 \alias{gf_text}
 \alias{gf_vline}
 \title{gf_ plotting functions}
@@ -66,6 +68,12 @@ gf_histogram(placeholder = NULL, formula = NULL, data = NULL,
   "ggplot")), ...)
 
 gf_text(placeholder = NULL, formula = NULL, data = NULL, geom = type,
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+
+gf_ribbon(placeholder = NULL, formula = NULL, data = NULL, geom = type,
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+
+gf_area(placeholder = NULL, formula = NULL, data = NULL, geom = type,
   verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
 
 gf_counts(placeholder = NULL, formula = NULL, data = NULL, geom = type,
