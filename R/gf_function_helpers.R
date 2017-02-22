@@ -266,6 +266,9 @@ gf_hex <- gf_factory(type = "hex")
 gf_hline <- gf_factory(type = "hline")
 #' @rdname gf_functions
 #' @export
+gf_vline <- gf_factory(type = "vline")
+#' @rdname gf_functions
+#' @export
 gf_abline <- gf_factory(type = "abline")
 #' @rdname gf_functions
 #' @export

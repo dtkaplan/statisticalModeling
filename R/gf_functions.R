@@ -10,7 +10,7 @@
 #'
 #' @aliases gf_abline gf_bar gf_boxplot gf_counts gf_density
 #' @aliases gf_density_2d gf_frame gf_freqpoly gf_hex gf_histogram
-#' @aliases gf_hline gf_jitter gf_line gf_path gf_point gf_text
+#' @aliases gf_hline gf_vline gf_jitter gf_line gf_path gf_point gf_text
 
 #'
 #' @param placeholder Ignore this argument. See details.
@@ -33,6 +33,8 @@
 #'   gf_abline(~ color:"red" + slope:-0.10 + intercept:35)
 #' gf_point(mpg ~ hp + color:cyl + size:wt, data = mtcars) %>%
 #'   gf_abline(color = "red", slope = -0.10, intercept = 35)
+#' gf_point(mpg ~ hp + color:cyl + size:wt, data = mtcars) %>%
+#'   gf_abline(color = "red", slope = -0.10, intercept = 33:36)
 #' # use %>% for gf_* but + when returning to native ggplot functions
 #' gf_line(mpg ~ hp + group:cyl, data = mtcars) %>%
 #'   gf_point(mpg ~ hp + group:cyl, data = mtcars) +

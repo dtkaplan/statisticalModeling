@@ -17,6 +17,7 @@
 \alias{gf_path}
 \alias{gf_point}
 \alias{gf_text}
+\alias{gf_vline}
 \title{gf_ plotting functions}
 \usage{
 gf_point(placeholder = NULL, formula = NULL, data = NULL, geom = type,
@@ -42,6 +43,9 @@ gf_hex(placeholder = NULL, formula = NULL, data = NULL, geom = type,
   verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
 
 gf_hline(placeholder = NULL, formula = NULL, data = NULL, geom = type,
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+
+gf_vline(placeholder = NULL, formula = NULL, data = NULL, geom = type,
   verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
 
 gf_abline(placeholder = NULL, formula = NULL, data = NULL, geom = type,
@@ -107,6 +111,8 @@ gf_point(mpg ~ hp + color:cyl + size:wt, data = mtcars) \%>\%
   gf_abline(~ color:"red" + slope:-0.10 + intercept:35)
 gf_point(mpg ~ hp + color:cyl + size:wt, data = mtcars) \%>\%
   gf_abline(color = "red", slope = -0.10, intercept = 35)
+gf_point(mpg ~ hp + color:cyl + size:wt, data = mtcars) \%>\%
+  gf_abline(color = "red", slope = -0.10, intercept = 33:36)
 # use \%>\% for gf_* but + when returning to native ggplot functions
 gf_line(mpg ~ hp + group:cyl, data = mtcars) \%>\%
   gf_point(mpg ~ hp + group:cyl, data = mtcars) +
