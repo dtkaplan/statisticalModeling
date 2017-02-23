@@ -8,18 +8,15 @@
 \title{gf_ functions with no formula part}
 \usage{
 gf_hline(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
-  "ggplot")), ...)
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
 
 gf_vline(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
-  "ggplot")), ...)
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
 
 gf_abline(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
-  "ggplot")), ...)
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
 
-gf_coefline(placeholder = NULL, formula = NULL, coef, ...)
+gf_coefline(placeholder = NULL, formula = NULL, coef, model, ...)
 }
 \arguments{
 \item{placeholder}{Ignore this argument. See details.}
@@ -36,6 +33,13 @@ gf_coefline(placeholder = NULL, formula = NULL, coef, ...)
 can be added to an existing frame.}
 
 \item{...}{Other arguments such as \code{position="dodge"}.}
+
+\item{coef}{A numeric vector of length at least 2, treated as intercept and slope.
+Additional components, if any, are ignored (with a warning).}
+
+\item{model}{An object with a method for \code{coef()} that returns a
+numeric vector, the first two elements of which are intercept and slope.
+This is equivalent to \code{coef = coef(model)}.}
 }
 \description{
 These functions provide a formula interface to \code{ggplot2} and

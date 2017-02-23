@@ -13,40 +13,36 @@
 \title{Multivariate gf_ plotting functions}
 \usage{
 gf_curve(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
-  "ggplot")), ...)
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
 
 gf_segment(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
-  "ggplot")), ...)
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
 
 gf_ribbon(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
-  "ggplot")), ...)
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
 
 gf_linerange(placeholder = NULL, formula = NULL, data = NULL,
-  geom = type, verbose = FALSE, debug = FALSE,
-  add = inherits(placeholder, c("gg", "ggplot")), ...)
+  geom = type, verbose = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_pointrange(placeholder = NULL, formula = NULL, data = NULL,
-  geom = type, verbose = FALSE, debug = FALSE,
-  add = inherits(placeholder, c("gg", "ggplot")), ...)
+  geom = type, verbose = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_crossbar(placeholder = NULL, formula = NULL, data = NULL,
-  geom = type, verbose = FALSE, debug = FALSE,
-  add = inherits(placeholder, c("gg", "ggplot")), ...)
+  geom = type, verbose = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_errorbar(placeholder = NULL, formula = NULL, data = NULL,
-  geom = type, verbose = FALSE, debug = FALSE,
-  add = inherits(placeholder, c("gg", "ggplot")), ...)
+  geom = type, verbose = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_errorbarh(placeholder = NULL, formula = NULL, data = NULL,
-  geom = type, verbose = FALSE, debug = FALSE,
-  add = inherits(placeholder, c("gg", "ggplot")), ...)
+  geom = type, verbose = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_rect(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
-  "ggplot")), ...)
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
 }
 \arguments{
 \item{placeholder}{Ignore this argument. See details.}

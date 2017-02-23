@@ -12,36 +12,30 @@
 \title{Univariate gf_ plotting functions}
 \usage{
 gf_counts(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
-  "ggplot")), ...)
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
 
 gf_bar(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
-  "ggplot")), ...)
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
 
 gf_freqpoly(placeholder = NULL, formula = NULL, data = NULL,
-  geom = type, verbose = FALSE, debug = FALSE,
-  add = inherits(placeholder, c("gg", "ggplot")), ...)
+  geom = type, verbose = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_density(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
-  "ggplot")), ...)
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
 
 gf_histogram(placeholder = NULL, formula = NULL, data = NULL,
-  geom = type, verbose = FALSE, debug = FALSE,
-  add = inherits(placeholder, c("gg", "ggplot")), ...)
+  geom = type, verbose = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_dotplot(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
-  "ggplot")), ...)
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
 
 gf_dens(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
-  "ggplot")), ...)
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
 
 gf_qq(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
-  "ggplot")), ...)
+  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
 }
 \arguments{
 \item{placeholder}{Ignore this argument. See details.}
@@ -78,7 +72,7 @@ gf_density(~ Sepal.Length + color:Species, data = iris)
 gf_dens(~ Sepal.Length + color:Species, data = iris)
 gf_freqpoly(~ Sepal.Length + color:Species, data = iris)
 gf_dotplot(~ Sepal.Length + fill:Species, data = iris)
-gf_counts(~ substance, data = HELPrct)
+gf_counts(~ Species, data = iris)
 }
 \seealso{
 \code{\link{gf_point}()}, \code{\link{gf_abline}()}, \code{\link{gf_pointrange}()}.

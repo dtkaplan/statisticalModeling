@@ -156,7 +156,7 @@ gf_tile <- gf_factory(type = "tile")
 # gf_ash(~ Sepal.Length + color:Species, data = iris)
 #' gf_freqpoly(~ Sepal.Length + color:Species, data = iris)
 #' gf_dotplot(~ Sepal.Length + fill:Species, data = iris)
-#' gf_counts(~ substance, data = HELPrct)
+#' gf_counts(~ Species, data = iris)
 
 # Separate functions for a count-type bar chart and a value-based bar chart.
 #' @rdname gf_functions1
@@ -273,6 +273,11 @@ gf_rect <- gf_factory(type = "rect", aes_form = ymin + ymax ~ xmin + xmax)
 #' can be added to an existing frame.
 #' @param verbose If \code{TRUE} print the ggplot2 command in the console.
 #' @param geom A way to specify ggplot geoms that are not aliased to gf functions.
+#' @param coef A numeric vector of length at least 2, treated as intercept and slope.
+#' Additional components, if any, are ignored (with a warning).
+#' @param model An object with a method for \code{coef()} that returns a
+#' numeric vector, the first two elements of which are intercept and slope.
+#' This is equivalent to \code{coef = coef(model)}.
 #' @param ... Other arguments such as \code{position="dodge"}.
 #' @seealso \code{\link{gf_point}()}, \code{\link{gf_histogram}()}, \code{\link{gf_pointrange}()}
 #' @export
@@ -290,7 +295,10 @@ gf_abline <- gf_factory(type = "abline", aes_form = NULL)
 
 #' @rdname gf_functions0
 #' @export
-gf_coefline <- function(placeholder = NULL, formula = NULL, coef, ...) {
+gf_coefline <- function(placeholder = NULL, formula = NULL, coef, model, ...) {
+  if (missing(coef)) coef <- coef(model)
+  if (length(coef) > 2) warning("Ignoring all but first two values of coef.")
+  if (length(coef) < 2) stop("coef must be of length at least 2.")
   gf_abline(placeholder = placeholder, formula = formula,
             intercept = coef[1], slope = coef[2], ...)
 }
