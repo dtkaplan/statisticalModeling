@@ -120,7 +120,7 @@ The \code{placeholder}
 argument is part of this interaction system; the end user can ignore it.
 }
 \examples{
-gf_point(mpg ~ hp + color:cyl + size:wt, data = mtcars)
+gf_point(mpg ~ hp + color:cyl + size:wt, data = mtcars, verbose = TRUE)
 gf_point(mpg ~ hp + color:cyl + size:wt, data = mtcars) \%>\%
   gf_abline(~ color:"red" + slope:-0.10 + intercept:35)
 gf_point(mpg ~ hp + color:cyl + size:wt, data = mtcars) \%>\%
@@ -131,7 +131,7 @@ gf_point(mpg ~ hp + color:cyl + size:wt, data = mtcars) \%>\%
   gf_vline(color = "brown", xintercept = c(200, 300))
 # use \%>\% for gf_* but + when returning to native ggplot functions
 gf_line(mpg ~ hp + group:cyl, data = mtcars) \%>\%
-  gf_point(mpg ~ hp + group:cyl, data = mtcars) +
+  gf_point(mpg ~ hp + group:cyl) +
   facet_grid(~ am)
 gf_text(Sepal.Length ~ Sepal.Width + label:Species + color:Species , data = iris)
 

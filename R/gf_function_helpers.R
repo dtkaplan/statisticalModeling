@@ -1,4 +1,5 @@
-
+#' @importFrom utils head tail
+#'
 # The actual graphing functions are created dynamically.
 #  See the functions at the bottom of this file
 
@@ -56,8 +57,7 @@ gf_factory <- function(type, extras = NULL, aes_form = y ~ x) {
            ...) {
     extras <- c(list(...), extras)
     data_name <- as.character(substitute(data))
-    # if (inherits(placeholder, c("gg", "ggplot"))) {
-    #   add <- TRUE
+
     if (inherits(placeholder, "formula")) {
       formula <- placeholder
       placeholder <- NULL
@@ -114,26 +114,27 @@ gf_master <- function(formula = NULL, data = NULL, add = FALSE,
   from_formula <- formula_to_df(formula, var_names, aes_form = aes_form)
 
   gg_string <-
-    if (add) { # don't need the ggplot() call
+    # if (TRUE) { # don't need the ggplot() call
       main_arguments <-
         df_to_aesthetics(from_formula,
-                         var_names, prefix = data_string)
+                         var_names, prefix = if (add) data_string else "")
       .add_arg_list_to_function_string(
         paste0("geom_", geom, main_arguments),
         extras)
-    } else {
-      main_arguments <-
-        df_to_aesthetics(subset(from_formula, from_formula$map),
-                         var_names, prefix = data_string)
-      geom_arguments <-
-        df_to_aesthetics(subset(from_formula, ! from_formula$map), var_names)
-      paste0("ggplot", main_arguments, " + ",
-             # always add extras to geom string
-             .add_arg_list_to_function_string(
-               paste0("geom_", geom, geom_arguments),
-               extras
-             ))
-    }
+    # } else {
+    #   main_arguments <-
+    #     df_to_aesthetics(subset(from_formula, from_formula$map),
+    #                      var_names, prefix = data_string)
+    #   geom_arguments <-
+    #     df_to_aesthetics(subset(from_formula, ! from_formula$map), var_names)
+    #   paste0("ggplot", main_arguments, " + ",
+    #          # always add extras to geom string
+    #          .add_arg_list_to_function_string(
+    #            paste0("geom_", geom, geom_arguments),
+    #            extras
+    #          ))
+    # }
+  if (! add) gg_string <- paste0("ggplot(", data_string, ") + ", gg_string)
 
   gg_string
 }
