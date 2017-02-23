@@ -8,13 +8,16 @@
 \title{gf_ functions with no formula part}
 \usage{
 gf_hline(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_vline(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_abline(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_coefline(placeholder = NULL, formula = NULL, coef, ...)
 }

@@ -52,12 +52,12 @@ gf_factory <- function(type, extras = NULL, aes_form = y ~ x) {
   # arguments Curried.
   function(placeholder = NULL, formula = NULL,
            data = NULL, geom = type, verbose = FALSE,
+           debug = FALSE,
            add = inherits(placeholder, c("gg", "ggplot")),
            ...) {
     extras <- c(list(...), extras)
     data_name <- as.character(substitute(data))
-    # if (inherits(placeholder, c("gg", "ggplot"))) {
-    #   add <- TRUE
+
     if (inherits(placeholder, "formula")) {
       formula <- placeholder
       placeholder <- NULL
@@ -72,6 +72,7 @@ gf_factory <- function(type, extras = NULL, aes_form = y ~ x) {
                            add = add, extras = extras,
                            aes_form = aes_form,
                            data_name = data_name)
+    if (debug) return(gg_string)
     if (verbose) cat(gsub("+", "+\n", gg_string, fixed = TRUE), "\n")
 
     P <- eval(parse(text = gg_string))
@@ -114,10 +115,10 @@ gf_master <- function(formula = NULL, data = NULL, add = FALSE,
   from_formula <- formula_to_df(formula, var_names, aes_form = aes_form)
 
   gg_string <-
-    if (add) { # don't need the ggplot() call
+    if (TRUE) { # don't need the ggplot() call
       main_arguments <-
         df_to_aesthetics(from_formula,
-                         var_names, prefix = data_string)
+                         var_names, prefix = if (add) data_string else "")
       .add_arg_list_to_function_string(
         paste0("geom_", geom, main_arguments),
         extras)
@@ -134,6 +135,7 @@ gf_master <- function(formula = NULL, data = NULL, add = FALSE,
                extras
              ))
     }
+  if (! add) gg_string <- paste0("ggplot(", data_string, ") + ", gg_string)
 
   gg_string
 }

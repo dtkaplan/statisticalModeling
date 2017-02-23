@@ -13,33 +13,40 @@
 \title{Univariate gf_ plotting functions}
 \usage{
 gf_counts(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_bar(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_freqpoly(placeholder = NULL, formula = NULL, data = NULL,
-  geom = type, verbose = FALSE, add = inherits(placeholder, c("gg",
-  "ggplot")), ...)
+  geom = type, verbose = FALSE, debug = FALSE,
+  add = inherits(placeholder, c("gg", "ggplot")), ...)
 
 gf_ash(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
-
-gf_density(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
-
-gf_histogram(placeholder = NULL, formula = NULL, data = NULL,
-  geom = type, verbose = FALSE, add = inherits(placeholder, c("gg",
+  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
   "ggplot")), ...)
 
+gf_density(placeholder = NULL, formula = NULL, data = NULL, geom = type,
+  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
+
+gf_histogram(placeholder = NULL, formula = NULL, data = NULL,
+  geom = type, verbose = FALSE, debug = FALSE,
+  add = inherits(placeholder, c("gg", "ggplot")), ...)
+
 gf_dotplot(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_dens(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_qq(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 }
 \arguments{
 \item{placeholder}{Ignore this argument. See details.}

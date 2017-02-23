@@ -25,70 +25,88 @@
 \title{bivariate gf_ plotting functions}
 \usage{
 gf_frame(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_point(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_jitter(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_line(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_path(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_smooth(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_spline(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_rug(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_quantile(placeholder = NULL, formula = NULL, data = NULL,
-  geom = type, verbose = FALSE, add = inherits(placeholder, c("gg",
-  "ggplot")), ...)
+  geom = type, verbose = FALSE, debug = FALSE,
+  add = inherits(placeholder, c("gg", "ggplot")), ...)
 
 gf_density_2d(placeholder = NULL, formula = NULL, data = NULL,
-  geom = type, verbose = FALSE, add = inherits(placeholder, c("gg",
-  "ggplot")), ...)
+  geom = type, verbose = FALSE, debug = FALSE,
+  add = inherits(placeholder, c("gg", "ggplot")), ...)
 
 gf_density2d(placeholder = NULL, formula = NULL, data = NULL,
-  geom = type, verbose = FALSE, add = inherits(placeholder, c("gg",
-  "ggplot")), ...)
+  geom = type, verbose = FALSE, debug = FALSE,
+  add = inherits(placeholder, c("gg", "ggplot")), ...)
 
 gf_contour(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_hex(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_boxplot(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_text(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_label(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_area(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_violin(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_spoke(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_step(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 
 gf_tile(placeholder = NULL, formula = NULL, data = NULL, geom = type,
-  verbose = FALSE, add = inherits(placeholder, c("gg", "ggplot")), ...)
+  verbose = FALSE, debug = FALSE, add = inherits(placeholder, c("gg",
+  "ggplot")), ...)
 }
 \arguments{
 \item{placeholder}{Ignore this argument. See details.}
@@ -120,7 +138,7 @@ The \code{placeholder}
 argument is part of this interaction system; the end user can ignore it.
 }
 \examples{
-gf_point(mpg ~ hp + color:cyl + size:wt, data = mtcars)
+gf_point(mpg ~ hp + color:cyl + size:wt, data = mtcars, verbose = TRUE)
 gf_point(mpg ~ hp + color:cyl + size:wt, data = mtcars) \%>\%
   gf_abline(~ color:"red" + slope:-0.10 + intercept:35)
 gf_point(mpg ~ hp + color:cyl + size:wt, data = mtcars) \%>\%
@@ -131,7 +149,7 @@ gf_point(mpg ~ hp + color:cyl + size:wt, data = mtcars) \%>\%
   gf_vline(color = "brown", xintercept = c(200, 300))
 # use \%>\% for gf_* but + when returning to native ggplot functions
 gf_line(mpg ~ hp + group:cyl, data = mtcars) \%>\%
-  gf_point(mpg ~ hp + group:cyl, data = mtcars) +
+  gf_point(mpg ~ hp + group:cyl) +
   facet_grid(~ am)
 gf_text(Sepal.Length ~ Sepal.Width + label:Species + color:Species , data = iris)
 
