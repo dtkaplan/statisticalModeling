@@ -40,4 +40,3 @@ GPA <- lm(gradepoint ~ sid - 1, data = College_grades)
 }
 }
 \keyword{datasets}
-

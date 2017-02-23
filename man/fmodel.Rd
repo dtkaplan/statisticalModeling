@@ -60,4 +60,3 @@ fmodel(mod3, ~ age + sex + sector, nlevels = 10, type = "response") +
   aes(x = age, y = as.numeric(married == "Married")), alpha = .1)
 }
 }
-

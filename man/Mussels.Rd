@@ -44,4 +44,3 @@ mod_3 <- lm(O2/count ~ ind.mass + attachment, data = Mussels)
 mod_4 <- lm(ammonia/count ~ ind.mass + attachment, data = Mussels)
 }
 \keyword{datasets}
-

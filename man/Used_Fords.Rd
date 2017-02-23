@@ -26,4 +26,3 @@ mod_1 <- lm(Price ~ Mileage, data = Used_Fords)
 mod_2 <- lm(Price ~ Mileage + Age, data = Used_Fords)
 }
 \keyword{datasets}
-

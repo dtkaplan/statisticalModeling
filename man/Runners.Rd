@@ -34,4 +34,3 @@ before 1999 are not considered.)
 mod_1 = lm(net ~ age + sex, data = Runners)
 }
 \keyword{datasets}
-

@@ -23,4 +23,3 @@ This function coordinates four components in building statistical models:
 \details{
 This is a light wrapper on the architecture-specific function fitting programs
 }
-

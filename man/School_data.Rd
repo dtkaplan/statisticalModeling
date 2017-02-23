@@ -50,4 +50,3 @@ test_score <- rnorm(nstudents, mean = 100 - 5 * (school == "private") + 20 * aca
 School_data <- data.frame(test_score, acad_motivation, group, relig_motivation, lottery, school)
 }
 \keyword{datasets}
-

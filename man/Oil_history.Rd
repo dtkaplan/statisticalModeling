@@ -24,4 +24,3 @@ model <- lm(log(mbbl) ~ year, data = Oil_history)
 fmodel(model)
 }
 \keyword{datasets}
-

@@ -36,4 +36,3 @@ mod_1 <- lm(Cost ~ Age + Coverage, data = AARP)
 effect_size(mod_1, ~ Coverage)
 }
 \keyword{datasets}
-

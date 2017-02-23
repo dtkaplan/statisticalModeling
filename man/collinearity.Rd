@@ -23,4 +23,3 @@ Calculate measures of collinearity
 collinearity( ~ cyl * disp * hp, data = mtcars)
 collinearity( ~ cyl * disp * hp, data = mtcars, format = "degrees")
 }
-
