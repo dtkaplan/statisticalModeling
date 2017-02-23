@@ -25,7 +25,7 @@
 #' argument is part of this interaction system; the end user can ignore it.
 #'
 #' @examples
-#' gf_point(mpg ~ hp + color:cyl + size:wt, data = mtcars)
+#' gf_point(mpg ~ hp + color:cyl + size:wt, data = mtcars, verbose = TRUE)
 #' gf_point(mpg ~ hp + color:cyl + size:wt, data = mtcars) %>%
 #'   gf_abline(~ color:"red" + slope:-0.10 + intercept:35)
 #' gf_point(mpg ~ hp + color:cyl + size:wt, data = mtcars) %>%
@@ -36,7 +36,7 @@
 #'   gf_vline(color = "brown", xintercept = c(200, 300))
 #' # use %>% for gf_* but + when returning to native ggplot functions
 #' gf_line(mpg ~ hp + group:cyl, data = mtcars) %>%
-#'   gf_point(mpg ~ hp + group:cyl, data = mtcars) +
+#'   gf_point(mpg ~ hp + group:cyl) +
 #'   facet_grid(~ am)
 #' gf_text(Sepal.Length ~ Sepal.Width + label:Species + color:Species , data = iris)
 #'
@@ -153,10 +153,10 @@ gf_tile <- gf_factory(type = "tile")
 #' gf_histogram(~ Sepal.Length + fill:Species, data = iris)
 #' gf_density(~ Sepal.Length + color:Species, data = iris)
 #' gf_dens(~ Sepal.Length + color:Species, data = iris)
-#' gf_ash(~ Sepal.Length + color:Species, data = iris)
+# gf_ash(~ Sepal.Length + color:Species, data = iris)
 #' gf_freqpoly(~ Sepal.Length + color:Species, data = iris)
 #' gf_dotplot(~ Sepal.Length + fill:Species, data = iris)
-#' gf_counts(~ substance, data = HELPrct)
+#' gf_counts(~ Species, data = iris)
 
 # Separate functions for a count-type bar chart and a value-based bar chart.
 #' @rdname gf_functions1
@@ -172,9 +172,9 @@ gf_bar <- gf_factory(type = "bar",
 #' @export
 gf_freqpoly <- gf_factory(type = "freqpoly", aes_form = ~ x)
 
-#' @rdname gf_functions1
-#' @export
-gf_ash <- gf_factory(type = "ash", aes_form = ~ x)
+# #' @rdname gf_functions1
+# #' @export
+# gf_ash <- gf_factory(type = "ash", aes_form = ~ x)
 
 #' @rdname gf_functions1
 #' @export
@@ -273,6 +273,11 @@ gf_rect <- gf_factory(type = "rect", aes_form = ymin + ymax ~ xmin + xmax)
 #' can be added to an existing frame.
 #' @param verbose If \code{TRUE} print the ggplot2 command in the console.
 #' @param geom A way to specify ggplot geoms that are not aliased to gf functions.
+#' @param coef A numeric vector of length at least 2, treated as intercept and slope.
+#' Additional components, if any, are ignored (with a warning).
+#' @param model An object with a method for \code{coef()} that returns a
+#' numeric vector, the first two elements of which are intercept and slope.
+#' This is equivalent to \code{coef = coef(model)}.
 #' @param ... Other arguments such as \code{position="dodge"}.
 #' @seealso \code{\link{gf_point}()}, \code{\link{gf_histogram}()}, \code{\link{gf_pointrange}()}
 #' @export
@@ -290,7 +295,10 @@ gf_abline <- gf_factory(type = "abline", aes_form = NULL)
 
 #' @rdname gf_functions0
 #' @export
-gf_coefline <- function(placeholder = NULL, formula = NULL, coef, ...) {
+gf_coefline <- function(placeholder = NULL, formula = NULL, coef, model, ...) {
+  if (missing(coef)) coef <- coef(model)
+  if (length(coef) > 2) warning("Ignoring all but first two values of coef.")
+  if (length(coef) < 2) stop("coef must be of length at least 2.")
   gf_abline(placeholder = placeholder, formula = formula,
             intercept = coef[1], slope = coef[2], ...)
 }

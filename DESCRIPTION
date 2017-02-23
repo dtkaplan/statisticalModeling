@@ -1,7 +1,7 @@
 Package: statisticalModeling
 Type: Package
 Title: Functions for Teaching Statistical Modeling
-Version: 0.3.9000
+Version: 0.3.9001
 Author: Daniel Kaplan
 Maintainer: Daniel Kaplan <kaplan@macalester.edu>
 Description: Provides graphics and other functions that evaluate and display models across many different kinds of model architecture. For instance, you can evaluate the effect size of a model input in the same way, regardless of architecture, interaction terms, etc.
