@@ -1,4 +1,5 @@
-
+#' @importFrom utils head tail
+#'
 # The actual graphing functions are created dynamically.
 #  See the functions at the bottom of this file
 
