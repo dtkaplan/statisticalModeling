@@ -167,11 +167,12 @@ formula_to_df <- function(formula = NULL, data_names = character(0),
 
   res <- c(nonpair_list, pair_list)
 
-  res <- data_frame(role = names(res),
-                    var = unlist(res),
-                    map = unlist(res) %in% c(data_names) | role %in% aes_names )
+  res <-
+    data_frame(
+      role = names(res),
+      var = unlist(res),
+      map = unlist(res) %in% c(data_names) | role %in% aes_names)
   row.names(res) <- NULL
-
   res
 }
 
