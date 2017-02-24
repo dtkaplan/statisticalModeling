@@ -33,4 +33,3 @@ mod_1 <- lm(hdd ~ year, data = HDD_Minneapolis)
 mod_2 <- lm(hdd ~ year + month, data = HDD_Minneapolis)
 }
 \keyword{datasets}
-

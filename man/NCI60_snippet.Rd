@@ -21,4 +21,3 @@ a microarray probe. The variable names are the names of the probes.
 data(NCI60_snippet)
 }
 \keyword{datasets}
-

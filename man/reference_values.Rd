@@ -23,4 +23,3 @@ Variables not listed in \code{at} will be assigned levels using these principles
 Categorical variables: the most populated levels.
 Quantitative variables: central quantiles, e.g. median for n=1, 0.33 and 0.67 for n=2, and so on.
 }
-

@@ -20,4 +20,3 @@ response_var(object, ...)
 \description{
 Functions for extracting data and names of explanatory and response variables from a model object
 }
-

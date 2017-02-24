@@ -35,4 +35,3 @@ effect_size(mod_2, ~ X)
 effect_size(mod_3, ~ X)
 }
 \keyword{datasets}
-

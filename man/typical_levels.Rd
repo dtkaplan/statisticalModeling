@@ -41,4 +41,3 @@ mod3 <- glm(married == "Married" ~ age + sex * sector,
 typical_levels(mod3, nlevels = 2)
 }
 }
-

@@ -64,4 +64,3 @@ Anderson MD, Ruess RW, Myrold DD, Taylor DL.
 Frankia genotypes in interior Alaska''  Oecologia (2009) 160:619-630.
 }
 \keyword{datasets}
-

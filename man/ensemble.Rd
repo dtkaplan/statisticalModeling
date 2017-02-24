@@ -26,4 +26,3 @@ data used to train the model as part of the model object produced. For these typ
 types of models for which the training data cannot be extracted from the model object. In such situations, 
 you use \code{data =} to provide the data set to use for resampling.
 }
-

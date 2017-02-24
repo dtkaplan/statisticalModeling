@@ -115,6 +115,7 @@ gf_master <- function(formula = NULL, data = NULL,
 
   from_formula <- formula_to_df(formula, var_names, aes_form = aes_form)
 
+
   main_arguments <-
     df_to_aesthetics(
       from_formula, var_names,

@@ -51,4 +51,3 @@ effect_size(mod1, ~ age, sex = "M", educ = c(10, 12, 16), age = c(30, 40))
 effect_size(mod1, ~ age, sex = "F", age = 34, step = 1)
 effect_size(mod1, ~ sex, age = 35, sex = "M", to = "F" )
 }
-

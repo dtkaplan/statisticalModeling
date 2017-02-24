@@ -23,4 +23,3 @@ Datasets like this are used in audits by the Federal Government to look for sign
 mod_1 = lm(earnings ~ age + hiredyears + sex, data = Trucking_jobs)
 }
 \keyword{datasets}
-

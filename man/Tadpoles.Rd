@@ -26,4 +26,3 @@ It was hypothesized that tadpoles would swim faster in the temperature of water 
 mod_1 = lm(vmax ~ poly(rtemp, 2) * group + length, data = Tadpoles)
 }
 \keyword{datasets}
-

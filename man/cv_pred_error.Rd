@@ -37,4 +37,3 @@ is a rather course measure. A more graded measure is the likelihood: the probabi
 from the test data given the model. (The "class" method is exactly the same as "error rate", but provided 
 for compatibility purposes with other software under development.)
 }
-

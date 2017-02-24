@@ -30,4 +30,3 @@ fmodel(mod_2, ~ living_area + fireplaces)
 Dick De Veaux (2015) "How much is a fireplace worth?" Stats 101: A resource for teaching introductory statistics, American Statistical Association
 }
 \keyword{datasets}
-

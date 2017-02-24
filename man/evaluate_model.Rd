@@ -63,4 +63,3 @@ evaluate_model(mod3, nlevels = 2, type = "response")
 evaluate_model(mod3, nlevels = 2, type = "response", at = list(sex = "F"))
 }
 }
-
