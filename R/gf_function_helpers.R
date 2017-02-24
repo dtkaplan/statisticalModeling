@@ -82,7 +82,8 @@ gf_factory <- function(type, extras = NULL, aes_form = y ~ x) {
   }
 }
 
-gf_master <- function(formula = NULL, data = NULL, add = FALSE,
+gf_master <- function(formula = NULL, data = NULL,
+                      add = FALSE,
                       data_name = NULL,
                       geom = "geom_point", extras = list(),
                       gg_object = NULL,
@@ -105,6 +106,7 @@ gf_master <- function(formula = NULL, data = NULL, add = FALSE,
     } else {
       names(data)
     }
+
   # arguments for the frame or, if add == TRUE, for the geom
   main_arguments <-
     formula_to_aesthetics(formula, var_names,
@@ -113,28 +115,18 @@ gf_master <- function(formula = NULL, data = NULL, add = FALSE,
 
   from_formula <- formula_to_df(formula, var_names, aes_form = aes_form)
 
+  main_arguments <-
+    df_to_aesthetics(
+      from_formula, var_names,
+      prefix = if (add) data_string else "")
+
   gg_string <-
-    # if (TRUE) { # don't need the ggplot() call
-      main_arguments <-
-        df_to_aesthetics(from_formula,
-                         var_names, prefix = if (add) data_string else "")
-      .add_arg_list_to_function_string(
-        paste0("geom_", geom, main_arguments),
-        extras)
-    # } else {
-    #   main_arguments <-
-    #     df_to_aesthetics(subset(from_formula, from_formula$map),
-    #                      var_names, prefix = data_string)
-    #   geom_arguments <-
-    #     df_to_aesthetics(subset(from_formula, ! from_formula$map), var_names)
-    #   paste0("ggplot", main_arguments, " + ",
-    #          # always add extras to geom string
-    #          .add_arg_list_to_function_string(
-    #            paste0("geom_", geom, geom_arguments),
-    #            extras
-    #          ))
-    # }
-  if (! add) gg_string <- paste0("ggplot(", data_string, ") + ", gg_string)
+    .add_arg_list_to_function_string(
+      paste0("geom_", geom, main_arguments),
+      extras)
+
+  if (! add) gg_string <-   # need ggplot() call, too
+    paste0("ggplot(", data_string, ") + ", gg_string)
 
   gg_string
 }
@@ -175,17 +167,9 @@ formula_to_df <- function(formula = NULL, data_names = character(0),
 
   res <- c(nonpair_list, pair_list)
 
-  # switch(
-  #   length(nonpairs),
-  #   list(),
-  #   list(x = nonpairs[[2]]),
-  #   list(y = nonpairs[[2]], x = nonpairs[[3]])
-  # )
-
-
-  res <- data.frame(role = names(res),
+  res <- data_frame(role = names(res),
                     var = unlist(res),
-                    map = unlist(res) %in% data_names)
+                    map = unlist(res) %in% c(data_names) | role %in% aes_names )
   row.names(res) <- NULL
 
   res
