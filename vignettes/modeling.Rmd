@@ -305,6 +305,13 @@ gf_point(mpg ~ hp + color:cyl + size:carb + alpha:0.75, data = mtcars) +
   ggplot2::xlab("Horsepower")
 ```
 
+TRYING TO FIND THE PROBLEM:
+```{r}
+gf_point(mpg ~ hp + color:cyl, data = mtcars)
+gf_point(mpg ~ hp + color:cyl + size:carb, alpha=0.75, data = mtcars, verbose = TRUE)
+gf_point(mpg ~ hp + color:cyl + size:carb + alpha:0.75, data = mtcars)
+```
+
 You add labels and facets using the standard `ggplot2` notation.  `xlab()` and `ylab()` are adding the axis labels in the above. (For faceting, see below.)
 
 ## Density and related plots

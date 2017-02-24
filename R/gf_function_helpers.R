@@ -113,14 +113,13 @@ gf_master <- function(formula = NULL, data = NULL, add = FALSE,
 
   from_formula <- formula_to_df(formula, var_names, aes_form = aes_form)
 
-  gg_string <-
     # if (TRUE) { # don't need the ggplot() call
-      main_arguments <-
-        df_to_aesthetics(from_formula,
-                         var_names, prefix = if (add) data_string else "")
-      .add_arg_list_to_function_string(
-        paste0("geom_", geom, main_arguments),
-        extras)
+  main_arguments <-
+    df_to_aesthetics(from_formula,
+                     var_names, prefix = if (add) data_string else "")
+  gg_string <-.add_arg_list_to_function_string(
+    paste0("geom_", geom, main_arguments),
+    extras)
     # } else {
     #   main_arguments <-
     #     df_to_aesthetics(subset(from_formula, from_formula$map),
