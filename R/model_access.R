@@ -12,7 +12,6 @@ explanatory_vars <- function(object, ...) {
   UseMethod("explanatory_vars")
 }
 explanatory_vars.lm <-
-  explanatory_vars.gwm <-
   explanatory_vars.groupwiseModel <-
   explanatory_vars.rpart <-
   explanatory_vars.randomForest <-
